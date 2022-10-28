@@ -74,7 +74,7 @@ class DotPlot {
                 .join("circle")
                 .attr("cx", d => x(d.coefficients))
                 .attr("cy", d => y(d.features))
-                .attr("r", "6")
+                .attr("r", "4")
                 // I mimick the R studio colour scheme
                 .style("fill", d => d.coefficients < 0 ? "#F8766D" : "#00BFC4");
 
