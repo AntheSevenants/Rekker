@@ -21,7 +21,6 @@ class DotPlot {
         this.width = parseInt(this.targetElement.style('width'), 10)
         this.height = parseInt(this.targetElement.style('height'), 10)
 
-        this.chartRangeWidth = this.width - this.margin.left - this.margin.right;
         this.chartRangeHeight = this.height - this.margin.top - this.margin.bottom;
 
         // Compute minimum and maximum values
@@ -31,18 +30,46 @@ class DotPlot {
     }
 
     initPlot() {
-        // Just a shorthand
-        let margin = this.margin;
-
         // Append the SVG to our target element
         this.svg = this.targetElement.append("svg")
                                      .attr("width", this.width)
                                      .attr("height", this.height)
-                                     .append("g")
-                                     .attr("transform", `translate(${margin.left}, ${margin.top})`);                            
+                                     .append("g");
+    }
+
+    setMargins() {
+        this.chartRangeWidth = this.width - this.margin.left - this.margin.right;
+
+        this.svg.attr("transform", `translate(${this.margin.left}, ${this.margin.top})`);
     }
 
     drawPlot() {
+        /////////
+        // Y axis
+        /////////
+
+        // Y scaler
+        let y = d3.scaleBand()
+                  .range([ 0, this.chartRangeHeight ])
+                  .domain(this.data.map(row => row.features))
+                  .padding(1);
+
+        // Y axis
+        let yAxis = this.svg.append("g")
+                            .call(d3.axisLeft(y));
+
+        let recommendedLeftMargin = 0;
+        // Adjust margin based on Y axis
+        yAxis.selectAll("text").each(function() {
+            if (this.getBBox().width > recommendedLeftMargin) { 
+                recommendedLeftMargin = this.getBBox().width;
+            }
+        });
+
+        this.margin["left"] = recommendedLeftMargin;
+
+        this.setMargins();
+
         /////////
         // X axis
         /////////
@@ -56,20 +83,6 @@ class DotPlot {
         this.svg.append("g")
                 .attr("transform", `translate(0, ${this.chartRangeHeight})`)
                 .call(d3.axisBottom(x));
-
-        /////////
-        // Y axis
-        /////////
-
-        // Y scaler
-        let y = d3.scaleBand()
-                  .range([ 0, this.chartRangeHeight ])
-                  .domain(this.data.map(row => row.features))
-                  .padding(1);
-
-        // Y axis
-        this.svg.append("g")
-                .call(d3.axisLeft(y));
 
         // Draw data points
         this.dataPoints = this.svg.selectAll("circle")
