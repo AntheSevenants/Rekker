@@ -1,8 +1,8 @@
 class DotPlot {
-    constructor(targetElementName, data, margin={ top: 10,
+    constructor(targetElementName, data, margin={ top: 0,
                                                   right: 30,
                                                   bottom: 30,
-                                                  left: 30 }) {
+                                                  left: 50 }) {
         // Find the target element in the DOM
         this.targetElement = d3.select(`#${targetElementName}`);
         // Clear the element contents
@@ -14,6 +14,9 @@ class DotPlot {
         // Compute the width and height of our container
         this.width = parseInt(this.targetElement.style('width'), 10)
         this.height = parseInt(this.targetElement.style('height'), 10)
+
+        this.chartRangeWidth = this.width - this.margin.left - this.margin.right;
+        this.chartRangeHeight = this.height - this.margin.top - this.margin.bottom;
 
         // Save the data
         this.data = data;
@@ -30,8 +33,8 @@ class DotPlot {
 
         // Append the SVG to our target element
         this.svg = this.targetElement.append("svg")
-                                     .attr("width", this.width + margin.left + margin.right)
-                                     .attr("height", this.height + margin.top + margin.bottom)
+                                     .attr("width", this.width)
+                                     .attr("height", this.height)
                                      .append("g")
                                      .attr("transform", `translate(${margin.left}, ${margin.top})`);                            
     }
@@ -44,11 +47,11 @@ class DotPlot {
         // X scaler
         let x = d3.scaleLinear()
                   .domain([ this.minimumValue, this.maximumValue ])
-                  .range([ 0, this.width ]);
+                  .range([ 0, this.chartRangeWidth ]);
 
         // X axis
         this.svg.append("g")
-                .attr("transform", `translate(0, ${this.height})`)
+                .attr("transform", `translate(0, ${this.chartRangeHeight})`)
                 .call(d3.axisBottom(x));
 
         /////////
@@ -57,7 +60,7 @@ class DotPlot {
 
         // Y scaler
         let y = d3.scaleBand()
-                  .range([ 0, this.height ])
+                  .range([ 0, this.chartRangeHeight ])
                   .domain(this.data.map(row => row.features))
                   .padding(1);
 
