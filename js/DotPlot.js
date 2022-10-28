@@ -82,7 +82,6 @@ class DotPlot {
                                   .attr("data-bs-title", d => d.features)
                                   .attr("data-bs-content", d => d3.format(".4r")(d.coefficients))
                                   .attr("data-bs-trigger", "hover");
-                                  // I mimick the R studio colour scheme
 
         this.applyDefaultStyling();
 
@@ -111,6 +110,7 @@ class DotPlot {
 
     applyDefaultStyling() {
         this.dataPoints.attr("r", "4")
+                       // I mimick the R studio colour scheme
                        .style("fill", d => d.coefficients < 0 ? "#F8766D" : "#00BFC4")
                        .style("opacity", 0.8)
                        .style("stroke", "grey")
