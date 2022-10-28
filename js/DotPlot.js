@@ -75,7 +75,7 @@ class DotPlot {
                                   .attr("cx", d => x(d.coefficients))
                                   .attr("cy", d => y(d.features))
                                   .attr("data-bs-toggle", "popover")
-                                  .attr("data-bs-placement", "top")
+                                  .attr("data-bs-placement", "left")
                                   .attr("data-bs-title", d => d.features)
                                   .attr("data-bs-content", d => d3.format(".4r")(d.coefficients))
                                   .attr("data-bs-trigger", "hover");
