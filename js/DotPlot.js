@@ -74,6 +74,11 @@ class DotPlot {
                                   .join("circle")
                                   .attr("cx", d => x(d.coefficients))
                                   .attr("cy", d => y(d.features))
+                                  .attr("data-bs-toggle", "popover")
+                                  .attr("data-bs-placement", "top")
+                                  .attr("data-bs-title", d => d.features)
+                                  .attr("data-bs-content", d => d3.format(".4r")(d.coefficients))
+                                  .attr("data-bs-trigger", "hover");
                                   // I mimick the R studio colour scheme
 
         this.applyDefaultStyling();
@@ -92,6 +97,13 @@ class DotPlot {
                  .attr("stroke-dasharray", "8,8")
                  .style("stroke", "#a6a6a6")
                  .style("fill", "none");
+
+        this.enablePopovers();
+    }
+
+    enablePopovers() {
+        const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
+        const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl));
     }
 
     applyDefaultStyling() {
