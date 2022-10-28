@@ -11,15 +11,18 @@ class DotPlot {
         // Save the margins for later
         this.margin = margin;
 
+        // Save the data
+        this.data = data;
+
+        // Set element height depending on how many data points there are
+        this.targetElement.style("height", `${this.data.length * 10}px`);
+
         // Compute the width and height of our container
         this.width = parseInt(this.targetElement.style('width'), 10)
         this.height = parseInt(this.targetElement.style('height'), 10)
 
         this.chartRangeWidth = this.width - this.margin.left - this.margin.right;
         this.chartRangeHeight = this.height - this.margin.top - this.margin.bottom;
-
-        // Save the data
-        this.data = data;
 
         // Compute minimum and maximum values
         this.coefficients = this.data.map(row => row.coefficients);
