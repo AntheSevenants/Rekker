@@ -27,6 +27,11 @@ class DotPlot {
         this.coefficients = this.data.map(row => row.coefficients);
         this.minimumValue = +Math.min(...this.coefficients);
         this.maximumValue = +Math.max(...this.coefficients);
+
+        this.groups = [ { "name": "Negative coefficients",
+                          "color": "#F8766D" },
+                        { "name": "Positive coefficients",
+                          "color": "#00BFC4" } ];
     }
 
     initPlot() {
@@ -114,6 +119,7 @@ class DotPlot {
                  .style("fill", "none");
 
         this.enablePopovers();
+        this.drawLegend();
     }
 
     enablePopovers() {
@@ -124,7 +130,8 @@ class DotPlot {
     applyDefaultStyling() {
         this.dataPoints.attr("r", "4")
                        // I mimick the R studio colour scheme
-                       .style("fill", d => d.coefficients < 0 ? "#F8766D" : "#00BFC4")
+                       .style("fill", d => d.coefficients < 0 ? 
+                                           this.groups[0]["color"] : this.groups[1]["color"] )
                        .style("opacity", 0.8)
                        .style("stroke", "grey")
                        .on("mouseover", (event, row) => {
@@ -141,5 +148,33 @@ class DotPlot {
 
     mouseOut() {
         this.applyDefaultStyling();
+    }
+
+    drawLegend() {
+        // Remove pre-existing legend things
+        this.svg.selectAll(".legend_piece").remove();
+
+        // Handmade legend
+        this.groups.forEach((group, index) => {
+            this.svg.append("circle")
+                    .attr("cx", this.chartRangeWidth - 10)
+                    .attr("cy", 30 * (index + 1))
+                    .attr("r", 6)
+                    .attr("fill-opacity", 0.6)
+                    .attr("class", "legend_piece")
+                    .style("fill", group["color"])
+                    .style("stroke", "grey")
+            
+            let text = group["name"];
+
+            this.svg.append("text")
+                    .attr("x", this.chartRangeWidth - 25)
+                    .attr("y", 30 * (index + 1))
+                    .text(text)
+                    .style("font-size", "15px")
+                    .attr("class", "legend_piece")
+                    .attr("alignment-baseline","middle")
+                    .attr("text-anchor", "end")
+        });
     }
 }
