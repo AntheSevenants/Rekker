@@ -1,6 +1,8 @@
 # Rekker
 Finally, a natural way to explore Elastic Net coefficients. *Amai mijne rekker*.
 
+[Live demo](https://anthesevenants.github.io/Rekker/)
+
 ## What is Rekker?
 
 Elastic Net regression is a fantastic technique for assessing the influence of a plethora of predictors on a specific response variable. By looking at the coefficients for each predictor in an Elastic Net regression (or its siblings Ridge and Lasso regression), we can investigate the "pull" of a particular predictor on the modelled phenomenon.
