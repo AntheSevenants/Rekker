@@ -76,5 +76,20 @@ class DotPlot {
                 .attr("cy", d => y(d.features))
                 .attr("r", "6")
                 .style("fill", "green");
+
+        // Add zero reference
+        let lineLayer = this.svg.append("g") // create another SVG group
+                                .attr("transform", "translate(0, 0)");
+
+        lineLayer.append("line")
+                 .attr("id", "baseline")
+                 .attr("x1", x(0))  
+                 .attr("y1", 0)
+                 .attr("x2", x(0))
+                 .attr("y2", this.chartRangeHeight)
+                 .style("stroke-width", 2)
+                 .attr("stroke-dasharray", "8,8")
+                 .style("stroke", "#a6a6a6")
+                 .style("fill", "none");
     }
 }
