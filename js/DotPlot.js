@@ -75,7 +75,8 @@ class DotPlot {
                 .attr("cx", d => x(d.coefficients))
                 .attr("cy", d => y(d.features))
                 .attr("r", "6")
-                .style("fill", "green");
+                // I mimick the R studio colour scheme
+                .style("fill", d => d.coefficients < 0 ? "#F8766D" : "#00BFC4");
 
         // Add zero reference
         let lineLayer = this.svg.append("g") // create another SVG group
