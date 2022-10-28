@@ -69,14 +69,14 @@ class DotPlot {
                 .call(d3.axisLeft(y));
 
         // Draw data points
-        this.svg.selectAll("circle")
-                .data(this.data)
-                .join("circle")
-                .attr("cx", d => x(d.coefficients))
-                .attr("cy", d => y(d.features))
-                .attr("r", "4")
-                // I mimick the R studio colour scheme
-                .style("fill", d => d.coefficients < 0 ? "#F8766D" : "#00BFC4");
+        this.dataPoints = this.svg.selectAll("circle")
+                                  .data(this.data)
+                                  .join("circle")
+                                  .attr("cx", d => x(d.coefficients))
+                                  .attr("cy", d => y(d.features))
+                                  // I mimick the R studio colour scheme
+
+        this.applyDefaultStyling();
 
         // Add zero reference
         let lineLayer = this.svg.append("g") // create another SVG group
@@ -92,5 +92,26 @@ class DotPlot {
                  .attr("stroke-dasharray", "8,8")
                  .style("stroke", "#a6a6a6")
                  .style("fill", "none");
+    }
+
+    applyDefaultStyling() {
+        this.dataPoints.attr("r", "4")
+                       .style("fill", d => d.coefficients < 0 ? "#F8766D" : "#00BFC4")
+                       .style("opacity", 0.8)
+                       .style("stroke", "grey")
+                       .on("mouseover", (event, row) => {
+                           let pointElement = d3.select(event.target);
+                           this.mouseOverPoint(row, pointElement);
+                       })
+                       .on("mouseout", () => { this.mouseOut(); });
+    }
+
+    mouseOverPoint(row, pointElement) {
+        pointElement.attr("r", "6")
+                    .style("opacity", 1);
+    }
+
+    mouseOut() {
+        this.applyDefaultStyling();
     }
 }
