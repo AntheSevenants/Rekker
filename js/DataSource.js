@@ -18,7 +18,7 @@ class DataSource {
             for (let dataset in this.datasets) {
                 // If the promise was succesful, we retrieve the value of that promise
                 // Else, we set the dataset to null
-                switch (results["status"]) {
+                switch (results[i]["status"]) {
                     case "fulfilled":
                         this.datasets[keys[i]] = results[i]["value"];
                         break;
@@ -26,6 +26,8 @@ class DataSource {
                         this.datasets[keys[i]] = null;
                         break;
                 }
+
+                i++;
             }
         });
 
