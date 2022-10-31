@@ -2,7 +2,8 @@ class DataSource {
     constructor() {
         // We define which datasets *can* be loaded
         this.datasets = { "coefficients": d3.csv("coefficients.csv"),
-                          "coding": d3.csv("coding.csv") };
+                          "coding": d3.csv("coding.csv"),
+                          "external": d3.csv("external.csv") };
     }
 
     async load() {
