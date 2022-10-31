@@ -1,5 +1,5 @@
 class DotPlot {
-    constructor(targetElementName, data, margin={ top: 0,
+    constructor(targetElementName, data, margin={ top: 30,
                                                   right: 30,
                                                   bottom: 30,
                                                   left: 50 }) {
@@ -14,15 +14,7 @@ class DotPlot {
         // Save the data
         this.coefficients = data["coefficients"];
         this.coding = data["coding"];
-
-        // Set element height depending on how many data points there are
-        this.targetElement.style("height", `${this.coefficients.length * 10}px`);
-
-        // Compute the width and height of our container
-        this.width = parseInt(this.targetElement.style('width'), 10)
-        this.height = parseInt(this.targetElement.style('height'), 10)
-
-        this.chartRangeHeight = this.height - this.margin.top - this.margin.bottom;
+        this.external = data["external"];
 
         // Compute minimum and maximum values
         this.coefficientValues = this.coefficients.map(row => row.coefficients);
@@ -30,8 +22,12 @@ class DotPlot {
         this.maximumValue = +Math.max(...this.coefficientValues);
 
         this._currentColorCoding = ColorCodings.PositiveNegative;
+        this._currentChartMode = ChartModes.DotPlot;
 
         this.initColorScale();
+        this.initDimensions();
+
+        this.externalColumn = "frequency";
     }
 
     clear() {
@@ -39,6 +35,7 @@ class DotPlot {
         this.targetElement.html("");
     }
 
+    // .currentColorCoding
     get currentColorCoding() {
         return this._currentColorCoding;
     }
@@ -50,12 +47,49 @@ class DotPlot {
         this.drawLegend();
     }
 
+    // .currentChartMode
+    get currentChartMode() {
+        return this._currentChartMode;
+    }
+
+    set currentChartMode(chartMode) {
+        this._currentChartMode = chartMode;
+        this.clear();
+        this.initColorScale();
+        this.initDimensions();
+        this.initPlot();
+        this.drawPlot();
+    }
+
+    initDimensions() {
+        switch (this.currentChartMode) {
+            case ChartModes.DotPlot:
+                // Set element height depending on how many data points there are
+                this.targetElement.style("height", `${this.coefficients.length * 10}px`);
+                break;
+            case ChartModes.ScatterPlot:
+                this.targetElement.style("height", `${window.innerHeight - 200}px`);
+                this.targetElement.style("width", `${window.innerHeight - 200}px`);
+                break;
+        }
+        
+        // Compute the width and height of our container
+        this.width = parseInt(this.targetElement.style('width'), 10)
+        this.height = parseInt(this.targetElement.style('height'), 10)
+        
+        this.chartRangeHeight = this.height - this.margin.top - this.margin.bottom;
+    }
+
     initPlot() {
         // Append the SVG to our target element
         this.svg = this.targetElement.append("svg")
                                      .attr("width", this.width)
                                      .attr("height", this.height)
                                      .append("g");
+
+        if (this.currentChartMode == ChartModes.ScatterPlot) {
+            this.initExternal();
+        }
     }
 
     initColorScale() {
@@ -82,6 +116,10 @@ class DotPlot {
         this.colorScale = d3.scaleOrdinal().domain(this.groups).range(Constants.ColorPalette);
     }
 
+    initExternal() {
+        this.data = Helpers.mergeVariables(this.data, this.external);
+    }
+
     setMargins() {
         this.chartRangeWidth = this.width - this.margin.left - this.margin.right;
 
@@ -93,11 +131,24 @@ class DotPlot {
         // Y axis
         /////////
 
-        // Y scaler
-        let y = d3.scaleBand()
-                  .range([ 0, this.chartRangeHeight ])
-                  .domain(this.data.map(row => row.features))
-                  .padding(1);
+        let y;
+        switch (this.currentChartMode) {
+            case ChartModes.DotPlot:
+                // Y scaler
+                y = d3.scaleBand()
+                      .range([ 0, this.chartRangeHeight ])
+                      .domain(this.data.map(row => row.features))
+                      .padding(1);
+                break;
+            case ChartModes.ScatterPlot:
+                let yValues = this.external.map(row => row[this.externalColumn]);
+
+                y = d3.scaleLinear()
+                      .domain([ Math.min(...yValues), Math.max(...yValues) + 150 ])
+                      .range([ this.chartRangeHeight, 0]);
+                break;
+        }
+        
 
         // Y axis
         let yAxis = this.svg.append("g")
@@ -111,7 +162,7 @@ class DotPlot {
             }
         });
 
-        this.margin["left"] = recommendedLeftMargin;
+        this.margin["left"] = recommendedLeftMargin + 10;
 
         this.setMargins();
 
@@ -134,12 +185,20 @@ class DotPlot {
                                   .data(this.data)
                                   .join("circle")
                                   .attr("cx", d => x(d.coefficients))
-                                  .attr("cy", d => y(d.features))
                                   .attr("data-bs-toggle", "popover")
                                   .attr("data-bs-placement", "left")
                                   .attr("data-bs-title", d => d.features)
                                   .attr("data-bs-content", d => d3.format(".4r")(d.coefficients))
                                   .attr("data-bs-trigger", "hover");
+
+        switch(this.currentChartMode) {
+            case ChartModes.DotPlot:
+                this.dataPoints.attr("cy", d => y(d.features));
+                break;
+            case ChartModes.ScatterPlot:
+                this.dataPoints.attr("cy", d => y(d[this.externalColumn]));
+                break;
+        }
 
         this.applyDefaultStyling();
 
