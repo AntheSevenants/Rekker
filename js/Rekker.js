@@ -27,5 +27,9 @@ class Rekker {
         if (!this.dataSource.availableDatasets.includes("coding")) {
             document.getElementById("radio_variable_encoding_group_coding").disabled = true;
         }
+
+        document.getElementsByName("radio_variable_encoding").forEach(element => {
+            element.onclick = () => { this.dotPlot.currentColorCoding = element.id; };
+        });
     }
 }
