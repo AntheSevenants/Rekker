@@ -19,5 +19,13 @@ class Rekker {
         let dotPlot = new DotPlot(this.dotPlotElementName, this.dataSource.datasets["coefficients"]);
         dotPlot.initPlot();
         dotPlot.drawPlot();
+
+        this.prepareInterface();
+    }
+
+    prepareInterface() {
+        if (!this.dataSource.availableDatasets.includes("coding")) {
+            document.getElementById("radio_variable_encoding_group_coding").disabled = true;
+        }
     }
 }
