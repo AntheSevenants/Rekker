@@ -25,13 +25,31 @@
         <script src="js/Rekker.js"></script>
         </head>
         <body>
-            <div class="container pt-4">
-                <h1>Rekker</h1>
-                <p>Finally, a natural way to explore Elastic Net coefficients.</p>
-
-                <div class="plot" id="dotplot">
+            <main class="d-flex flex-nowrap">
+                <div class="d-flex flex-column flex-shrink-0 p-3 sidebar" style="width: 280px;">
+                  <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+                    <img class="bi pe-none me-2" width="40" height="32" src="img/rubber-bands.png">
+                    <span class="fs-4">Rekker</span>
+                  </a>
+                  <hr>
+                  <div class="flex-column mb-auto">
+                    
+                  </div>
+                  <hr>
+                  <div class="text-white">
+                    <span href="#" class="d-flex align-items-center text-white text-decoration-none">
+                      <img src="https://github.com/AntheSevenants.png" alt="" width="32" height="32" class="rounded-circle me-2">
+                      <strong>by Anthe Sevenants</strong>
+                    </span>
+                  </div>
                 </div>
-            </div>
+                <div class="flex-grow-1 scrollable">
+                    <div class="container pt-4">        
+                        <div class="plot" id="dotplot">
+                        </div>
+                    </div>
+                </div>
+            </main>
 
             <!-- Main script -->
             <script>

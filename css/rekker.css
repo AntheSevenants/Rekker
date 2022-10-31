@@ -1,3 +1,23 @@
 .plot {
 	width: 100%;
 }
+
+main {
+	height: 100vh;
+	max-height: 100vh;
+	overflow-x: auto;
+	overflow-y: hidden;
+}
+
+.sidebar {
+	background-color: #212529;
+}
+
+.sidebar hr {
+	background-color: #eee;
+}
+
+.scrollable {
+	overflow-y: auto;
+	width: auto;
+}
