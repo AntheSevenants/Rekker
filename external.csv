@@ -1,0 +1,501 @@
+index,features,frequency
+0,Eagles,5884
+1,Intocable,8507
+2,JID,4881
+3,Arizona Zervas,7668
+4,Armin van Buuren,360
+5,Kali Uchis,5139
+6,Mike WiLL Made-It,3718
+7,Thomas Rhett,2540
+8,Milky Chance,5067
+9,Paul Simon,2527
+10,Becky G,7758
+11,Lil Durk,1460
+12,Tom Walker,4297
+13,Elevation Worship,4211
+14,Rod Wave,5087
+15,Creedence Clearwater Revival,7105
+16,Lauv,9459
+17,Offset,9096
+18,Alejandro Fernández,8556
+19,The Beach Boys,4973
+20,Lil Xan,6754
+21,The Head And The Heart,4473
+22,Tame Impala,128
+23,Arcade Fire,2465
+24,Felix Jaehn,7268
+25,Timbaland,6688
+26,Julieta Venegas,3611
+27,Mr. Probz,8911
+28,Eslabon Armado,537
+29,DMX,3031
+30,R.E.M.,3469
+31,Tori Kelly,5339
+32,Luan Santana,5787
+33,Jason Derulo,3240
+34,Duki,6075
+35,Noriel,5917
+36,Lynyrd Skynyrd,8102
+37,D-Block Europe,9982
+38,CNCO,3999
+39,Disturbed,7439
+40,RAYE,4379
+41,Zendaya,8334
+42,TKKG,6196
+43,The Chainsmokers,878
+44,Skrillex,8478
+45,Wale,1329
+46,Calvin Harris,1075
+47,Selena Gomez,4359
+48,Meek Mill,4604
+49,Santana,3793
+50,Tyga,8598
+51,Camila Cabello,2425
+52,Lil Peep,8083
+53,Topic,7411
+54,Lady A,287
+55,The Killers,511
+56,ZZ Top,5594
+57,Disney,9492
+58,Frank Ocean,4231
+59,Bruno & Marrone,6574
+60,50 Cent,7722
+61,Gucci Mane,5238
+62,Gente De Zona,9279
+63,Sum 41,6301
+64,Incubus,6510
+65,Zé Neto & Cristiano,3740
+66,Morgan Wallen,3867
+67,Dadju,447
+68,Fetty Wap,4183
+69,Pearl Jam,1389
+70,Camilo,6944
+71,Papa Roach,4961
+72,Roxette,7909
+73,Bruno Martini,2867
+74,J. Cole,573
+75,Pedro Capó,6876
+76,Dean Martin,8528
+77,TINI,6577
+78,Mau y Ricky,2633
+79,Flume,2321
+80,Juan Magán,6311
+81,SEVENTEEN,1506
+82,Tungevaag,2885
+83,*NSYNC,4974
+84,Justin Quiles,4093
+85,Julia Michaels,6167
+86,Greeicy,5480
+87,Zoé,9520
+88,Sting,2851
+89,Hombres G,744
+90,WILLOW,955
+91,Alex Rose,7533
+92,Upchurch,4777
+93,H.E.R.,3630
+94,Jeezy,6975
+95,Granular,9161
+96,Lofi Fruits Music,7952
+97,Andrea Bocelli,6283
+98,Juice WRLD,223
+99,UB40,5977
+100,Moneybagg Yo,8732
+101,Jhay Cortez,7532
+102,6LACK,7374
+103,Brett Young,5339
+104,Blur,6213
+105,Phil Collins,1469
+106,MGMT,1233
+107,Trevor Daniel,7072
+108,George Michael,1767
+109,Kevin Roldan,2115
+110,Robbie Williams,8216
+111,Camila,9344
+112,Troye Sivan,4183
+113,Jul,9636
+114,YUNGBLUD,4345
+115,Tracy Chapman,779
+116,U2,9751
+117,Alicia Keys,9535
+118,Zion & Lennox,8321
+119,Rex Orange County,1674
+120,Bee Gees,3607
+121,Destiny's Child,3439
+122,Kevin Gates,2495
+123,Bring Me The Horizon,7633
+124,Gemitaiz,7426
+125,Bonez MC,987
+126,Panic! At The Disco,8990
+127,Pitbull,1501
+128,Maria Becerra,9422
+129,Showtek,9736
+130,Frédéric Chopin,9207
+131,Bruce Springsteen,9242
+132,Ella Mai,9521
+133,Dominic Fike,2858
+134,The Doors,8854
+135,KYLE,6322
+136,Cali Y El Dandee,3367
+137,Petit Biscuit,8200
+138,Blake Shelton,8211
+139,Angus & Julia Stone,4731
+140,El Fantasma,3204
+141,Jason Aldean,8646
+142,Gunna,9848
+143,Becky Hill,2836
+144,Eladio Carrion,5071
+145,John Williams,14
+146,Two Feet,7545
+147,Alessia Cara,4005
+148,Cigarettes After Sex,872
+149,Rudimental,1392
+150,Capo Plaza,3266
+151,Giveon,2729
+152,Maluma,3321
+153,Oliver Heldens,2353
+154,Machine Gun Kelly,7856
+155,Big Sean,4388
+156,Niska,1335
+157,Of Monsters and Men,9874
+158,Rich Brian,2797
+159,Maggie Lindemann,9374
+160,Los Enanitos Verdes,1084
+161,The Weeknd,6899
+162,Metallica,4373
+163,Ricky Martin,7233
+164,Tove Lo,3583
+165,Aitana,4290
+166,Nacho,9452
+167,José José,6576
+168,Daryl Hall & John Oates,2622
+169,X Ambassadors,3956
+170,Nick Jonas,1231
+171,Jowell & Randy,1746
+172,Wisin & Yandel,7666
+173,Don Diablo,3159
+174,Sara Bareilles,3397
+175,The Cranberries,135
+176,Five Finger Death Punch,3118
+177,Nelly,7428
+178,Daya,2430
+179,MNEK,3994
+180,Matoma,2946
+181,Quavo,9596
+182,Queen,7849
+183,Aminé,1442
+184,Skillet,2505
+185,Jack Harlow,745
+186,Keith Urban,4970
+187,Selena,454
+188,Jessie Reyez,1678
+189,will.i.am,7009
+190,Sido,3101
+191,J Balvin,2606
+192,Lil Dicky,1108
+193,Rag'n'Bone Man,3374
+194,Tom Petty and the Heartbreakers,981
+195,Os Barões Da Pisadinha,9853
+196,Carrie Underwood,3143
+197,Evanescence,5100
+198,Aventura,4093
+199,Melanie Martinez,3368
+200,Van Morrison,304
+201,Reik,1622
+202,Bryce Vine,9374
+203,Alesso,995
+204,Liam Payne,3558
+205,BTS,4667
+206,Jax Jones,9670
+207,Iggy Azalea,1773
+208,Martin Garrix,6233
+209,DJ Snake,2267
+210,One Direction,7970
+211,KHEA,5510
+212,Chris Young,8968
+213,The Fray,5618
+214,Brantley Gilbert,7457
+215,ILLENIUM,305
+216,Yusuf / Cat Stevens,7490
+217,Louis Tomlinson,6955
+218,Jack Johnson,5984
+219,Lenny Kravitz,2997
+220,The Offspring,2626
+221,Tim McGraw,1926
+222,The xx,113
+223,Snoop Dogg,8366
+224,Jimi Hendrix,7357
+225,Prince Royce,3503
+226,Salmo,400
+227,TWICE,9928
+228,Ninho,9336
+229,Breaking Benjamin,596
+230,Dread Mar I,3369
+231,Mumford & Sons,1284
+232,The Lumineers,9625
+233,Ava Max,3253
+234,Dire Straits,9133
+235,Elton John,9742
+236,Rita Ora,8784
+237,Hardwell,3136
+238,Mambo Kingz,6637
+239,Marco Antonio Solís,7245
+240,Beyoncé,4198
+241,Cash Cash,4685
+242,Pineapple StormTv,8869
+243,Kid Cudi,3319
+244,Loud Luxury,2702
+245,Nat King Cole,1247
+246,Beastie Boys,5718
+247,Ezhel,2112
+248,Depeche Mode,507
+249,EXO,4922
+250,Bizarrap,7544
+251,Ben Howard,2183
+252,Lil Tecca,9009
+253,Nipsey Hussle,5925
+254,Summer Cem,2991
+255,Bon Iver,8623
+256,Marilyn Manson,6930
+257,Demi Lovato,8570
+258,Jonas Blue,6843
+259,Christina Perri,8381
+260,John Lennon,6684
+261,Rod Stewart,1778
+262,Lee Brice,3483
+263,Alec Benjamin,6147
+264,AURORA,945
+265,Rauw Alejandro,3735
+266,Foreigner,5767
+267,The Rolling Stones,1260
+268,Hans Zimmer,4763
+269,Gustavo Mioto,9814
+270,Kodaline,4706
+271,John Mayer,7573
+272,Drake,2041
+273,IU,3791
+274,Wiz Khalifa,3073
+275,Alice In Chains,9299
+276,Hailee Steinfeld,9260
+277,KAROL G,5406
+278,Cosculluela,5895
+279,LANY,1999
+280,Johnny Cash,4453
+281,Matuê,6567
+282,James TW,8546
+283,Juicy J,1148
+284,Katy Perry,1563
+285,Charli XCX,862
+286,Alfredo Olivas,5557
+287,Maren Morris,7499
+288,Gloria Trevi,4945
+289,Pharrell Williams,5628
+290,Disclosure,6910
+291,GIMS,6962
+292,Marvin Gaye,6391
+293,Juan Luis Guerra 4.40,6029
+294,James Bay,7245
+295,Stromae,1133
+296,Surfaces,9358
+297,Colbie Caillat,4148
+298,Kollegah,8447
+299,Gorillaz,2787
+300,Twenty One Pilots,3501
+301,Shania Twain,7444
+302,MKTO,429
+303,Vicente Fernández,2507
+304,Cartel De Santa,2637
+305,Damso,8026
+306,Imanbek,3584
+307,Hollywood Undead,6976
+308,Travis Scott,2171
+309,DaBaby,5088
+310,Natalia Lafourcade,4535
+311,Sean Kingston,2346
+312,Rae Sremmurd,3757
+313,Ben&Ben,9162
+314,Ne-Yo,1426
+315,Kygo,8851
+316,ABBA,6511
+317,Gavin James,3490
+318,Don Omar,1179
+319,Zedd,5968
+320,The Pussycat Dolls,3822
+321,JAY-Z,4254
+322,Ofenbach,9932
+323,Shawn Mendes,3879
+324,Jennifer Lopez,9814
+325,Ricardo Arjona,7913
+326,Bebe Rexha,4959
+327,Galantis,9470
+328,Joel Corry,5855
+329,SAINt JHN,4110
+330,Alanis Morissette,8065
+331,Bea Miller,585
+332,Joan Sebastian,3535
+333,Tiësto,2186
+334,Sean Paul,2386
+335,YoungBoy Never Broke Again,6989
+336,Brent Faiyaz,5096
+337,Jessie J,9894
+338,Kane Brown,3190
+339,Aleman,7062
+340,Denzel Curry,2651
+341,Carly Rae Jepsen,310
+342,RAF Camora,4379
+343,Calibre 50,3503
+344,AJ Tracey,7273
+345,Radiohead,3547
+346,Dean Lewis,9724
+347,Melendi,570
+348,Weezer,8146
+349,Ariana Grande,347
+350,Rammstein,3941
+351,Luísa Sonza,4398
+352,Tee Grizzley,5784
+353,Bryan Adams,7650
+354,Clairo,7705
+355,Shinedown,5623
+356,The 1975,5900
+357,Mitski,7113
+358,Harry Styles,3416
+359,Lukas Graham,1446
+360,Avril Lavigne,3709
+361,MC Kevinho,6758
+362,Jasmine Thompson,9323
+363,Joey Bada$$,2928
+364,Keane,9000
+365,Beret,7069
+366,Lykke Li,4849
+367,Dido,1129
+368,Bethel Music,7908
+369,Anuel AA,3886
+370,Sade,1795
+371,6ix9ine,2484
+372,Bing Crosby,1750
+373,Gerardo Ortiz,4165
+374,The Script,135
+375,LIT killah,37
+376,Canserbero,3657
+377,Tones And I,6814
+378,Céline Dion,1703
+379,Bibi Blocksberg,6269
+380,(G)I-DLE,8260
+381,Seeb,7276
+382,Little Mix,5308
+383,Tory Lanez,6720
+384,Guaynaa,2244
+385,MF DOOM,7465
+386,The Beatles,9767
+387,Alan Walker,3727
+388,Capital Bra,2176
+389,James Blunt,5764
+390,Bibi und Tina,6527
+391,Tainy,6357
+392,Kiiara,9273
+393,Luke Combs,9707
+394,Rihanna,3797
+395,David Bowie,2176
+396,Skepta,3553
+397,Pop Smoke,149
+398,Ozzy Osbourne,2760
+399,Timmy Trumpet,6702
+400,Maná,3803
+401,Pink Sweat$,6491
+402,Supertramp,2563
+403,Leona Lewis,4536
+404,Thirty Seconds To Mars,6724
+405,Dennis Lloyd,3899
+406,Los Bukis,6994
+407,OneRepublic,6461
+408,Chief Keef,1295
+409,Halsey,2231
+410,Evaluna Montaner,2236
+411,2 Chainz,9700
+412,Lil Baby,2399
+413,Kylie Minogue,8039
+414,XXXTENTACION,6693
+415,Dynoro,9335
+416,Bruno Mars,6204
+417,Junior H,805
+418,Vintage Culture,6756
+419,Ty Dolla $ign,1228
+420,Nicky Jam,3165
+421,Mark Ronson,9583
+422,Zara Larsson,4002
+423,Lil Kleine,1693
+424,KISS,8844
+425,MAX,5757
+426,Casper Magico,4952
+427,The Cure,6177
+428,ScHoolboy Q,1105
+429,Lily Allen,2457
+430,Ms. Lauryn Hill,7475
+431,Jay Chou,2732
+432,ANAVITÓRIA,2719
+433,Future,2195
+434,Rise Against,1547
+435,Chris Stapleton,8823
+436,Kontra K,4935
+437,Pentatonix,4855
+438,Florida Georgia Line,3649
+439,Wolfgang Amadeus Mozart,8799
+440,Tiago PZK,4305
+441,Conan Gray,5264
+442,DJ Luian,3287
+443,Ozuna,9769
+444,Trippie Redd,6902
+445,Lil Skies,1061
+446,Moby,2042
+447,5 Seconds of Summer,8183
+448,YOASOBI,8059
+449,A$AP Ferg,4077
+450,Deftones,8823
+451,Steve Aoki,3018
+452,Yellow Claw,7692
+453,Regard,9947
+454,Icona Pop,7219
+455,Sigala,4094
+456,The Kooks,8459
+457,Los Tucanes De Tijuana,4128
+458,Swedish House Mafia,6478
+459,Enrique Iglesias,2241
+460,AJR,6751
+461,Michael Jackson,2309
+462,Led Zeppelin,9239
+463,Trey Songz,4454
+464,Henrique & Juliano,4576
+465,Yung Gravy,9866
+466,Blueface,4330
+467,Stevie Wonder,8578
+468,Andy Grammer,2880
+469,Nicki Minaj,4971
+470,Kodak Black,8497
+471,G-Eazy,7298
+472,Quinn XCII,5174
+473,Enya,3963
+474,Britney Spears,9166
+475,Silk Sonic,7041
+476,Norah Jones,1605
+477,John Legend,209
+478,Booba,9907
+479,Benjamin Blümchen,7443
+480,My Chemical Romance,4405
+481,Lil Mosey,3699
+482,Mariah Carey,7523
+483,Maiara & Maraisa,2643
+484,Bastille,6927
+485,NF,3479
+486,Lil Tjay,2671
+487,Green Day,7405
+488,Mora,5179
+489,Joji,266
+490,Ciara,9690
+491,JP Cooper,3
+492,Myke Towers,513
+493,The Kid LAROI,4773
+494,Volbeat,5357
+495,BØRNS,7565
+496,Ghostemane,1568
+497,girl in red,3622
+498,Desiigner,5619
+499,Trueno,8905
