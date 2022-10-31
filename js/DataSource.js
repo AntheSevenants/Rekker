@@ -33,4 +33,8 @@ class DataSource {
 
         return true;
     }
+
+    get availableDatasets() {
+        return Object.keys(this.datasets).filter(dataset => this.datasets[dataset] != null);
+    }
 }
