@@ -21,5 +21,3 @@ class Rekker {
         dotPlot.drawPlot();
     }
 }
-
-rekker = new Rekker();
