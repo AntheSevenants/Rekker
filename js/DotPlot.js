@@ -12,10 +12,11 @@ class DotPlot {
         this.margin = margin;
 
         // Save the data
-        this.data = data;
+        this.coefficients = data["coefficients"];
+        this.codings = data["coefficients"];
 
         // Set element height depending on how many data points there are
-        this.targetElement.style("height", `${this.data.length * 10}px`);
+        this.targetElement.style("height", `${this.coefficients.length * 10}px`);
 
         // Compute the width and height of our container
         this.width = parseInt(this.targetElement.style('width'), 10)
@@ -24,14 +25,13 @@ class DotPlot {
         this.chartRangeHeight = this.height - this.margin.top - this.margin.bottom;
 
         // Compute minimum and maximum values
-        this.coefficients = this.data.map(row => row.coefficients);
-        this.minimumValue = +Math.min(...this.coefficients);
-        this.maximumValue = +Math.max(...this.coefficients);
+        this.coefficientValues = this.coefficients.map(row => row.coefficients);
+        this.minimumValue = +Math.min(...this.coefficientValues);
+        this.maximumValue = +Math.max(...this.coefficientValues);
 
-        this.groups = [ { "name": "Negative coefficients",
-                          "color": "#F8766D" },
-                        { "name": "Positive coefficients",
-                          "color": "#00BFC4" } ];
+        this.colorCoding = ColorCodings.PositiveNegative;
+
+        this.initColorScale();
     }
 
     initPlot() {
@@ -40,6 +40,23 @@ class DotPlot {
                                      .attr("width", this.width)
                                      .attr("height", this.height)
                                      .append("g");
+    }
+
+    initColorScale() {
+        let data;
+        switch (this.colorCoding) {
+            case ColorCodings.PositiveNegative:
+                this.groups = [ "Negative coefficients", "Positive coefficients" ];
+                this.data = Helpers.mergeVariables(this.coefficients,
+                                                   this.coefficients.map(row => ({ "features": row["features"],
+                                                                                   "group": row["coefficients"] < 0 ? 
+                                                                                            this.groups[0] :
+                                                                                            this.groups[1] })));
+                break;
+        }
+
+        // Color scaler
+        this.colorScale = d3.scaleOrdinal().domain(this.groups).range(["#F8766D", "#00BFC4"]);
     }
 
     setMargins() {
@@ -130,8 +147,7 @@ class DotPlot {
     applyDefaultStyling() {
         this.dataPoints.attr("r", "4")
                        // I mimick the R studio colour scheme
-                       .style("fill", d => d.coefficients < 0 ? 
-                                           this.groups[0]["color"] : this.groups[1]["color"] )
+                       .style("fill", d => this.colorScale(d.group) )
                        .style("opacity", 0.8)
                        .style("stroke", "grey")
                        .on("mouseover", (event, row) => {
@@ -162,10 +178,10 @@ class DotPlot {
                     .attr("r", 6)
                     .attr("fill-opacity", 0.6)
                     .attr("class", "legend_piece")
-                    .style("fill", group["color"])
+                    .style("fill", this.colorScale(group))
                     .style("stroke", "grey")
             
-            let text = group["name"];
+            let text = group;
 
             this.svg.append("text")
                     .attr("x", this.chartRangeWidth - 25)
