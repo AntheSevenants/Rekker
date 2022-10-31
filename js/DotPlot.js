@@ -6,14 +6,14 @@ class DotPlot {
         // Find the target element in the DOM
         this.targetElement = d3.select(`#${targetElementName}`);
         // Clear the element contents
-        this.targetElement.html("");
+        this.clear();
 
         // Save the margins for later
         this.margin = margin;
 
         // Save the data
         this.coefficients = data["coefficients"];
-        this.codings = data["coefficients"];
+        this.coding = data["coding"];
 
         // Set element height depending on how many data points there are
         this.targetElement.style("height", `${this.coefficients.length * 10}px`);
@@ -29,9 +29,25 @@ class DotPlot {
         this.minimumValue = +Math.min(...this.coefficientValues);
         this.maximumValue = +Math.max(...this.coefficientValues);
 
-        this.colorCoding = ColorCodings.PositiveNegative;
+        this._currentColorCoding = ColorCodings.PositiveNegative;
 
         this.initColorScale();
+    }
+
+    clear() {
+        // Clear the element contents
+        this.targetElement.html("");
+    }
+
+    get currentColorCoding() {
+        return this._currentColorCoding;
+    }
+
+    set currentColorCoding(coding) {
+        this._currentColorCoding = coding;
+        this.initColorScale();
+        this.applyDefaultStyling();
+        this.drawLegend();
     }
 
     initPlot() {
@@ -44,7 +60,8 @@ class DotPlot {
 
     initColorScale() {
         let data;
-        switch (this.colorCoding) {
+
+        switch (this.currentColorCoding) {
             case ColorCodings.PositiveNegative:
                 this.groups = [ "Negative coefficients", "Positive coefficients" ];
                 this.data = Helpers.mergeVariables(this.coefficients,
@@ -53,10 +70,16 @@ class DotPlot {
                                                                                             this.groups[0] :
                                                                                             this.groups[1] })));
                 break;
+            case ColorCodings.GroupCoding:
+                this.groups = Helpers.uniqueValues(this.coding, "group").sort();
+                this.data = Helpers.mergeVariables(this.coefficients, this.coding);
+                break;
         }
 
+        console.log(this.groups);
+
         // Color scaler
-        this.colorScale = d3.scaleOrdinal().domain(this.groups).range(["#F8766D", "#00BFC4"]);
+        this.colorScale = d3.scaleOrdinal().domain(this.groups).range(Constants.ColorPalette);
     }
 
     setMargins() {
