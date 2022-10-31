@@ -1,8 +1,8 @@
 class ChartModes {
 	static get DotPlot () {
-		return "dot";
+		return "radio_view_coefficients";
 	}
 	static get ScatterPlot () {
-		return "scatter";
+		return "radio_view_external";
 	}
 }
