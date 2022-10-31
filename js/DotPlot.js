@@ -27,7 +27,7 @@ class DotPlot {
         this.initColorScale();
         this.initDimensions();
 
-        this.externalColumn = "frequency";
+        this.externalColumn = null;
     }
 
     clear() {
@@ -54,6 +54,11 @@ class DotPlot {
 
     set currentChartMode(chartMode) {
         this._currentChartMode = chartMode;
+
+        this.updatePlot();
+    }
+
+    updatePlot() {
         this.clear();
         this.initColorScale();
         this.initDimensions();
@@ -66,6 +71,7 @@ class DotPlot {
             case ChartModes.DotPlot:
                 // Set element height depending on how many data points there are
                 this.targetElement.style("height", `${this.coefficients.length * 10}px`);
+                // TODO: be able to reset the width
                 break;
             case ChartModes.ScatterPlot:
                 this.targetElement.style("height", `${window.innerHeight - 200}px`);
