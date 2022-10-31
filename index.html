@@ -27,21 +27,28 @@
         <body>
             <main class="d-flex flex-nowrap">
                 <div class="d-flex flex-column flex-shrink-0 p-3 sidebar" style="width: 280px;">
-                  <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
-                    <img class="bi pe-none me-2" width="40" height="32" src="img/rubber-bands.png">
-                    <span class="fs-4">Rekker</span>
-                  </a>
-                  <hr>
-                  <div class="flex-column mb-auto">
+                    <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+                        <img class="bi pe-none me-2" width="40" height="32" src="img/rubber-bands.png">
+                        <span class="fs-4">Rekker</span>
+                    </a>
+                    <hr>
+                    <p class="text-white pb-0 mb-2">Variable encoding:</p>
+                    <div class="flex-column mb-auto">
+                        <div class="btn-group" role="group" aria-label="Radio toggle button group for variable encoding">
+                            <input type="radio" class="btn-check" name="radio_variable_encoding" id="radio_variable_encoding_positive_negative" autocomplete="off" checked>
+                            <label class="btn btn-outline-primary" for="radio_variable_encoding_positive_negative">Positive / negative</label>
                     
-                  </div>
-                  <hr>
-                  <div class="text-white">
-                    <span href="#" class="d-flex align-items-center text-white text-decoration-none">
-                      <img src="https://github.com/AntheSevenants.png" alt="" width="32" height="32" class="rounded-circle me-2">
-                      <strong>by Anthe Sevenants</strong>
-                    </span>
-                  </div>
+                            <input type="radio" class="btn-check" name="radio_variable_encoding" id="radio_variable_encoding_group_coding" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="radio_variable_encoding_group_coding">Group coding</label>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="text-white">
+                        <span href="#" class="d-flex align-items-center text-white text-decoration-none">
+                            <img src="https://github.com/AntheSevenants.png" alt="" width="32" height="32" class="rounded-circle me-2">
+                            <strong>by Anthe Sevenants</strong>
+                        </span>
+                    </div>
                 </div>
                 <div class="flex-grow-1 scrollable">
                     <div class="container pt-4">        
