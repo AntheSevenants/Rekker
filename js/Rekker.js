@@ -4,6 +4,8 @@ class Rekker {
 
         this.dataSource = new DataSource();
         this.dataSource.load().then(() => { this.execute(); });
+
+        this.selectExternal = d3.select("#select_external");
     }
 
     execute() {
@@ -31,5 +33,37 @@ class Rekker {
         document.getElementsByName("radio_variable_encoding").forEach(element => {
             element.onclick = () => { this.dotPlot.currentColorCoding = element.id; };
         });
+
+        let externalVariables = [];
+        if (this.dataSource.availableDatasets.includes("external")) {
+            externalVariables = 
+                externalVariables.concat(this.dataSource.datasets["external"].columns.filter(column => column != "features"));
+        }
+        
+        this.selectExternal.selectAll("option")
+                           .data(externalVariables)
+                           .enter()
+                           .append("option")
+                           .attr("value", d => d)
+                           .text(d => d);
+
+        this.selectExternal.on("change", () => { 
+            this.updateExternalColumn();
+        });
+
+        document.getElementsByName("radio_view").forEach(element => {
+            element.onclick = () => { 
+                let chartMode = element.id;
+                this.dotPlot.currentChartMode = chartMode;
+
+                this.selectExternal.attr("disabled", chartMode == ChartModes.ScatterPlot ? null : "");
+                this.updateExternalColumn();
+            };
+        });
+    }
+
+    updateExternalColumn() {
+        this.dotPlot.externalColumn = this.selectExternal.node().value;
+        this.dotPlot.updatePlot();
     }
 }
