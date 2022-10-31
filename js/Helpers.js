@@ -25,4 +25,8 @@ class Helpers {
 		// Extract resulting combined objects from the Map as an Array
 		return Array.from(m.values());
 	}
+
+	static uniqueValues(array, columnName) {
+		return [...new Set( array.map(obj => obj[columnName])) ];
+	}
 }
