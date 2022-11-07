@@ -12,12 +12,14 @@ class DotPlot {
         this.margin = margin;
 
         // Save the data
-        this.coefficients = data["coefficients"];
+        this.coefficients = data["coefficients"].map((row) => { 
+            row["coefficient"] = +row["coefficient"];
+            return row; });
         this.coding = data["coding"];
         this.external = data["external"];
 
         // Compute minimum and maximum values
-        this.coefficientValues = this.coefficients.map(row => row.coefficients);
+        this.coefficientValues = this.coefficients.map(row => +row.coefficient);
         this.minimumValue = +Math.min(...this.coefficientValues);
         this.maximumValue = +Math.max(...this.coefficientValues);
 
@@ -26,6 +28,8 @@ class DotPlot {
 
         this.initColorScale();
         this.initDimensions();
+
+        console.log(this.coefficients);
 
         this.externalColumn = null;
     }
@@ -105,8 +109,8 @@ class DotPlot {
             case ColorCodings.PositiveNegative:
                 this.groups = [ "Negative coefficients", "Positive coefficients" ];
                 this.data = Helpers.mergeVariables(this.coefficients,
-                                                   this.coefficients.map(row => ({ "features": row["features"],
-                                                                                   "group": row["coefficients"] < 0 ? 
+                                                   this.coefficients.map(row => ({ "feature": row["feature"],
+                                                                                   "group": row["coefficient"] < 0 ? 
                                                                                             this.groups[0] :
                                                                                             this.groups[1] })));
                 break;
@@ -137,13 +141,15 @@ class DotPlot {
         // Y axis
         /////////
 
+        console.log(this.data);
+
         let y;
         switch (this.currentChartMode) {
             case ChartModes.DotPlot:
                 // Y scaler
                 y = d3.scaleBand()
                       .range([ 0, this.chartRangeHeight ])
-                      .domain(this.data.map(row => row.features))
+                      .domain(this.data.map(row => row.feature))
                       .padding(1);
                 break;
             case ChartModes.ScatterPlot:
@@ -190,16 +196,16 @@ class DotPlot {
         this.dataPoints = this.svg.selectAll("circle")
                                   .data(this.data)
                                   .join("circle")
-                                  .attr("cx", d => x(d.coefficients))
+                                  .attr("cx", d => x(d.coefficient))
                                   .attr("data-bs-toggle", "popover")
                                   .attr("data-bs-placement", "left")
-                                  .attr("data-bs-title", d => d.features)
-                                  .attr("data-bs-content", d => d3.format(".4r")(d.coefficients))
+                                  .attr("data-bs-title", d => d.feature)
+                                  .attr("data-bs-content", d => d3.format(".4r")(d.coefficient))
                                   .attr("data-bs-trigger", "hover");
 
         switch(this.currentChartMode) {
             case ChartModes.DotPlot:
-                this.dataPoints.attr("cy", d => y(d.features));
+                this.dataPoints.attr("cy", d => y(d.feature));
                 break;
             case ChartModes.ScatterPlot:
                 this.dataPoints.attr("cy", d => y(d[this.externalColumn]));

@@ -7,14 +7,14 @@ class Helpers {
 		coordinates.forEach((coordRow) => { 
 			for (let key in variables[0]) {
 				// Don't overwrite the features
-				if (key == "features") continue;
+				if (key == "feature") continue;
 			}
-			m.set(coordRow["features"], coordRow);
+			m.set(coordRow["feature"], coordRow);
 		});
 
 		// For values in 'variables', insert them if missing, otherwise, update existing values:
 		variables.forEach((varRow) => {
-    		let existing = m.get(varRow["features"]);
+    		let existing = m.get(varRow["feature"]);
     		if (existing === undefined) {
         		m.set(varRow._, varRow);
         	} else {
