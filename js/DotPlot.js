@@ -27,9 +27,9 @@ class DotPlot {
         this._currentChartMode = ChartModes.DotPlot;
 
         this.initColorScale();
-        this.initDimensions();
 
-        console.log(this.coefficients);
+        this.originalWidth = parseInt(this.targetElement.style('width'), 10);
+        this.initDimensions();
 
         this.externalColumn = null;
     }
@@ -75,7 +75,7 @@ class DotPlot {
             case ChartModes.DotPlot:
                 // Set element height depending on how many data points there are
                 this.targetElement.style("height", `${this.coefficients.length * 10}px`);
-                // TODO: be able to reset the width
+                this.targetElement.style("width", `${this.originalWidth}px`);
                 break;
             case ChartModes.ScatterPlot:
                 this.targetElement.style("height", `${window.innerHeight - 200}px`);
@@ -84,8 +84,8 @@ class DotPlot {
         }
         
         // Compute the width and height of our container
-        this.width = parseInt(this.targetElement.style('width'), 10)
-        this.height = parseInt(this.targetElement.style('height'), 10)
+        this.width = parseInt(this.targetElement.style('width'), 10);
+        this.height = parseInt(this.targetElement.style('height'), 10);
         
         this.chartRangeHeight = this.height - this.margin.top - this.margin.bottom;
     }
@@ -122,8 +122,6 @@ class DotPlot {
                 break;
         }
 
-        console.log(this.groups);
-
         // Color scaler
         this.colorScale = d3.scaleOrdinal().domain(this.groups).range(Constants.ColorPalette);
     }
@@ -142,8 +140,6 @@ class DotPlot {
         /////////
         // Y axis
         /////////
-
-        console.log(this.data);
 
         let y;
         switch (this.currentChartMode) {
