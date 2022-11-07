@@ -23,7 +23,7 @@ Because we tend to use many predictors at once with Elastic Net-like regression,
 
 	The dataset should have the following structure:
 	```csv
-	coefficients,features
+	coefficient,feature
 	-2.7109007348534733,I
 	-2.5738031394173366,Monday
 	-1.970461593962809,not
