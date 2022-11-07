@@ -1,4 +1,4 @@
-coefficients,features,is_positive
+coefficient,feature,is_positive
 -2.7109007348534733,Eagles,FALSE
 -2.5738031394173366,Intocable,FALSE
 -1.970461593962809,JID,FALSE
