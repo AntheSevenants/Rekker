@@ -153,7 +153,7 @@ class DotPlot {
             case ChartModes.ScatterPlot:
                 let yValues = this.data.map(row => row[this.externalColumn]).filter(value => value != "NA");
                 y = d3.scaleLinear()
-                      .domain([ Math.min(...yValues), Math.max(...yValues) + 150 ])
+                      .domain([ Math.min(...yValues), Math.max(...yValues) ])
                       .range([ this.chartRangeHeight, 0]);
                 break;
         }
