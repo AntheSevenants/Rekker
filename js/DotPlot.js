@@ -104,13 +104,12 @@ class DotPlot {
         switch (this.currentColorCoding) {
             case ColorCodings.PositiveNegative:
                 this.groups = [ "Negative coefficients", "Positive coefficients", "Removed coefficients" ];
-                this.data = Helpers.mergeVariables(this.coefficients,
-                                                   this.coefficients.map(row => ({ "feature": row["feature"],
-                                                                                   "group": row["coefficient"] != 0 ?
-                                                                                            (row["coefficient"] < 0 ? 
-                                                                                            this.groups[0] :
-                                                                                            this.groups[1]) :
-                                                                                            this.groups[2] })));
+                this.data = this.coefficients.map(row => 
+                    Object.assign({}, row, { "group": row["coefficient"] != 0 ?
+                                                      (row["coefficient"] < 0 ? 
+                                                      this.groups[0] :
+                                                      this.groups[1]) :
+                                                      this.groups[2]  }));
                 break;
             case ColorCodings.GroupCoding:
                 this.groups = Helpers.uniqueValues(this.coefficients, "group").sort();
