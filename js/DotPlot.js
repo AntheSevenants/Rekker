@@ -119,7 +119,7 @@ class DotPlot {
         if (this.groupColumn == "_sign") {
             this.groups = this.signGroups;
         } else {
-            this.groups = Helpers.uniqueValues(this.coefficients, "group").sort();
+            this.groups = Helpers.uniqueValues(this.coefficients, this.groupColumn).sort();
         }
 
         // Color scaler
