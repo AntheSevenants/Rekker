@@ -6,6 +6,7 @@ class Rekker {
         this.dataSource.load().then(() => { this.execute(); });
 
         this.selectExternal = d3.select("#select_external");
+        this.selectCoding = d3.select("#select_coding");
     }
 
     execute() {
@@ -26,12 +27,16 @@ class Rekker {
     }
 
     prepareInterface() {
-        if (!this.dataSource.codingAvailable) {
-            document.getElementById("radio_variable_encoding_group_coding").disabled = true;
-        }
-
         document.getElementsByName("radio_variable_encoding").forEach(element => {
-            element.onclick = () => { this.dotPlot.currentColorCoding = element.id; };
+            element.onclick = () => { 
+                if (element.id == ColorCodings.PositiveNegative) {
+                    this.dotPlot.groupColumn = "_sign";
+                    this.selectCoding.attr("disabled", "");
+                } else {
+                    this.updateCodingColumn();
+                    this.selectCoding.attr("disabled", null);
+                }
+            };
         });
 
         let externalVariables = [];
@@ -50,6 +55,24 @@ class Rekker {
             this.updateExternalColumn();
         });
 
+        let codingVariables = [];
+        if (this.dataSource.codingAvailable) {
+            codingVariables = this.dataSource.stringColumns;
+        } else {
+            document.getElementById("radio_variable_encoding_group_coding").disabled = true;
+        }
+        
+        this.selectCoding.selectAll("option")
+                           .data(codingVariables)
+                           .enter()
+                           .append("option")
+                           .attr("value", d => d)
+                           .text(d => d);
+
+        this.selectCoding.on("change", () => { 
+            this.updateCodingColumn();
+        });
+
         document.getElementsByName("radio_view").forEach(element => {
             element.onclick = () => { 
                 this.updateExternalColumn();
@@ -63,5 +86,9 @@ class Rekker {
 
     updateExternalColumn() {
         this.dotPlot.externalColumn = this.selectExternal.node().value;
+    }
+
+    updateCodingColumn() {
+        this.dotPlot.groupColumn = this.selectCoding.node().value;
     }
 }

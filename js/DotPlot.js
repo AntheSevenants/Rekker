@@ -32,16 +32,15 @@ class DotPlot {
         this.minimumValue = +Math.min(...this.coefficientValues);
         this.maximumValue = +Math.max(...this.coefficientValues);
 
-        this._currentColorCoding = ColorCodings.PositiveNegative;
+        this.externalColumn = null;
+        this._groupColumn = "_sign";
+
         this._currentChartMode = ChartModes.DotPlot;
 
         this.initColorScale();
 
         this.originalWidth = parseInt(this.targetElement.style('width'), 10);
         this.initDimensions();
-
-        this.externalColumn = null;
-        this.groupColumn = "_sign";
     }
 
     clear() {
@@ -49,13 +48,13 @@ class DotPlot {
         this.targetElement.html("");
     }
 
-    // .currentColorCoding
-    get currentColorCoding() {
-        return this._currentColorCoding;
+    // .groupColumn
+    get groupColumn() {
+        return this._groupColumn;
     }
 
-    set currentColorCoding(coding) {
-        this._currentColorCoding = coding;
+    set groupColumn(column) {
+        this._groupColumn = column;
         this.initColorScale();
         this.applyDefaultStyling();
         this.drawLegend();
@@ -115,15 +114,10 @@ class DotPlot {
     initColorScale() {
         this.data = this.coefficients;
 
-        switch (this.currentColorCoding) {
-            case ColorCodings.PositiveNegative:
-                this.groups = this.signGroups;
-                this.groupColumn = "_sign";
-                break;
-            case ColorCodings.GroupCoding:
-                this.groups = Helpers.uniqueValues(this.coefficients, "group").sort();
-                this.groupColumn = "group";
-                break;
+        if (this.groupColumn == "_sign") {
+            this.groups = this.signGroups;
+        } else {
+            this.groups = Helpers.uniqueValues(this.coefficients, "group").sort();
         }
 
         // Color scaler
