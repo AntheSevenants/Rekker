@@ -151,7 +151,7 @@ class DotPlot {
                       .padding(1);
                 break;
             case ChartModes.ScatterPlot:
-                let yValues = this.data.map(row => row[this.externalColumn]);
+                let yValues = this.data.map(row => row[this.externalColumn]).filter(value => value != "NA");
                 y = d3.scaleLinear()
                       .domain([ Math.min(...yValues), Math.max(...yValues) + 150 ])
                       .range([ this.chartRangeHeight, 0]);
@@ -205,7 +205,9 @@ class DotPlot {
                 this.dataPoints.attr("cy", d => y(d.feature));
                 break;
             case ChartModes.ScatterPlot:
-                this.dataPoints.attr("cy", d => y(d[this.externalColumn]));
+                this.dataPoints.attr("cy", d => this.externalColumn != "NA" ?
+                                           y(d[this.externalColumn]) :
+                                           0);
                 break;
         }
 
