@@ -60,6 +60,8 @@ class Rekker {
         let externalVariables = [];
         if (this.dataSource.externalAvailable) {
             externalVariables = this.dataSource.numericColumns;
+        } else {
+            document.getElementById("radio_view_external").disabled = true;
         }
         
         this.selectExternal.selectAll("option")
