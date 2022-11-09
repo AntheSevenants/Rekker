@@ -14,6 +14,19 @@ class DotPlot {
         // Save the data
         this.coefficients = data["coefficients"];
 
+        // Compute the signs for each data point
+        this.signGroups = [ "Negative coefficients", "Positive coefficients", "Removed coefficients" ];
+        this.coefficients.forEach(row => {
+            if (row["coefficient"] == 0) {
+                row["_sign"] = this.signGroups[2];
+            }
+            else {
+                row["_sign"] = row["coefficient"] < 0 ?
+                               this.signGroups[0] :
+                               this.signGroups[1];
+            }
+        });
+
         // Compute minimum and maximum values
         this.coefficientValues = this.coefficients.map(row => +row.coefficient);
         this.minimumValue = +Math.min(...this.coefficientValues);
@@ -28,6 +41,7 @@ class DotPlot {
         this.initDimensions();
 
         this.externalColumn = null;
+        this.groupColumn = "_sign";
     }
 
     clear() {
@@ -99,21 +113,16 @@ class DotPlot {
     }
 
     initColorScale() {
-        let data;
+        this.data = this.coefficients;
 
         switch (this.currentColorCoding) {
             case ColorCodings.PositiveNegative:
-                this.groups = [ "Negative coefficients", "Positive coefficients", "Removed coefficients" ];
-                this.data = this.coefficients.map(row => 
-                    Object.assign({}, row, { "group": row["coefficient"] != 0 ?
-                                                      (row["coefficient"] < 0 ? 
-                                                      this.groups[0] :
-                                                      this.groups[1]) :
-                                                      this.groups[2]  }));
+                this.groups = this.signGroups;
+                this.groupColumn = "_sign";
                 break;
             case ColorCodings.GroupCoding:
                 this.groups = Helpers.uniqueValues(this.coefficients, "group").sort();
-                this.data = this.coefficients.map(row => row);
+                this.groupColumn = "group";
                 break;
         }
 
@@ -233,7 +242,7 @@ class DotPlot {
     applyDefaultStyling() {
         this.dataPoints.attr("r", "4")
                        // I mimick the R studio colour scheme
-                       .style("fill", d => this.colorScale(d.group) )
+                       .style("fill", d => this.colorScale(d[this.groupColumn]) )
                        .style("opacity", 0.8)
                        .style("stroke", "grey")
                        .on("mouseover", (event, row) => {
