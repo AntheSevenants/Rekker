@@ -53,7 +53,7 @@ class DataSource {
 
             let items = this.datasets["coefficients"].map(d => d[column]).filter(d => d[column] != "NA");
 
-            return items.every(i => Number.isInteger); });
+            return items.every(Number.isInteger); });
 
         this.stringColumns = this.datasets["coefficients"].columns.filter(column => {
             if (this.skipColumns.includes(column)) {
