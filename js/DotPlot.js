@@ -34,7 +34,7 @@ class DotPlot {
         this.minimumValue = +Math.min(...this.coefficientValues);
         this.maximumValue = +Math.max(...this.coefficientValues);
 
-        this.externalColumn = null;
+        this._externalColumn = null;
         this._groupColumn = "_sign";
 
         this._currentChartMode = ChartModes.DotPlot;
@@ -60,6 +60,17 @@ class DotPlot {
         this.initColorScale();
         this.applyDefaultStyling();
         this.drawLegend();
+    }
+
+    // .externalColumn
+    get externalColumn() {
+        return this._externalColumn;
+    }
+
+    set externalColumn(column) {
+        this._externalColumn = column;
+
+        this.updatePlot();
     }
 
     // .currentChartMode
