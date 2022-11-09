@@ -18,24 +18,27 @@ Because we tend to use many predictors at once with Elastic Net-like regression,
 
 ## Using Rekker
 
+Rekker supports loading files from your local hard disk. **Unless you want to make changes to the code, you can simply use the [live demo](https://anthesevenants.github.io/Rekker/) and load your dataset.**
+
+To host Rekker yourself, follow these steps:
+
 1. Clone this repository
-2. Place your dataset (`coefficients.csv`) in the repository's directory.
-
-	The dataset should have the following structure:
-	```csv
-	coefficient,feature
-	-2.7109007348534733,I
-	-2.5738031394173366,Monday
-	-1.970461593962809,not
-	-1.864356619676603,like
-	```
-
-3. Serve the repository's directory using an HTTP server, for example by using the built-in Python webserver:
+2. Serve the repository's directory using an HTTP server, for example by using the built-in Python webserver:
 
 	```
 	> python -m http.server
 	Serving HTTP on 0.0.0.0 port 8000 (http://0.0.0.0:8000/) ...
 	```
+
+The demo dataset is `coefficients.csv` in the repository's directory. A Rekker dataset should have the following structure:
+
+```csv
+coefficient,feature
+-2.7109007348534733,I
+-2.5738031394173366,Monday
+-1.970461593962809,not
+-1.864356619676603,like
+```
 
 ## Future work
 
