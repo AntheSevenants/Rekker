@@ -1,11 +1,13 @@
 class DataSource {
     constructor() {
-        // We define which datasets *can* be loaded
-        this.datasets = { "coefficients": d3.csv("coefficients.csv", d3.autoType) };
-
         this.skipColumns = ["feature", "coefficient"];
         this.numericColumns = [];
         this.stringColumns = [];
+    }
+
+    setCoefficientsUrl(coefficientsUrl) {
+        // We define which datasets *can* be loaded
+        this.datasets = { "coefficients": d3.csv(coefficientsUrl, d3.autoType) };
     }
 
     async load() {

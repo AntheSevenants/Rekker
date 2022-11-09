@@ -1,4 +1,4 @@
-.plot {
+.plot, .section {
 	width: 100%;
 }
 
@@ -24,4 +24,8 @@ main {
 
 .btn-group label {
 	background-color: #ffffff;
+}
+
+.hidden {
+	display: none;
 }

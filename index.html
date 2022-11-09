@@ -69,8 +69,15 @@
                     </div>
                 </div>
                 <div class="flex-grow-1 scrollable">
-                    <div class="container d-flex justify-content-center align-items-center pt-4" style="min-height: 100vh;">        
-                        <div class="plot" id="dotplot">
+                    <div class="container d-flex justify-content-center align-items-center pt-4" style="min-height: 100vh;">
+                        <div id="section_fileUpload" class="section row justify-content-center pb-5">
+                            <div class="col-12 col-lg-5">
+                                <label for="input_dataset" class="form-label">Choose a dataset to visualise:</label>
+                                <input class="form-control" type="file" id="input_dataset">
+                                <p class="pt-2 text-secondary">Your dataset will be processed locally. No data will leave your computer.</p>
+                            </div>
+                        </div>
+                        <div class="plot hidden" id="dotplot">
                         </div>
                     </div>
                 </div>

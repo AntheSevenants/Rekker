@@ -7,6 +7,8 @@ class DotPlot {
         this.targetElement = d3.select(`#${targetElementName}`);
         // Clear the element contents
         this.clear();
+        // Make the element visible (should it not be visible)
+        this.targetElement.classed("hidden", null);
 
         // Save the margins for later
         this.margin = margin;

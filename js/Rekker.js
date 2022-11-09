@@ -3,7 +3,16 @@ class Rekker {
         this.dotPlotElementName = "dotplot";
 
         this.dataSource = new DataSource();
-        this.dataSource.load().then(() => { this.execute(); });
+
+        d3.select("#input_dataset").on("change", (event) => {
+            let reader = new FileReader()
+            reader.onload = () => {
+                this.dataSource.setCoefficientsUrl(reader.result);
+                d3.select("#section_fileUpload").remove();
+                this.dataSource.load().then(() => { this.execute(); });
+            }
+            reader.readAsDataURL(event.target.files[0])
+        })
 
         this.selectExternal = d3.select("#select_external");
         this.selectCoding = d3.select("#select_coding");
