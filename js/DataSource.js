@@ -1,9 +1,11 @@
 class DataSource {
     constructor() {
         // We define which datasets *can* be loaded
-        this.datasets = { "coefficients": d3.csv("coefficients.csv"),
-                          "coding": d3.csv("coding.csv"),
-                          "external": d3.csv("external.csv") };
+        this.datasets = { "coefficients": d3.csv("coefficients.csv", d3.autoType) };
+
+        this.skipColumns = ["feature", "coefficient"];
+        this.numericColumns = [];
+        this.stringColumns = [];
     }
 
     async load() {
@@ -32,7 +34,37 @@ class DataSource {
             }
         });
 
+        this.findOtherSources();
+
         return true;
+    }
+
+    findOtherSources() {
+        if (!this.availableDatasets.includes("coefficients")) {
+            return;
+        }
+
+        this.numericColumns = this.datasets["coefficients"].columns.filter(column => {
+            if (this.skipColumns.includes(column)) {
+                return false;
+            }
+
+            return this.datasets["coefficients"].map(d => d[column]).every(Number.isInteger); });
+
+        this.stringColumns = this.datasets["coefficients"].columns.filter(column => {
+            if (this.skipColumns.includes(column)) {
+                return false;
+            }
+
+            return this.datasets["coefficients"].map(d => d[column]).every(i => typeof i === "string"); });
+    }
+
+    get codingAvailable() {
+        return this.stringColumns.length > 0;
+    }
+
+    get externalAvailable() {
+        return this.numericColumns.length > 0;
     }
 
     get availableDatasets() {

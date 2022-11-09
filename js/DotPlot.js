@@ -12,11 +12,7 @@ class DotPlot {
         this.margin = margin;
 
         // Save the data
-        this.coefficients = data["coefficients"].map((row) => { 
-            row["coefficient"] = +row["coefficient"];
-            return row; });
-        this.coding = data["coding"];
-        this.external = data["external"];
+        this.coefficients = data["coefficients"];
 
         // Compute minimum and maximum values
         this.coefficientValues = this.coefficients.map(row => +row.coefficient);
@@ -108,17 +104,23 @@ class DotPlot {
         switch (this.currentColorCoding) {
             case ColorCodings.PositiveNegative:
                 this.groups = [ "Negative coefficients", "Positive coefficients", "Removed coefficients" ];
-                this.data = Helpers.mergeVariables(this.coefficients,
+                /*this.data = Helpers.mergeVariables(this.coefficients,
                                                    this.coefficients.map(row => ({ "feature": row["feature"],
                                                                                    "group": row["coefficient"] != 0 ?
                                                                                             (row["coefficient"] < 0 ? 
                                                                                             this.groups[0] :
                                                                                             this.groups[1]) :
-                                                                                            this.groups[2] })));
+                                                                                            this.groups[2] })));*/
+                this.data = this.coefficients.map(row => ({ "feature": row["feature"],
+                                                            "group": row["coefficient"] != 0 ?
+                                                                     (row["coefficient"] < 0 ? 
+                                                                     this.groups[0] :
+                                                                     this.groups[1]) :
+                                                                     this.groups[2],
+                                                            "coefficient": row["coefficient"] }))
                 break;
             case ColorCodings.GroupCoding:
-                this.groups = Helpers.uniqueValues(this.coding, "group").sort();
-                this.data = Helpers.mergeVariables(this.coefficients, this.coding);
+                this.groups = Helpers.uniqueValues(this.coefficients, "group").sort();
                 break;
         }
 
@@ -127,7 +129,7 @@ class DotPlot {
     }
 
     initExternal() {
-        this.data = Helpers.mergeVariables(this.data, this.external);
+        //this.data = Helpers.mergeVariables(this.data, this.external);
     }
 
     setMargins() {

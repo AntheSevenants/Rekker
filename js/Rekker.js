@@ -26,7 +26,7 @@ class Rekker {
     }
 
     prepareInterface() {
-        if (!this.dataSource.availableDatasets.includes("coding")) {
+        if (!this.dataSource.codingAvailable) {
             document.getElementById("radio_variable_encoding_group_coding").disabled = true;
         }
 
@@ -35,9 +35,8 @@ class Rekker {
         });
 
         let externalVariables = [];
-        if (this.dataSource.availableDatasets.includes("external")) {
-            externalVariables = 
-                externalVariables.concat(this.dataSource.datasets["external"].columns.filter(column => column != "features"));
+        if (this.dataSource.externalAvailable) {
+            externalVariables = this.dataSource.numericColumns;
         }
         
         this.selectExternal.selectAll("option")
@@ -64,6 +63,7 @@ class Rekker {
 
     updateExternalColumn() {
         this.dotPlot.externalColumn = this.selectExternal.node().value;
+        console.log(this.dotPlot.externalColumn);
         this.dotPlot.updatePlot();
     }
 }
