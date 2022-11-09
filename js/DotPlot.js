@@ -104,23 +104,17 @@ class DotPlot {
         switch (this.currentColorCoding) {
             case ColorCodings.PositiveNegative:
                 this.groups = [ "Negative coefficients", "Positive coefficients", "Removed coefficients" ];
-                /*this.data = Helpers.mergeVariables(this.coefficients,
+                this.data = Helpers.mergeVariables(this.coefficients,
                                                    this.coefficients.map(row => ({ "feature": row["feature"],
                                                                                    "group": row["coefficient"] != 0 ?
                                                                                             (row["coefficient"] < 0 ? 
                                                                                             this.groups[0] :
                                                                                             this.groups[1]) :
-                                                                                            this.groups[2] })));*/
-                this.data = this.coefficients.map(row => ({ "feature": row["feature"],
-                                                            "group": row["coefficient"] != 0 ?
-                                                                     (row["coefficient"] < 0 ? 
-                                                                     this.groups[0] :
-                                                                     this.groups[1]) :
-                                                                     this.groups[2],
-                                                            "coefficient": row["coefficient"] }))
+                                                                                            this.groups[2] })));
                 break;
             case ColorCodings.GroupCoding:
                 this.groups = Helpers.uniqueValues(this.coefficients, "group").sort();
+                this.data = this.coefficients.map(row => row);
                 break;
         }
 
@@ -153,8 +147,7 @@ class DotPlot {
                       .padding(1);
                 break;
             case ChartModes.ScatterPlot:
-                let yValues = this.external.map(row => row[this.externalColumn]);
-
+                let yValues = this.data.map(row => row[this.externalColumn]);
                 y = d3.scaleLinear()
                       .domain([ Math.min(...yValues), Math.max(...yValues) + 150 ])
                       .range([ this.chartRangeHeight, 0]);

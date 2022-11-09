@@ -52,18 +52,16 @@ class Rekker {
 
         document.getElementsByName("radio_view").forEach(element => {
             element.onclick = () => { 
+                this.updateExternalColumn();
                 let chartMode = element.id;
                 this.dotPlot.currentChartMode = chartMode;
 
                 this.selectExternal.attr("disabled", chartMode == ChartModes.ScatterPlot ? null : "");
-                this.updateExternalColumn();
             };
         });
     }
 
     updateExternalColumn() {
         this.dotPlot.externalColumn = this.selectExternal.node().value;
-        console.log(this.dotPlot.externalColumn);
-        this.dotPlot.updatePlot();
     }
 }
