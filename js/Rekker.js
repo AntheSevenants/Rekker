@@ -8,14 +8,23 @@ class Rekker {
             let reader = new FileReader()
             reader.onload = () => {
                 this.dataSource.setCoefficientsUrl(reader.result);
-                d3.select("#section_fileUpload").remove();
-                this.dataSource.load().then(() => { this.execute(); });
+                this.load();
             }
             reader.readAsDataURL(event.target.files[0])
         })
 
         this.selectExternal = d3.select("#select_external");
         this.selectCoding = d3.select("#select_coding");
+
+        d3.select("#button_load_sample").on("click", () => {
+            this.dataSource.setCoefficientsUrl("coefficients.csv");
+            this.load();
+        });
+    }
+
+    load() {
+        d3.select("#section_fileUpload").remove();
+        this.dataSource.load().then(() => { this.execute(); });
     }
 
     execute() {
