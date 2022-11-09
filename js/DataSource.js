@@ -51,16 +51,16 @@ class DataSource {
                 return false;
             }
 
-            let items = this.datasets["coefficients"].map(d => d[column]).filter(d => d[column] != "NA");
+            let items = this.datasets["coefficients"].map(d => d[column]).filter(value => value != "NA");
 
-            return items.every(Number.isInteger); });
+            return items.every(i => typeof i === "number"); });
 
         this.stringColumns = this.datasets["coefficients"].columns.filter(column => {
             if (this.skipColumns.includes(column)) {
                 return false;
             }
 
-            let items = this.datasets["coefficients"].map(d => d[column]).filter(d => d[column] != "NA");
+            let items = this.datasets["coefficients"].map(d => d[column]).filter(value => value != "NA");
 
             return items.every(i => typeof i === "string"); });
     }
