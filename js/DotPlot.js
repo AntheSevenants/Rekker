@@ -40,6 +40,9 @@ class DotPlot {
         // The X column for when the external column is collapsed
         this.externalColumnX = null;
 
+        // Show removed zero coefficients?
+        this._showZeroCoefficients = true;
+
         this._currentChartMode = ChartModes.DotPlot;
 
         this.initColorScale();
@@ -95,6 +98,17 @@ class DotPlot {
 
     set currentChartMode(chartMode) {
         this._currentChartMode = chartMode;
+
+        this.updatePlot();
+    }
+
+    // .showZeroCoefficients
+    get showZeroCoefficients() {
+        return this._showZeroCoefficients;
+    }
+
+    set showZeroCoefficients(showZeroCoefficients) {
+        this._showZeroCoefficients = showZeroCoefficients;
 
         this.updatePlot();
     }
@@ -279,6 +293,15 @@ class DotPlot {
                        // I mimick the R studio colour scheme
                        .style("fill", d => this.colorScale(d[this.groupColumn]) )
                        .style("opacity", 0.8)
+                       .style("visibility", (d) => { 
+                            if (d.coefficient == 0) {
+                                if (!this.showZeroCoefficients) {
+                                    return "hidden";
+                                }
+                            }
+
+                            return "visible";
+                        })
                        .style("stroke", "grey")
                        .on("mouseover", (event, row) => {
                            let pointElement = d3.select(event.target);

@@ -15,6 +15,7 @@ class Rekker {
 
         this.selectExternal = d3.select("#select_external");
         this.selectCoding = d3.select("#select_coding");
+        this.showZeroCoefficientsCheckbox = d3.select("#checkbox_show_zero_coefficients");
 
         d3.select("#button_load_sample").on("click", () => {
             this.dataSource.setCoefficientsUrl("coefficients.csv");
@@ -74,6 +75,10 @@ class Rekker {
         this.selectExternal.on("change", () => { 
             this.updateExternalColumn();
         });
+
+        this.showZeroCoefficientsCheckbox.on("change", () => {
+            this.dotPlot.showZeroCoefficients = this.showZeroCoefficientsCheckbox.node().checked;
+        })
 
         let codingVariables = [];
         if (this.dataSource.codingAvailable) {
