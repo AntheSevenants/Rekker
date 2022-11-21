@@ -55,6 +55,37 @@ class DataSource {
 
             return items.every(i => typeof i === "number"); });
 
+        // Sometimes, columns can be two-dimensional
+        // In this case, collapse these columns into one column and give them a special marking
+        this.numericColumnsCollapsed = this.numericColumns.map(d => {
+            let suffix = d.slice(-2);
+            switch(suffix) {
+                // Column ends in .x
+                case ".x":
+                case ".y":
+                    let checkSuffix = suffix == ".x" ? ".y" : ".x";
+
+                    // Same column ending in .x/.y also exists
+                    let baseColumnName = d.slice(0, -2);
+                    if (this.numericColumns.includes(`${baseColumnName}${checkSuffix}`)) {
+                        // Only return if we are checking .x, else we will get duplicates
+                        if (suffix == ".x") {
+                            return `${baseColumnName}²`;
+                        } else {
+                            return null;
+                        }
+                    // If same column ending does not exist, just return the column name as-is
+                    } else {
+                        return d;
+                    }
+                    break;
+                // Other columns: return column name as is;
+                default:
+                    return d;
+                    break;
+            }
+        }).filter(d => d != null);
+
         this.stringColumns = this.datasets["coefficients"].columns.filter(column => {
             if (this.skipColumns.includes(column)) {
                 return false;
