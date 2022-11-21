@@ -37,6 +37,9 @@ class DotPlot {
         this._externalColumn = null;
         this._groupColumn = "_sign";
 
+        // The X column for when the external column is collapsed
+        this.externalColumnX = null;
+
         this._currentChartMode = ChartModes.DotPlot;
 
         this.initColorScale();
@@ -69,6 +72,18 @@ class DotPlot {
 
     set externalColumn(column) {
         this._externalColumn = column;
+
+        // If the external column is 'collapsed' (= ends in ²),
+        // we manually change the assignment to the base name + .y
+        // We inform the draw function further down by setting the 
+        // .externalColumnX field
+        let baseColumnName = column.slice(0, -1);
+        if (column.slice(-1) == "²") {
+            this._externalColumn = `${baseColumnName}.y`;
+            this.externalColumnX = `${baseColumnName}.x`;
+        } else {
+            this.externalColumnX = null;
+        }
 
         this.updatePlot();
     }
@@ -191,9 +206,18 @@ class DotPlot {
         /////////
 
         // X scaler
-        let x = d3.scaleLinear()
+        let x;
+
+        if (this.externalColumnX == null) {
+            x = d3.scaleLinear()
                   .domain([ this.minimumValue, this.maximumValue ])
                   .range([ 0, this.chartRangeWidth ]);
+        } else {
+            let xValues = this.data.map(row => row[this.externalColumnX]).filter(value => value != "NA");
+            x = d3.scaleLinear()
+                  .domain([ Math.min(...xValues), Math.max(...xValues) ])
+                  .range([ 0, this.chartRangeWidth ]);
+        }
 
         // X axis
         this.svg.append("g")
@@ -204,7 +228,9 @@ class DotPlot {
         this.dataPoints = this.svg.selectAll("circle")
                                   .data(this.data)
                                   .join("circle")
-                                  .attr("cx", d => x(d.coefficient))
+                                  .attr("cx", d => this.externalColumnX == null ?
+                                                   x(d.coefficient) :
+                                                   x(d[this.externalColumnX]))
                                   .attr("data-bs-toggle", "popover")
                                   .attr("data-bs-placement", "left")
                                   .attr("data-bs-title", d => d.feature)
