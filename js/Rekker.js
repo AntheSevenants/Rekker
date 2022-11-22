@@ -60,7 +60,7 @@ class Rekker {
                     // Reset the gradient manually
                     this.usePositiveNegativeGradientCheckbox.node().checked = false;
                     this.dotPlot.useGradient = false;
-                    
+
                     this.usePositiveNegativeGradientCheckbox.attr("disabled", "");
                 }
             };
@@ -114,9 +114,15 @@ class Rekker {
             element.onclick = () => { 
                 this.updateExternalColumn();
                 let chartMode = element.id;
-                this.dotPlot.currentChartMode = chartMode;
 
-                this.selectExternal.attr("disabled", chartMode == ChartModes.ScatterPlot ? null : "");
+                if (chartMode == ChartModes.ScatterPlot) {
+                    this.selectExternal.attr("disabled", null);
+                } else {
+                    this.selectExternal.attr("disabled", "");
+                    this.dotPlot.externalColumnX = null;
+                }
+                
+                this.dotPlot.currentChartMode = chartMode;
             };
         });
     }
