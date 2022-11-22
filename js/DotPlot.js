@@ -150,8 +150,8 @@ class DotPlot {
                 this.targetElement.style("width", `${this.originalWidth}px`);
                 break;
             case ChartModes.ScatterPlot:
-                this.targetElement.style("height", `${window.innerHeight - 200}px`);
-                this.targetElement.style("width", `${window.innerHeight - 200}px`);
+                this.targetElement.style("height", `${window.innerHeight - 50}px`);
+                this.targetElement.style("width", `${window.innerHeight - 50}px`);
                 break;
         }
         
@@ -307,8 +307,8 @@ class DotPlot {
                                   .attr("cy", d => this.scaleY(d))
                                   .attr("data-bs-toggle", "popover")
                                   .attr("data-bs-placement", "left")
+                                  .attr("data-bs-html", "true")
                                   .attr("data-bs-title", d => d.feature)
-                                  .attr("data-bs-content", d => d3.format(".4r")(d.coefficient))
                                   .attr("data-bs-trigger", "hover");        
 
         if (this.zoomAllowed) {
@@ -408,6 +408,18 @@ class DotPlot {
 
     applyDefaultStyling() {
         this.dataPoints.attr("r", "4")
+                       .attr("data-bs-content", d => {
+                            let base = d3.format(".4r")(d.coefficient);
+
+                            if (this.currentChartMode == ChartModes.ScatterPlot && this.externalColumnX == null) {
+                                let externalValue = d3.format(".4r")(d[this.externalColumn]);
+
+                                base = `coefficient: <i>${base}</i><br>`;
+                                base += `${this.externalColumn}: <i>${externalValue}</i>`;
+                            }
+
+                            return base;
+                        })
                        // I mimick the R studio colour scheme
                        .style("fill", d => { 
                             if (this.useGradient) {
