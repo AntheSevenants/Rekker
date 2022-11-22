@@ -29,3 +29,7 @@ main {
 .hidden {
 	display: none;
 }
+
+select:disabled {
+	opacity: 0.2 !important;
+}
