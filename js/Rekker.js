@@ -16,6 +16,7 @@ class Rekker {
         this.selectExternal = d3.select("#select_external");
         this.selectCoding = d3.select("#select_coding");
         this.showZeroCoefficientsCheckbox = d3.select("#checkbox_show_zero_coefficients");
+        this.usePositiveNegativeGradientCheckbox = d3.select("#checkbox_positive_negative_gradient");
 
         d3.select("#button_load_sample").on("click", () => {
             this.dataSource.setCoefficientsUrl("coefficients.csv");
@@ -51,9 +52,16 @@ class Rekker {
                 if (element.id == ColorCodings.PositiveNegative) {
                     this.dotPlot.groupColumn = "_sign";
                     this.selectCoding.attr("disabled", "");
+                    this.usePositiveNegativeGradientCheckbox.attr("disabled", null);
                 } else {
                     this.updateCodingColumn();
                     this.selectCoding.attr("disabled", null);
+
+                    // Reset the gradient manually
+                    this.usePositiveNegativeGradientCheckbox.node().checked = false;
+                    this.dotPlot.useGradient = false;
+                    
+                    this.usePositiveNegativeGradientCheckbox.attr("disabled", "");
                 }
             };
         });
@@ -78,6 +86,10 @@ class Rekker {
 
         this.showZeroCoefficientsCheckbox.on("change", () => {
             this.dotPlot.showZeroCoefficients = this.showZeroCoefficientsCheckbox.node().checked;
+        })
+
+        this.usePositiveNegativeGradientCheckbox.on("change", () => {
+            this.dotPlot.useGradient = this.usePositiveNegativeGradientCheckbox.node().checked;
         })
 
         let codingVariables = [];

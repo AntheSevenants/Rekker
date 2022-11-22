@@ -43,6 +43,9 @@ class DotPlot {
         // Show removed zero coefficients?
         this._showZeroCoefficients = true;
 
+        // Use gradient?
+        this._useGradient = false;
+
         this._currentChartMode = ChartModes.DotPlot;
 
         this.initColorScale();
@@ -113,6 +116,19 @@ class DotPlot {
         this.updatePlot();
     }
 
+    // .useGradient
+    get useGradient() {
+        return this._useGradient;
+    }
+
+    set useGradient(gradientUsed) {
+        this._useGradient = gradientUsed;
+
+        this.initColorScale();
+        this.applyDefaultStyling();
+        this.drawLegend();
+    }
+
     updatePlot() {
         this.clear();
         this.initColorScale();
@@ -162,8 +178,14 @@ class DotPlot {
             this.groups = Helpers.uniqueValues(this.coefficients, this.groupColumn).sort();
         }
 
-        // Color scaler
+        // We just want a categorical scale if we're not using the gradient scaling option
         this.colorScale = d3.scaleOrdinal().domain(this.groups).range(Constants.ColorPalette);
+
+        if (this.useGradient) {
+            this.gradientColorScale = d3.scaleLinear()
+                                        .domain([ this.minimumValue, this.maximumValue ])
+                                        .range(Constants.GradientPalette);
+        }
     }
 
     initExternal() {
@@ -291,7 +313,13 @@ class DotPlot {
     applyDefaultStyling() {
         this.dataPoints.attr("r", "4")
                        // I mimick the R studio colour scheme
-                       .style("fill", d => this.colorScale(d[this.groupColumn]) )
+                       .style("fill", d => { 
+                            if (this.useGradient) {
+                                return this.gradientColorScale(d.coefficient);
+                            }
+
+                            return this.colorScale(d[this.groupColumn]) }
+                        )
                        .style("opacity", 0.8)
                        .style("visibility", (d) => { 
                             if (d.coefficient == 0) {
@@ -325,13 +353,23 @@ class DotPlot {
 
         // Handmade legend
         this.groups.forEach((group, index) => {
+            if (this.useGradient && index > 1) {
+                return;
+            }
+
             this.svg.append("circle")
                     .attr("cx", this.chartRangeWidth - 10)
                     .attr("cy", 30 * (index + 1))
                     .attr("r", 6)
                     .attr("fill-opacity", 0.6)
                     .attr("class", "legend_piece")
-                    .style("fill", this.colorScale(group))
+                    .style("fill", () => {
+                        if (index <= 1 && this.useGradient) {
+                            return Constants.GradientPalette[index];
+                        }
+
+                        return(this.colorScale(group));
+                    })
                     .style("stroke", "grey")
             
             let text = group;
