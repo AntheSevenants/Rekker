@@ -129,6 +129,11 @@ class DotPlot {
         this.drawLegend();
     }
 
+    // .zoomAllowed
+    get zoomAllowed() {
+        return (this.currentChartMode == ChartModes.ScatterPlot && this.externalColumnX != null);
+    }
+
     updatePlot() {
         this.clear();
         this.initColorScale();
@@ -219,6 +224,8 @@ class DotPlot {
                       .range([ this.chartRangeHeight, 0]);
                 break;
         }
+
+        this.y = y;
         
 
         // Y axis
@@ -232,6 +239,8 @@ class DotPlot {
                 recommendedLeftMargin = this.getBBox().width;
             }
         });
+
+        this.yAxis = yAxis;
 
         this.margin["left"] = recommendedLeftMargin + 10;
 
@@ -256,32 +265,64 @@ class DotPlot {
         }
 
         // X axis
-        this.svg.append("g")
-                .attr("transform", `translate(0, ${this.chartRangeHeight})`)
-                .call(d3.axisBottom(x));
+        this.xAxis = this.svg.append("g")
+                             .attr("transform", `translate(0, ${this.chartRangeHeight})`)
+                             .call(d3.axisBottom(x));
+
+        this.pointPlane = this.svg;
+
+        this.x = x;
+
+        if (this.zoomAllowed) {
+            this.clipMargin = 4;
+    
+            // Clip path: everything OUTSIDE of this area won't be drawn
+            // (modified from the D3 Graph Gallery)
+            this.clip = this.svg.append("defs")
+                                .append("SVG:clipPath")
+                                .attr("id", "clip")
+                                .append("SVG:rect")
+                                .attr("width", this.chartRangeWidth + this.clipMargin * 2)
+                                .attr("height", this.chartRangeHeight + this.clipMargin * 2)
+                                .attr("x", -this.clipMargin)
+                                .attr("y", -this.clipMargin);
+
+            // Scatter variable: both circles and the brush take place here
+            this.scatter = this.svg.append("g")
+                                   .attr("clip-path", "url(#clip)");
+
+            this.zoom = d3.zoom()
+                      .scaleExtent([.5, 16])
+                      .extent([ [0, 0], [this.chartRangeWidth, this.chartRangeHeight] ])
+                      .on("zoom", (event) => { this.updateChart(event); });
+
+            this.pointPlane = this.scatter;
+        }
 
         // Draw data points
-        this.dataPoints = this.svg.selectAll("circle")
+        this.dataPoints = this.pointPlane.selectAll("circle")
                                   .data(this.data)
                                   .join("circle")
-                                  .attr("cx", d => this.externalColumnX == null ?
-                                                   x(d.coefficient) :
-                                                   x(d[this.externalColumnX]))
+                                  .attr("cx", d => this.scaleX(d))
+                                  .attr("cy", d => this.scaleY(d))
                                   .attr("data-bs-toggle", "popover")
                                   .attr("data-bs-placement", "left")
                                   .attr("data-bs-title", d => d.feature)
                                   .attr("data-bs-content", d => d3.format(".4r")(d.coefficient))
-                                  .attr("data-bs-trigger", "hover");
+                                  .attr("data-bs-trigger", "hover");        
 
-        switch(this.currentChartMode) {
-            case ChartModes.DotPlot:
-                this.dataPoints.attr("cy", d => y(d.feature));
-                break;
-            case ChartModes.ScatterPlot:
-                this.dataPoints.attr("cy", d => this.externalColumn != "NA" ?
-                                           y(d[this.externalColumn]) :
-                                           0);
-                break;
+        if (this.zoomAllowed) {
+            // This add an invisible rect on top of the chart area. 
+            // This rect can recover pointer events: necessary to understand when the user zooms
+            this.svg.append("rect")
+                    .attr("width", this.chartRangeWidth)
+                    .attr("height", this.chartRangeHeight)
+                    .style("fill", "none")
+                    .style("pointer-events", "all")
+                    //.attr("transform", `translate(${this.margin.left}, ${this.margin.top})`)
+                    .lower()
+                    .call(this.zoom);
+            // now the user can zoom and it will trigger the function called updateChart
         }
 
         this.applyDefaultStyling();
@@ -290,19 +331,74 @@ class DotPlot {
         let lineLayer = this.svg.append("g") // create another SVG group
                                 .attr("transform", "translate(0, 0)");
 
-        lineLayer.append("line")
-                 .attr("id", "baseline")
-                 .attr("x1", x(0))  
-                 .attr("y1", 0)
-                 .attr("x2", x(0))
-                 .attr("y2", this.chartRangeHeight)
-                 .style("stroke-width", 2)
-                 .attr("stroke-dasharray", "8,8")
-                 .style("stroke", "#a6a6a6")
-                 .style("fill", "none");
+        this.lineX = lineLayer.append("line")
+                              .attr("id", "baseline")
+                              .attr("x1", this.x(0))  
+                              .attr("y1", 0)
+                              .attr("x2", this.x(0))
+                              .attr("y2", this.chartRangeHeight)
+                              .style("stroke-width", 2)
+                              .attr("stroke-dasharray", "8,8")
+                              .style("stroke", "#a6a6a6")
+                              .style("fill", "none");
+
+        this.lineY = lineLayer.append("line")
+                              .attr("id", "baseline-y")
+                              .attr("x1", 0)
+                              .attr("y1", this.y(0))
+                              .attr("x2", this.chartRangeWidth)
+                              .attr("y2", this.y(0))
+                              .style("stroke-width", 2)
+                              .attr("stroke-dasharray", "8,8")
+                              .style("stroke", "#a6a6a6")
+                              .style("fill", "none")
+                              .style("visibility", !this.zoomAllowed ? "hidden" : "visible");
 
         this.enablePopovers();
         this.drawLegend();
+
+        this.originalX = this.x;
+        this.originalY = this.y;
+    }
+
+    scaleX(d) {
+        return this.externalColumnX == null ?
+               this.x(d.coefficient) :
+               this.x(d[this.externalColumnX]);
+    }
+
+    scaleY(d) {
+         switch(this.currentChartMode) {
+            case ChartModes.DotPlot:
+                return this.y(d.feature);
+                break;
+            case ChartModes.ScatterPlot:
+                return this.externalColumn != "NA" ?
+                       this.y(d[this.externalColumn]) :
+                       0;
+                break;
+        }
+    }
+
+    // A function that updates the chart when the user zooms and thus new boundaries are available
+    updateChart(event) {
+        // recover the new scale
+        this.x = event.transform.rescaleX(this.originalX);
+        this.y = event.transform.rescaleY(this.originalY);
+    
+        // update axes with these new boundaries
+        this.xAxis.call(d3.axisBottom(this.x))
+        this.yAxis.call(d3.axisLeft(this.y))
+
+        this.scatter.selectAll("circle")
+                    .attr('cx', d => this.scaleX(d))
+                    .attr('cy', d => this.scaleY(d));
+
+        this.lineX.attr("x1", this.x(0)) 
+                  .attr("x2", this.x(0))
+
+        this.lineY.attr("y1", this.y(0)) 
+                  .attr("y2", this.y(0))
     }
 
     enablePopovers() {
