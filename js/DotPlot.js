@@ -69,6 +69,8 @@ class DotPlot {
         this.initColorScale();
         this.applyDefaultStyling();
         this.drawLegend();
+
+        this.enablePopovers();
     }
 
     // .externalColumn
@@ -434,6 +436,12 @@ class DotPlot {
 
                                 base = `coefficient: <i>${base}</i><br>`;
                                 base += `${this.externalColumn}: <i>${externalValue}</i>`;
+                            }
+
+                            if (this.useGradient) {
+                                console.log("dskfjqslmkfqsdf");
+                                let groupValue = d3.format(".4r")(d[this.groupColumn]);
+                                base += `<br>${this.groupColumn}: <i>${groupValue}</i>`;
                             }
 
                             return base;
