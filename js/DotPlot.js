@@ -373,7 +373,6 @@ class DotPlot {
                               .style("fill", "none")
                               .style("visibility", !this.zoomAllowed ? "hidden" : "visible");
 
-        this.enablePopovers();
         this.drawLegend();
         this.drawStatistics();
 
@@ -439,7 +438,6 @@ class DotPlot {
                             }
 
                             if (this.useGradient) {
-                                console.log("dskfjqslmkfqsdf");
                                 let groupValue = d3.format(".4r")(d[this.groupColumn]);
                                 base += `<br>${this.groupColumn}: <i>${groupValue}</i>`;
                             }
@@ -469,7 +467,12 @@ class DotPlot {
                            let pointElement = d3.select(event.target);
                            this.mouseOverPoint(row, pointElement);
                        })
-                       .on("mouseout", () => { this.mouseOut(); });
+                       .on("mouseout", (event, row) => { 
+                           let pointElement = d3.select(event.target);
+                           this.mouseOut(row, pointElement);
+                        });
+
+        this.enablePopovers();
     }
 
     mouseOverPoint(row, pointElement) {
@@ -477,8 +480,9 @@ class DotPlot {
                     .style("opacity", 1);
     }
 
-    mouseOut() {
-        this.applyDefaultStyling();
+    mouseOut(row, pointElement) {
+        pointElement.attr("r", "4")
+                    .style("opacity", 0.8);
     }
 
     drawLegend() {
