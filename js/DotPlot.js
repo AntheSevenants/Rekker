@@ -177,9 +177,25 @@ class DotPlot {
     initColorScale() {
         this.data = this.coefficients;
 
+        // Hardcoded positive/negative groups
         if (this.groupColumn == "_sign") {
             this.groups = this.signGroups;
-        } else {
+        // Numeric groups
+        } else if (this.useGradient) {
+            let groupValues = this.data.map(row => row[this.groupColumn]).filter(value => value != "NA");
+
+            this.minimumGroupValue = +Math.min(...groupValues);
+            this.maximumGroupValue = +Math.max(...groupValues);
+
+            // Coefficient numeric group/
+            if (this.groupColumn == "coefficient") {
+                this.groups = this.signGroups;
+            } else {
+                this.groups = [ this.minimumGroupValue,this.maximumGroupValue ];
+            }
+        }
+        // Categorical groups
+        else {
             this.groups = Helpers.uniqueValues(this.coefficients, this.groupColumn).sort();
         }
 
@@ -188,7 +204,7 @@ class DotPlot {
 
         if (this.useGradient) {
             this.gradientColorScale = d3.scaleLinear()
-                                        .domain([ this.minimumValue, this.maximumValue ])
+                                        .domain([ this.minimumGroupValue, this.maximumGroupValue ])
                                         .range(Constants.GradientPalette);
         }
     }
@@ -425,10 +441,10 @@ class DotPlot {
                        // I mimick the R studio colour scheme
                        .style("fill", d => { 
                             if (this.useGradient) {
-                                return this.gradientColorScale(d.coefficient);
+                                return this.gradientColorScale(d[this.groupColumn]);
+                            } else {
+                                return this.colorScale(d[this.groupColumn]); }
                             }
-
-                            return this.colorScale(d[this.groupColumn]) }
                         )
                        .style("opacity", 0.8)
                        .style("visibility", (d) => { 

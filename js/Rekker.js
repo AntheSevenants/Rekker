@@ -52,11 +52,12 @@ class Rekker {
         document.getElementsByName("radio_color_coding").forEach(element => {
             element.onclick = () => { 
                 if (element.id == ColorCodings.NumericCoding) {
-                    this.dotPlot.groupColumn = "_sign";
+                    this.updateNumericCodingColumn();
                     this.selectCategoricalCoding.attr("disabled", "");
                     this.selectNumericCoding.attr("disabled", null);
+                    this.dotPlot.useGradient = true;
                 } else {
-                    this.updateCodingColumn();
+                    this.updateCategoricalCodingColumn();
                     this.selectCategoricalCoding.attr("disabled", null);
 
                     // Reset the gradient manually
@@ -100,7 +101,7 @@ class Rekker {
                            .text(d => d);
 
         this.selectNumericCoding.selectAll("option")
-                                .data(externalVariables)
+                                .data(["coefficient"].concat(externalVariables))
                                 .enter()
                                 .append("option")
                                 .attr("value", d => d)
@@ -135,7 +136,11 @@ class Rekker {
                            .text(d => d == "_sign" ? "Positive/negative coefficient" : d);
 
         this.selectCategoricalCoding.on("change", () => { 
-            this.updateCodingColumn();
+            this.updateCategoricalCodingColumn();
+        });
+
+        this.selectNumericCoding.on("change", () => { 
+            this.updateNumericCodingColumn();
         });
 
         document.getElementsByName("radio_view").forEach(element => {
@@ -176,7 +181,11 @@ class Rekker {
         this.dotPlot.externalColumn = `${this.selectExternal2D.node().value}²`;
     }
 
-    updateCodingColumn() {
+    updateCategoricalCodingColumn() {
         this.dotPlot.groupColumn = this.selectCategoricalCoding.node().value;
+    }
+
+    updateNumericCodingColumn() {
+        this.dotPlot.groupColumn = this.selectNumericCoding.node().value;
     }
 }
