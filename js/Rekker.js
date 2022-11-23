@@ -14,7 +14,9 @@ class Rekker {
         })
 
         this.selectExternal = d3.select("#select_external");
-        this.selectCoding = d3.select("#select_coding");
+        this.selectExternal2D = d3.select("#select_external_2D");
+        this.selectCategoricalCoding = d3.select("#select_categorical_coding");
+        this.selectNumericCoding = d3.select("#select_numeric_coding");
         this.showZeroCoefficientsCheckbox = d3.select("#checkbox_show_zero_coefficients");
         this.usePositiveNegativeGradientCheckbox = d3.select("#checkbox_positive_negative_gradient");
 
@@ -47,21 +49,21 @@ class Rekker {
     }
 
     prepareInterface() {
-        document.getElementsByName("radio_variable_encoding").forEach(element => {
+        document.getElementsByName("radio_color_coding").forEach(element => {
             element.onclick = () => { 
-                if (element.id == ColorCodings.PositiveNegative) {
+                if (element.id == ColorCodings.NumericCoding) {
                     this.dotPlot.groupColumn = "_sign";
-                    this.selectCoding.attr("disabled", "");
-                    this.usePositiveNegativeGradientCheckbox.attr("disabled", null);
+                    this.selectCategoricalCoding.attr("disabled", "");
+                    this.selectNumericCoding.attr("disabled", null);
                 } else {
                     this.updateCodingColumn();
-                    this.selectCoding.attr("disabled", null);
+                    this.selectCategoricalCoding.attr("disabled", null);
 
                     // Reset the gradient manually
-                    this.usePositiveNegativeGradientCheckbox.node().checked = false;
+                    //this.usePositiveNegativeGradientCheckbox.node().checked = false;
                     this.dotPlot.useGradient = false;
 
-                    this.usePositiveNegativeGradientCheckbox.attr("disabled", "");
+                    this.selectNumericCoding.attr("disabled", "");
                 }
             };
         });
@@ -70,6 +72,16 @@ class Rekker {
         if (this.dataSource.externalAvailable) {
             externalVariables = this.dataSource.numericColumnsCollapsed;
         } else {
+            // todo should this go?
+            document.getElementById("radio_view_external").disabled = true;
+        }
+        
+
+        let externalVariables2D = [];
+        if (this.dataSource.external2DAvailable) {
+            externalVariables2D = this.dataSource.numericColumns2D;
+        } else {
+            // todo this should be adapted
             document.getElementById("radio_view_external").disabled = true;
         }
         
@@ -79,9 +91,27 @@ class Rekker {
                            .append("option")
                            .attr("value", d => d)
                            .text(d => d);
+        
+        this.selectExternal2D.selectAll("option")
+                           .data(externalVariables2D)
+                           .enter()
+                           .append("option")
+                           .attr("value", d => d)
+                           .text(d => d);
+
+        this.selectNumericCoding.selectAll("option")
+                                .data(externalVariables)
+                                .enter()
+                                .append("option")
+                                .attr("value", d => d)
+                                .text(d => d);
 
         this.selectExternal.on("change", () => { 
             this.updateExternalColumn();
+        });
+
+        this.selectExternal2D.on("change", () => { 
+            this.updateExternal2DColumn();
         });
 
         this.showZeroCoefficientsCheckbox.on("change", () => {
@@ -92,36 +122,47 @@ class Rekker {
             this.dotPlot.useGradient = this.usePositiveNegativeGradientCheckbox.node().checked;
         })
 
-        let codingVariables = [];
+        let codingVariables = [ "_sign" ];
         if (this.dataSource.codingAvailable) {
-            codingVariables = this.dataSource.stringColumns;
-        } else {
-            document.getElementById("radio_variable_encoding_group_coding").disabled = true;
+            codingVariables = codingVariables.concat(this.dataSource.stringColumns);
         }
         
-        this.selectCoding.selectAll("option")
+        this.selectCategoricalCoding.selectAll("option")
                            .data(codingVariables)
                            .enter()
                            .append("option")
                            .attr("value", d => d)
-                           .text(d => d);
+                           .text(d => d == "_sign" ? "Positive/negative coefficient" : d);
 
-        this.selectCoding.on("change", () => { 
+        this.selectCategoricalCoding.on("change", () => { 
             this.updateCodingColumn();
         });
 
         document.getElementsByName("radio_view").forEach(element => {
             element.onclick = () => { 
-                this.updateExternalColumn();
-                let chartMode = element.id;
+                let axisMode = element.id;
+                let chartMode;
 
-                if (chartMode == ChartModes.ScatterPlot) {
-                    this.selectExternal.attr("disabled", null);
-                } else {
+                if (axisMode == AxisModes.CoefficientsOnly) {
+                    chartMode = ChartModes.DotPlot;
+
                     this.selectExternal.attr("disabled", "");
+                    this.selectExternal2D.attr("disabled", "");
                     this.dotPlot.externalColumnX = null;
+                } else {
+                    chartMode = ChartModes.ScatterPlot;
+
+                    if (axisMode == AxisModes.CoefficientsExternal) {
+                        this.updateExternalColumn();
+                        this.selectExternal.attr("disabled", null);
+                        this.selectExternal2D.attr("disabled", "");   
+                    } else if (axisMode == AxisModes.ExternalOnly) {
+                        this.updateExternal2DColumn();
+                        this.selectExternal2D.attr("disabled", null);
+                        this.selectExternal.attr("disabled", "");   
+                    }
                 }
-                
+
                 this.dotPlot.currentChartMode = chartMode;
             };
         });
@@ -131,7 +172,11 @@ class Rekker {
         this.dotPlot.externalColumn = this.selectExternal.node().value;
     }
 
+    updateExternal2DColumn() {
+        this.dotPlot.externalColumn = `${this.selectExternal2D.node().value}²`;
+    }
+
     updateCodingColumn() {
-        this.dotPlot.groupColumn = this.selectCoding.node().value;
+        this.dotPlot.groupColumn = this.selectCategoricalCoding.node().value;
     }
 }

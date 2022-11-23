@@ -55,8 +55,10 @@ class DataSource {
 
             return items.every(i => typeof i === "number"); });
 
+        this.numericColumns2D = [];
+
         // Sometimes, columns can be two-dimensional
-        // In this case, collapse these columns into one column and give them a special marking
+        // In this case, collapse these columns into one column and add them to the 2D list;
         this.numericColumnsCollapsed = this.numericColumns.map(d => {
             let suffix = d.slice(-2);
             switch(suffix) {
@@ -70,7 +72,8 @@ class DataSource {
                     if (this.numericColumns.includes(`${baseColumnName}${checkSuffix}`)) {
                         // Only return if we are checking .x, else we will get duplicates
                         if (suffix == ".x") {
-                            return `${baseColumnName}²`;
+                            this.numericColumns2D.push(baseColumnName);
+                            return null;
                         } else {
                             return null;
                         }
@@ -102,6 +105,10 @@ class DataSource {
 
     get externalAvailable() {
         return this.numericColumns.length > 0;
+    }
+
+    get external2DAvailable() {
+        return this.numericColumns2D.length > 0;
     }
 
     get availableDatasets() {
