@@ -83,7 +83,7 @@ class Rekker {
             externalVariables2D = this.dataSource.numericColumns2D;
         } else {
             // todo this should be adapted
-            document.getElementById("radio_view_external").disabled = true;
+            document.getElementById("radio_view_external_only").disabled = true;
         }
         
         this.selectExternal.selectAll("option")
