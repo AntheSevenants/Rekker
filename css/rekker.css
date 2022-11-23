@@ -33,3 +33,7 @@ main {
 select:disabled {
 	opacity: 0.2 !important;
 }
+
+.dragplane {
+	cursor: move;
+}

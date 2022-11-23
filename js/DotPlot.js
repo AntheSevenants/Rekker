@@ -317,6 +317,7 @@ class DotPlot {
             this.svg.append("rect")
                     .attr("width", this.chartRangeWidth)
                     .attr("height", this.chartRangeHeight)
+                    .attr("class", "dragplane")
                     .style("fill", "none")
                     .style("pointer-events", "all")
                     //.attr("transform", `translate(${this.margin.left}, ${this.margin.top})`)
@@ -507,7 +508,7 @@ class DotPlot {
 
         let data = this.data.map(d => ({ "coefficient": d.coefficient,
                                          [this.externalColumn]: d[this.externalColumn] }));
-        
+
         let stats = new Statistics(data.filter(d => d.coefficient != 0), variables);
         let rho = stats.correlationCoefficient('coefficient', this.externalColumn);
 
