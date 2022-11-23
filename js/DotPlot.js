@@ -356,6 +356,7 @@ class DotPlot {
 
         this.enablePopovers();
         this.drawLegend();
+        this.drawStatistics();
 
         this.originalX = this.x;
         this.originalY = this.y;
@@ -491,5 +492,34 @@ class DotPlot {
                     .attr("alignment-baseline","middle")
                     .attr("text-anchor", "end")
         });
+    }
+
+    drawStatistics() {
+        // Remove pre-existing statistics things
+        this.svg.selectAll(".statistics").remove();
+
+        if (!(this.currentChartMode == ChartModes.ScatterPlot && this.externalColumnX == null)) {
+            return;
+        }
+
+        let variables = { "coefficient": "metric",
+                          [this.externalColumn]: 'metric' };
+
+        let data = this.data.map(d => ({ "coefficient": d.coefficient,
+                                         [this.externalColumn]: d[this.externalColumn] }));
+        
+        let stats = new Statistics(data.filter(d => d.coefficient != 0), variables);
+        let rho = stats.correlationCoefficient('coefficient', this.externalColumn);
+
+        let text = `ρ = ${d3.format(".4r")(rho["correlationCoefficient"])}`;
+
+        this.svg.append("text")
+                .attr("x", 25)
+                .attr("y", 30)
+                .text(text)
+                .style("font-size", "15px")
+                .attr("class", "statistics")
+                .attr("alignment-baseline","middle")
+                .attr("text-anchor", "left")
     }
 }
