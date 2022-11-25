@@ -46,6 +46,8 @@ class DotPlot {
         // Use gradient?
         this._useGradient = false;
 
+        this.colorPalette = null;
+
         this._currentChartMode = ChartModes.DotPlot;
 
         this.initColorScale();
@@ -136,6 +138,25 @@ class DotPlot {
         return (this.currentChartMode == ChartModes.ScatterPlot && this.externalColumnX != null);
     }
 
+    setColorPalette(colorPalette, update=true) {
+        this.colorPalette = colorPalette;
+        if (update) {
+            this.updatePlot();
+        }
+    }
+
+    getColorPalette(gradient) {
+        if (this.colorPalette != null) {
+            return this.colorPalette;
+        } else {
+            if (!gradient) {
+                return Constants.ColorPalette;
+            } else {
+                return Constants.GradientPalette;
+            }
+        }
+    }
+
     updatePlot() {
         this.clear();
         this.initColorScale();
@@ -202,12 +223,12 @@ class DotPlot {
         }
 
         // We just want a categorical scale if we're not using the gradient scaling option
-        this.colorScale = d3.scaleOrdinal().domain(this.groups).range(Constants.ColorPalette);
+        this.colorScale = d3.scaleOrdinal().domain(this.groups).range(this.getColorPalette(false));
 
         if (this.useGradient) {
             this.gradientColorScale = d3.scaleLinear()
                                         .domain([ this.minimumGroupValue, this.maximumGroupValue ])
-                                        .range(Constants.GradientPalette);
+                                        .range(this.getColorPalette(true));
         }
     }
 
@@ -503,7 +524,7 @@ class DotPlot {
                     .attr("class", "legend_piece")
                     .style("fill", () => {
                         if (index <= 1 && this.useGradient) {
-                            return Constants.GradientPalette[index];
+                            return this.getColorPalette(true)[index];
                         }
 
                         return(this.colorScale(group));

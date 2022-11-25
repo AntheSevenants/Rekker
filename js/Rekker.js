@@ -171,6 +171,21 @@ class Rekker {
                 this.dotPlot.currentChartMode = chartMode;
             };
         });
+
+        // Colour palette upload
+        d3.select("#input_color_palette").on("change", (event) => {
+            let reader = new FileReader()
+            reader.onload = () => {
+                try {
+                    let colorPalette = JSON.parse(reader.result);
+                    this.dotPlot.setColorPalette(colorPalette);
+                }
+                catch (error) {
+                    console.log(error);
+                }
+            }
+            reader.readAsText(event.target.files[0])
+        })
     }
 
     updateExternalColumn() {
