@@ -33,4 +33,12 @@ class Helpers {
 	static sort(a, b) {
 		return a - b;
 	};
+
+	static round(number, decimalPlaces) {
+		return Math.ceil(number * Math.pow(10, decimalPlaces)) / Math.pow(10, decimalPlaces);
+	}
+
+	static coords2key(coord) {
+		return `x_${coord.x}+y_${coord.y}`;
+	}
 }

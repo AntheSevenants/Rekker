@@ -341,10 +341,59 @@ class DotPlot {
         this.coordinates = {};
         this.data.forEach(d => {
             this.coordinates[d.feature] = {
-                "x": this.scaleX(d),
-                "y": this.scaleY(d)
+                "x": Helpers.round(this.scaleX(d), 3),
+                "y":  Helpers.round(this.scaleY(d), 3)
             };
         });
+
+        // Now, let's only look at the coordinate values
+        let coordinateValues = Object.values(this.coordinates);
+
+        // We compute the unique coordinates, 
+        // so we can check below which coordinate pairs are duplicates
+        let uniqueCoordinates = coordinateValues.filter(
+            (pair, index) => index === coordinateValues.findIndex(
+                other => pair.x === other.x && 
+                        pair.y === other.y
+        ));
+
+        // Converting to a set removes duplicates (or so they say)
+        uniqueCoordinates = new Set(uniqueCoordinates);
+
+        // Now, let's find the duplicates by checking set membership
+        this.duplicates = coordinateValues.filter(item => {
+            if (uniqueCoordinates.has(item)) {
+                uniqueCoordinates.delete(item);
+            } else {
+                return item;
+            }
+        });
+
+        // We group all duplicates by coordinate
+        // This way, we know which features belong to a specific coordinate
+        this.duplicatesCollection = {};
+        for (let feature in this.coordinates) {
+            let coordinates = this.coordinates[feature];
+
+            for (let j = 0; j < this.duplicates.length; j++) {
+                let duplicate = this.duplicates[j];
+                if (coordinates.x == duplicate.x && 
+                        coordinates.y == duplicate.y) {
+                    let key = Helpers.coords2key(duplicate);
+                    if (key in this.duplicatesCollection) {
+                        this.duplicatesCollection[key].features.push(feature)
+                    } else {
+                        this.duplicatesCollection[key] = {
+                            "x": duplicate.x,
+                            "y": duplicate.y,
+                            "features": [ feature ]
+                        };
+                    }
+
+                    break;
+                }
+            }
+        }
 
         // Draw data points
         this.dataPoints = this.pointPlane.selectAll("circle")
@@ -352,6 +401,7 @@ class DotPlot {
                                   .join("circle")
                                   .attr("cx", d => this.coordinates[d.feature]["x"])
                                   .attr("cy", d => this.coordinates[d.feature]["y"])
+                                  .style("stroke", "grey")
                                   .attr("data-bs-toggle", "popover")
                                   .attr("data-bs-placement", "left")
                                   .attr("data-bs-html", "true")
@@ -373,6 +423,7 @@ class DotPlot {
             // now the user can zoom and it will trigger the function called updateChart
         }
 
+        this.handleDuplicates();
         this.applyDefaultStyling();
 
         // Add zero reference
@@ -497,7 +548,6 @@ class DotPlot {
 
                             return "visible";
                         })
-                       .style("stroke", "grey")
                        .on("mouseover", (event, row) => {
                            let pointElement = d3.select(event.target);
                            this.mouseOverPoint(row, pointElement);
@@ -508,6 +558,37 @@ class DotPlot {
                         });
 
         this.enablePopovers();
+    }
+
+    handleDuplicates() {
+        // Now, let's go after duplicates
+        for (let key in this.duplicatesCollection) {
+            // We check all duplicate groupings
+            let duplicatesCollection = this.duplicatesCollection[key];
+
+            // The first feature becomes the "primary" feature of data point
+            let primaryFeature = duplicatesCollection.features[0];
+            // We use this point in the point cloud as a basis for our tooltip
+            let primaryDataPoint = d3.select(`circle[data-bs-title='${primaryFeature}']`);
+            
+            // We get a list of all other features which are assumed under this data point
+            let secondaryFeatures = duplicatesCollection.features.slice(1);
+
+            // Compute the title of the primary data point as all features with this coordinate
+            let tooltipTitle = `(${duplicatesCollection.features.length}) ` +
+                               `${duplicatesCollection.features.sort().join(", ")}`;
+
+            // Set the title and make the contours red
+            primaryDataPoint.attr("data-bs-title", tooltipTitle)
+                            .style("stroke-width", "2")
+                            .style("stroke", "red");
+
+            // And hide all other data points under this point
+            secondaryFeatures.forEach(secondaryFeature => {
+                let secondaryDataPoint = d3.select(`circle[data-bs-title='${secondaryFeature}']`);
+                secondaryDataPoint.style("display", "none");
+            });
+        }
     }
 
     mouseOverPoint(row, pointElement) {
