@@ -83,6 +83,10 @@ class DotPlot {
     set externalColumn(column) {
         this._externalColumn = column;
 
+        if (this._externalColumn == null) {
+            return;
+        }
+
         // If the external column is 'collapsed' (= ends in ²),
         // we manually change the assignment to the base name + .y
         // We inform the draw function further down by setting the 

@@ -153,6 +153,7 @@ class Rekker {
 
                     this.selectExternal.attr("disabled", "");
                     this.selectExternal2D.attr("disabled", "");
+                    this.dotPlot.externalColumn = null;
                     this.dotPlot.externalColumnX = null;
                 } else {
                     chartMode = ChartModes.ScatterPlot;
