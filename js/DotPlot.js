@@ -338,12 +338,20 @@ class DotPlot {
             this.pointPlane = this.scatter;
         }
 
+        this.coordinates = {};
+        this.data.forEach(d => {
+            this.coordinates[d.feature] = {
+                "x": this.scaleX(d),
+                "y": this.scaleY(d)
+            };
+        });
+
         // Draw data points
         this.dataPoints = this.pointPlane.selectAll("circle")
                                   .data(this.data)
                                   .join("circle")
-                                  .attr("cx", d => this.scaleX(d))
-                                  .attr("cy", d => this.scaleY(d))
+                                  .attr("cx", d => this.coordinates[d.feature]["x"])
+                                  .attr("cy", d => this.coordinates[d.feature]["y"])
                                   .attr("data-bs-toggle", "popover")
                                   .attr("data-bs-placement", "left")
                                   .attr("data-bs-html", "true")
@@ -563,8 +571,9 @@ class DotPlot {
 
         let data = this.data.map(d => ({ "coefficient": d.coefficient,
                                          [this.externalColumn]: d[this.externalColumn] }));
+        data = data.filter(d => d.coefficient != 0 || d[this.externalColumn] != "NA");
 
-        let stats = new Statistics(data.filter(d => d.coefficient != 0), variables);
+        let stats = new Statistics(data, variables);
         let rho = stats.correlationCoefficient('coefficient', this.externalColumn);
 
         let text = `ρ = ${d3.format(".4r")(rho["correlationCoefficient"])}`;
