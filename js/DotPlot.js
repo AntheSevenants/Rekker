@@ -121,7 +121,7 @@ class DotPlot {
     set showZeroCoefficients(showZeroCoefficients) {
         this._showZeroCoefficients = showZeroCoefficients;
 
-        this.updatePlot();
+        this.applyDefaultStyling();
     }
 
     // .useGradient
