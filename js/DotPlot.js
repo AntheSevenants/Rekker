@@ -481,6 +481,12 @@ class DotPlot {
                                 }
                             }
 
+                            if (this.externalColumn != null) {
+                                if (d[this.externalColumn] == "NA") {
+                                    return "hidden";
+                                }
+                            }
+
                             return "visible";
                         })
                        .style("stroke", "grey")
