@@ -48,6 +48,8 @@ coefficient,feature
 
 This means your dataset should have a numeric "coefficient" column, and a character "feature" column.
 
+The coefficient values will be rendered in a [dot plot](https://user-images.githubusercontent.com/84721952/204799949-2cfc2ed4-ed30-4ca3-a070-6721dfbc2979.png).
+
 ### External numeric information
 
 You can extend Rekker's functionality by adding extra information for each feature-coefficient pairing. If you wish to offset each coefficient against a specific numeric variable, simply add an extra numeric column. The following example shows the above example, complemented with a numeric "frequency" column.
@@ -63,6 +65,8 @@ You can add multiple numeric columns and switch between them in the Rekker inter
 
 These numeric columns can also be used for colour coding by selecting the "Numeric" option under "Colour coding" and choosing a column.
 
+The coefficient values and external data will be rendered in a [scatter plot](https://user-images.githubusercontent.com/84721952/204800161-0ed4ab65-84ae-4bd6-8279-cb2373fbd193.png).
+
 #### Bidimensional numeric information
 
 You can also define bidimensional numeric information for use with Rekker. To include this kind of information, use the "column.x" and "column.y" naming scheme:
@@ -76,6 +80,8 @@ coefficient,feature,coord.x, coord.y
 ```
 
 Corresponding column pairs will be combined automatically in the Rekker interface. Because two dimensions now need to be visualised, the coefficient axis is lost. You can still consult the coefficient values by hovering over a data point, or by setting "positive/negative" as the group coding. You can add multiple bidimensional numeric columns and switch between them in the Rekker interface.  The columns will show up under "External data only".
+
+The external data will be rendered in a [scatter plot](https://user-images.githubusercontent.com/84721952/204800617-8e155904-f882-4272-8901-0bb9ceea81e3.png).
 
 ### External group information
 
