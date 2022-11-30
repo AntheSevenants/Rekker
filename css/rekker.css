@@ -11,6 +11,7 @@ main {
 
 .sidebar {
 	background-color: #212529;
+	overflow-y: auto;
 }
 
 .sidebar hr {
