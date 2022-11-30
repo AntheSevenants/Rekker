@@ -1,4 +1,4 @@
-# Rekker
+#  <img src="https://raw.githubusercontent.com/AntheSevenants/Rekker/main/img/rubber-bands.png" style="height: 1em; width: auto;"> Rekker
 Finally, a natural way to explore Elastic Net coefficients. *Amai mijne rekker*.
 
 [Live demo](https://anthesevenants.github.io/Rekker/)
@@ -15,6 +15,8 @@ Because we tend to use many predictors at once with Elastic Net-like regression,
 * colour-coded data points
 * zero coefficient baseline
 * tooltip with exact values
+* compare coefficients against other values
+* compare coefficients against distributional semantics
 
 ## Using Rekker
 
@@ -57,7 +59,9 @@ coefficient,feature,frequency
 -1.970461593962809,not,42
 -1.864356619676603,like,147
 ```
-You can add multiple numeric columns and switch between them in the Rekker interface.
+You can add multiple numeric columns and switch between them in the Rekker interface. The columns will show up under "Coefficients + external data".
+
+These numeric columns can also be used for colour coding by selecting the "Numeric" option under "Colour coding" and choosing a column.
 
 #### Bidimensional numeric information
 
@@ -71,7 +75,7 @@ coefficient,feature,coord.x, coord.y
 -1.864356619676603,like,-0.5,0.3
 ```
 
-Corresponding column pairs will be combined automatically in the Rekker interface and are marked with a ²-suffix. Because two dimensions now need to be visualised, the coefficient axis is lost. You can still consult the coefficient values by hovering over a data point, or by setting "positive/negative" as the group coding. You can add multiple bidimensional numeric columns and switch between them in the Rekker interface.
+Corresponding column pairs will be combined automatically in the Rekker interface. Because two dimensions now need to be visualised, the coefficient axis is lost. You can still consult the coefficient values by hovering over a data point, or by setting "positive/negative" as the group coding. You can add multiple bidimensional numeric columns and switch between them in the Rekker interface.  The columns will show up under "External data only".
 
 ### External group information
 
@@ -83,7 +87,7 @@ coefficient,feature,frequency,pos
 -1.970461593962809,not,42,adverb
 -1.864356619676603,like,147,verb
 ```
-Each unique group will receive its own colour coding. You can add multiple group columns and switch between them in the Rekker interface.
+Each unique group will receive its own colour coding. You can add multiple group columns and switch between them in the Rekker interface. The columns will show up under "Colour coding" > "Categorical".
 
 ## Future work
 
