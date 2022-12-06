@@ -41,4 +41,11 @@ class Helpers {
 	static coords2key(coord) {
 		return `x_${coord.x}+y_${coord.y}`;
 	}
+
+	static logit2prob(logit) {
+		let odds = Math.exp(logit);
+		let prob = odds / (1 + odds);
+
+		return prob;
+	}
 }

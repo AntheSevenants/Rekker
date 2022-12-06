@@ -29,6 +29,11 @@ class DotPlot {
             }
         });
 
+        // Compute the probability value for each data point
+        this.coefficients.forEach(row => {
+            row["_prob"] = Helpers.logit2prob(row["coefficient"]);
+        });
+
         // Compute minimum and maximum values
         this.coefficientValues = this.coefficients.map(row => +row.coefficient);
         this.minimumValue = +Math.min(...this.coefficientValues);
@@ -45,6 +50,9 @@ class DotPlot {
 
         // Use gradient?
         this._useGradient = false;
+
+        // Convert coefficients to probabilities
+        this._probabilityMode = false;
 
         this.colorPalette = null;
 
@@ -147,6 +155,17 @@ class DotPlot {
         if (update) {
             this.updatePlot();
         }
+    }
+
+    // .probabilityMode
+    get probabilityMode() {
+        return this._probabilityMode;
+    }
+
+    set probabilityMode(probabilityMode) {
+        this._probabilityMode = probabilityMode;
+
+        this.updatePlot(); // todo check if we can just change scales
     }
 
     getColorPalette(gradient) {
@@ -294,18 +313,35 @@ class DotPlot {
         /////////
 
         // X scaler
-        let x;
+        let minimumXvalue = null;
+        let maximumXvalue = null;
+        let xValues;
+        let customXvalues = false;
 
         if (this.externalColumnX == null) {
-            x = d3.scaleLinear()
-                  .domain([ this.minimumValue, this.maximumValue ])
-                  .range([ 0, this.chartRangeWidth ]);
+            // Show coefficients as logits
+            if (!this.probabilityMode) {
+                minimumXvalue = this.minimumValue;
+                maximumXvalue = this.maximumValue;
+            // Show coefficients as probabilities            
+            } else {
+                xValues = this.data.map(row => row["_prob"]);
+                customXvalues = true;
+            }
+            
         } else {
             let xValues = this.data.map(row => row[this.externalColumnX]).filter(value => value != "NA");
-            x = d3.scaleLinear()
-                  .domain([ Math.min(...xValues), Math.max(...xValues) ])
-                  .range([ 0, this.chartRangeWidth ]);
+            customXvalues = true;
         }
+
+        if (customXvalues) {
+            minimumXvalue = Math.min(...xValues);
+            maximumXvalue = Math.max(...xValues);
+        }
+        
+        let x = d3.scaleLinear()
+                  .domain([ minimumXvalue, maximumXvalue ])
+                  .range([ 0, this.chartRangeWidth ]);
 
         // X axis
         this.xAxis = this.svg.append("g")
@@ -436,9 +472,9 @@ class DotPlot {
 
         this.lineX = lineLayer.append("line")
                               .attr("id", "baseline")
-                              .attr("x1", this.x(0))  
+                              .attr("x1", !this.probabilityMode ? this.x(0) : this.x(0.5))  
                               .attr("y1", 0)
-                              .attr("x2", this.x(0))
+                              .attr("x2", !this.probabilityMode ? this.x(0) : this.x(0.5))
                               .attr("y2", this.chartRangeHeight)
                               .style("stroke-width", 2)
                               .attr("stroke-dasharray", "8,8")
@@ -465,9 +501,18 @@ class DotPlot {
     }
 
     scaleX(d) {
-        return this.externalColumnX == null ?
-               this.x(d.coefficient) :
-               this.x(d[this.externalColumnX]);
+        // Coefficient as logit
+        if (this.externalColumnX == null) {
+            if (!this.probabilityMode) {
+                return this.x(d.coefficient);
+            // Coefficient as probability
+            } else {
+                return this.x(d["_prob"]);
+            }
+        // External value
+        } else {
+            return this.x(d[this.externalColumnX]);
+        }
     }
 
     scaleY(d) {

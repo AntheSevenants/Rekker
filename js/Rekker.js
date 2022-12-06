@@ -19,6 +19,7 @@ class Rekker {
         this.selectNumericCoding = d3.select("#select_numeric_coding");
         this.showZeroCoefficientsCheckbox = d3.select("#checkbox_show_zero_coefficients");
         this.usePositiveNegativeGradientCheckbox = d3.select("#checkbox_positive_negative_gradient");
+        this.probabilityModeCheckbox = d3.select("#checkbox_probabilities_mode");
 
         d3.select("#button_load_sample").on("click", () => {
             this.dataSource.setCoefficientsUrl("coefficients.csv");
@@ -117,6 +118,10 @@ class Rekker {
 
         this.showZeroCoefficientsCheckbox.on("change", () => {
             this.dotPlot.showZeroCoefficients = this.showZeroCoefficientsCheckbox.node().checked;
+        })
+
+        this.probabilityModeCheckbox.on("change", () => {
+            this.dotPlot.probabilityMode = this.probabilityModeCheckbox.node().checked;
         })
 
         this.usePositiveNegativeGradientCheckbox.on("change", () => {
