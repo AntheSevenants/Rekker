@@ -557,13 +557,15 @@ class DotPlot {
     applyDefaultStyling() {
         this.dataPoints.attr("r", "4")
                        .attr("data-bs-content", d => {
-                            let base = d3.format(".4r")(d.coefficient);
+                            let pValue =d3.format(".4r")(d["_prob"]);
+                            let coefficient = d3.format(".4r")(d.coefficient);
+
+                            let base = `coefficient: <i>${coefficient}</i><br>`;
+                                base += `probability: <i>${pValue}</i>`;
 
                             if (this.currentChartMode == ChartModes.ScatterPlot && this.externalColumnX == null) {
                                 let externalValue = d3.format(".4r")(d[this.externalColumn]);
-
-                                base = `coefficient: <i>${base}</i><br>`;
-                                base += `${this.externalColumn}: <i>${externalValue}</i>`;
+                                base += `<br>${this.externalColumn}: <i>${externalValue}</i>`;
                             }
 
                             if (this.useGradient) {
