@@ -472,9 +472,9 @@ class DotPlot {
 
         this.lineX = lineLayer.append("line")
                               .attr("id", "baseline")
-                              .attr("x1", !this.probabilityMode ? this.x(0) : this.x(0.5))  
+                              .attr("x1", !this.probabilityMode || this.externalColumnX != null ? this.x(0) : this.x(0.5))  
                               .attr("y1", 0)
-                              .attr("x2", !this.probabilityMode ? this.x(0) : this.x(0.5))
+                              .attr("x2", !this.probabilityMode || this.externalColumnX != null ? this.x(0) : this.x(0.5))
                               .attr("y2", this.chartRangeHeight)
                               .style("stroke-width", 2)
                               .attr("stroke-dasharray", "8,8")
