@@ -330,7 +330,7 @@ class DotPlot {
             }
             
         } else {
-            let xValues = this.data.map(row => row[this.externalColumnX]).filter(value => value != "NA");
+            xValues = this.data.map(row => row[this.externalColumnX]).filter(value => value != "NA");
             customXvalues = true;
         }
 
