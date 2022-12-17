@@ -378,6 +378,8 @@ class DotPlot {
             this.pointPlane = this.scatter;
         }
 
+        this.clusterColumn = null;
+
         this.coordinates = {};
         this.data.forEach(d => {
             this.coordinates[d.feature] = {
@@ -435,6 +437,9 @@ class DotPlot {
             }
         }
 
+        // Draw clusters (before data points, so they appear below them)
+        this.drawClusters();
+
         // Draw data points
         this.dataPoints = this.pointPlane.selectAll("circle")
                                   .data(this.data)
@@ -465,6 +470,17 @@ class DotPlot {
 
         this.handleDuplicates();
         this.applyDefaultStyling();
+
+        /*this.svg.selectAll("polygon")
+            .data([poly])
+          .enter().append("polygon")
+            .attr("points", (d) => { 
+                return d.map((d) => {
+                    return [this.x(d[0]), this.y(d[1])].join(",");
+                }).join(" ");
+            })
+            .attr("stroke","black")
+            .attr("stroke-width",2);*/
 
         // Add zero reference
         let lineLayer = this.svg.append("g") // create another SVG group
@@ -500,6 +516,38 @@ class DotPlot {
         this.originalY = this.y;
     }
 
+    drawClusters() {
+        if (this.clusterColumn != null) {
+            let clusters = Helpers.uniqueValues(this.data, this.clusterColumn).sort();
+
+            let points = clusters.map(d => []);
+
+            this.coefficients.forEach(row => {
+                let cluster = row[this.clusterColumn];
+                let clusterIndex = clusters.indexOf(cluster);
+
+                points[clusterIndex].push([ row[this.externalColumnX], row[this.externalColumn] ]);
+            });
+    
+            // Polygon
+            let hull = points.map(d => d3.polygonHull(d));
+
+            console.log(hull);
+    
+            let teamArea = this.pointPlane.selectAll(".teamHull").data(points);
+                teamArea.exit().remove();
+                teamArea.enter().append("path")
+                  .attr("class", "teamHull")
+                  .attr("d", (points) => this.scalePath(points))
+                  .attr("fill", "transparent")
+                  .attr("stroke", "#aafafa")
+                  .attr("stroke-width", "2")
+                  .attr("stroke-dashoffset", "120px")
+                  .attr("stroke-location", "outside")
+                  .style("pointer-events", "none");
+        }
+    }
+
     scaleX(d) {
         // Coefficient as logit
         if (this.externalColumnX == null) {
@@ -528,6 +576,21 @@ class DotPlot {
         }
     }
 
+    scalePath(points) {
+        // Scale points
+        // We have to get the original values into the .data thing because we need them for zooming
+        points = points.map(coordinates => [ this.x(coordinates[0]),
+                                             this.y(coordinates[1]) ]);
+
+        // Check what points we really need
+        let hull = d3.polygonHull(points);
+
+        // Turn them into a path
+        let path = "M" + hull.join("L") + "Z";
+
+        return path;
+    }
+
     // A function that updates the chart when the user zooms and thus new boundaries are available
     updateChart(event) {
         // recover the new scale
@@ -541,6 +604,9 @@ class DotPlot {
         this.scatter.selectAll("circle")
                     .attr('cx', d => this.scaleX(d))
                     .attr('cy', d => this.scaleY(d));
+
+        this.scatter.selectAll(".teamHull")
+                    .attr("d", (points) => this.scalePath(points));
 
         this.lineX.attr("x1", this.x(0)) 
                   .attr("x2", this.x(0))
