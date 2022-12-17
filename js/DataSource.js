@@ -97,6 +97,8 @@ class DataSource {
             let items = this.datasets["coefficients"].map(d => d[column]).filter(value => value != "NA");
 
             return items.every(i => typeof i === "string"); });
+
+        this.clusterColumns = this.datasets["coefficients"].columns.filter(column => column.startsWith("cluster."));
     }
 
     get codingAvailable() {

@@ -54,6 +54,9 @@ class DotPlot {
         // Convert coefficients to probabilities
         this._probabilityMode = false;
 
+        // Wha tshould we base our clusters on?
+        this._clusterColumn = null;
+
         this.colorPalette = null;
 
         this._currentChartMode = ChartModes.DotPlot;
@@ -166,6 +169,17 @@ class DotPlot {
         this._probabilityMode = probabilityMode;
 
         this.updatePlot(); // todo check if we can just change scales
+    }
+
+    // .clusterColumn
+    get clusterColumn() {
+        return this._clusterColumn;
+    }
+
+    set clusterColumn(clusterColumn) {
+        this._clusterColumn = clusterColumn;
+
+        this.updatePlot();
     }
 
     getColorPalette(gradient) {
@@ -378,8 +392,6 @@ class DotPlot {
             this.pointPlane = this.scatter;
         }
 
-        this.clusterColumn = null;
-
         this.coordinates = {};
         this.data.forEach(d => {
             this.coordinates[d.feature] = {
@@ -517,7 +529,7 @@ class DotPlot {
     }
 
     drawClusters() {
-        if (this.clusterColumn != null) {
+        if (this._clusterColumn != null) {
             let clusters = Helpers.uniqueValues(this.data, this.clusterColumn).sort();
 
             let points = clusters.map(d => []);

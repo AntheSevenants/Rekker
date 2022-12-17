@@ -15,6 +15,7 @@ class Rekker {
 
         this.selectExternal = d3.select("#select_external");
         this.selectExternal2D = d3.select("#select_external_2D");
+        this.selectClustering = d3.select("#select_clustering");
         this.selectCategoricalCoding = d3.select("#select_categorical_coding");
         this.selectNumericCoding = d3.select("#select_numeric_coding");
         this.showZeroCoefficientsCheckbox = d3.select("#checkbox_show_zero_coefficients");
@@ -86,6 +87,11 @@ class Rekker {
             // todo this should be adapted
             document.getElementById("radio_view_external_only").disabled = true;
         }
+
+        let clusterColumns = [ null ];
+        if (this.dataSource.clusterColumns.length != 0) {
+            clusterColumns = clusterColumns.concat(this.dataSource.clusterColumns);
+        }
         
         this.selectExternal.selectAll("option")
                            .data(externalVariables)
@@ -100,6 +106,13 @@ class Rekker {
                            .append("option")
                            .attr("value", d => d)
                            .text(d => d);
+        
+        this.selectClustering.selectAll("option")
+                           .data(clusterColumns)
+                           .enter()
+                           .append("option")
+                           .attr("value", d => d)
+                           .text(d => d == null ? "None" : d);
 
         this.selectNumericCoding.selectAll("option")
                                 .data(["coefficient"].concat(externalVariables))
@@ -114,6 +127,10 @@ class Rekker {
 
         this.selectExternal2D.on("change", () => { 
             this.updateExternal2DColumn();
+        });
+
+        this.selectClustering.on("change", () => { 
+            this.updateClustering();
         });
 
         this.showZeroCoefficientsCheckbox.on("change", () => {
@@ -158,6 +175,7 @@ class Rekker {
 
                     this.selectExternal.attr("disabled", "");
                     this.selectExternal2D.attr("disabled", "");
+                    this.this.selectClustering.attr("disabled", "");
                     this.dotPlot.externalColumn = null;
                     this.dotPlot.externalColumnX = null;
                 } else {
@@ -167,9 +185,11 @@ class Rekker {
                         this.updateExternalColumn();
                         this.selectExternal.attr("disabled", null);
                         this.selectExternal2D.attr("disabled", "");   
+                        this.this.selectClustering.attr("disabled", "");   
                     } else if (axisMode == AxisModes.ExternalOnly) {
                         this.updateExternal2DColumn();
                         this.selectExternal2D.attr("disabled", null);
+                        this.selectClustering.attr("disabled", null);
                         this.selectExternal.attr("disabled", "");   
                     }
                 }
@@ -200,6 +220,10 @@ class Rekker {
 
     updateExternal2DColumn() {
         this.dotPlot.externalColumn = `${this.selectExternal2D.node().value}²`;
+    }
+
+    updateClustering() {
+        this.dotPlot.clusterColumn = `${this.selectClustering.node().value}`;
     }
 
     updateCategoricalCodingColumn() {
