@@ -531,6 +531,7 @@ class DotPlot {
     drawClusters() {
         if (this._clusterColumn != null) {
             let clusters = Helpers.uniqueValues(this.data, this.clusterColumn).sort();
+            let clusterColorScale = d3.scaleOrdinal().domain(clusters).range(Constants.ClusterPalette);
 
             let points = clusters.map(d => []);
 
@@ -552,7 +553,7 @@ class DotPlot {
                   .attr("class", "teamHull")
                   .attr("d", (points) => this.scalePath(points))
                   .attr("fill", "transparent")
-                  .attr("stroke", "#aafafa")
+                  .attr("stroke", (d, i) => clusterColorScale(clusters[i]))
                   .attr("stroke-width", "2")
                   .attr("stroke-dashoffset", "120px")
                   .attr("stroke-location", "outside")
