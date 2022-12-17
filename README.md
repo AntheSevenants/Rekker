@@ -17,6 +17,7 @@ Because we tend to use many predictors at once with Elastic Net-like regression,
 * tooltip with exact values
 * compare coefficients against other values
 * compare coefficients against distributional semantics
+	* draw distributional clusters
 
 ## Using Rekker
 
@@ -82,6 +83,18 @@ coefficient,feature,coord.x, coord.y
 Corresponding column pairs will be combined automatically in the Rekker interface. Because two dimensions now need to be visualised, the coefficient axis is lost. You can still consult the coefficient values by hovering over a data point, or by setting "positive/negative" as the group coding. You can add multiple bidimensional numeric columns and switch between them in the Rekker interface.  The columns will show up under "External data only".
 
 The external data will be rendered in a [scatter plot](https://user-images.githubusercontent.com/84721952/204800617-8e155904-f882-4272-8901-0bb9ceea81e3.png).
+
+You can also add clustering information to this bidimensional plot. To add clustering information, just specify for each data point to which cluster it belongs. Make sure the clustering column is prefixed with "cluster.":
+
+```csv
+coefficient,feature,coord.x, coord.y, cluster.kmeans
+-2.7109007348534733,I,0.1,0.3,cluster 1
+-2.5738031394173366,Monday,0.8,-0.4,cluster 2
+-1.970461593962809,not,0,0,cluster 2
+-1.864356619676603,like,-0.5,0.3,cluster 1
+```
+
+The available clusterings will be recognised automatically in the Rekker interface. The clusters will be drawn as polygons under your bidimensional data points.
 
 ### External group information
 
