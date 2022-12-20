@@ -530,7 +530,7 @@ class DotPlot {
 
     drawClusters() {
         if (this._clusterColumn != null) {
-            let clusters = Helpers.uniqueValues(this.data, this.clusterColumn).sort();
+            let clusters = Helpers.uniqueValues(this.data, this.clusterColumn).filter(cluster => cluster != "NA").sort();
             let clusterColorScale = d3.scaleOrdinal().domain(clusters).range(Constants.ClusterPalette);
 
             let points = clusters.map(d => []);
@@ -539,13 +539,16 @@ class DotPlot {
                 let cluster = row[this.clusterColumn];
                 let clusterIndex = clusters.indexOf(cluster);
 
+                // If cluster is NA, skip
+                if (clusterIndex < 0) {
+                    return;
+                }
+
                 points[clusterIndex].push([ row[this.externalColumnX], row[this.externalColumn] ]);
             });
     
             // Polygon
             let hull = points.map(d => d3.polygonHull(d));
-
-            console.log(hull);
     
             let teamArea = this.pointPlane.selectAll(".teamHull").data(points);
                 teamArea.exit().remove();
