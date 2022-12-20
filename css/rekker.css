@@ -51,3 +51,27 @@ select:disabled {
 .card-header.secondary {
 	background-color: rgba(255, 255, 255, 0.5) !important;
 }
+
+.tally {
+	display: flex;
+
+	align-items: center;
+    justify-items: center;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: stretch;
+    justify-content: space-evenly;
+}
+
+.tipdot {
+	width: 1em;
+	height: 1em;
+
+	vertical-align: middle;
+
+	display: inline-block;
+
+	border-radius: 50%;
+
+	border: 1px solid grey;
+}
