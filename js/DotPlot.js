@@ -530,14 +530,15 @@ class DotPlot {
 
     drawClusters() {
         if (this._clusterColumn != null) {
-            let clusters = Helpers.uniqueValues(this.data, this.clusterColumn).filter(cluster => cluster != "NA").sort();
-            let clusterColorScale = d3.scaleOrdinal().domain(clusters).range(Constants.ClusterPalette);
+            this.clusters = Helpers.uniqueValues(this.data, this.clusterColumn).filter(cluster => cluster != "NA").sort();
+            let clusterColorScale = d3.scaleOrdinal().domain(this.clusters).range(Constants.ClusterPalette);
+            let clusterColorFillScale = d3.scaleOrdinal().domain(this.clusters).range(Constants.ClusterPaletteFill);
 
-            let points = clusters.map(d => []);
+            let points = this.clusters.map(d => []);
 
             this.coefficients.forEach(row => {
                 let cluster = row[this.clusterColumn];
-                let clusterIndex = clusters.indexOf(cluster);
+                let clusterIndex = this.clusters.indexOf(cluster);
 
                 // If cluster is NA, skip
                 if (clusterIndex < 0) {
@@ -556,11 +557,17 @@ class DotPlot {
                   .attr("class", "teamHull")
                   .attr("d", (points) => this.scalePath(points))
                   .attr("fill", "transparent")
-                  .attr("stroke", (d, i) => clusterColorScale(clusters[i]))
+                  //.attr("fill", (di, i) => clusterColorFillScale(this.clusters[i]))
+                  .attr("stroke", (d, i) => clusterColorScale(this.clusters[i]))
                   .attr("stroke-width", "2")
                   .attr("stroke-dashoffset", "120px")
                   .attr("stroke-location", "outside")
-                  .style("pointer-events", "none");
+                  .style("pointer-events", "visibleStroke")
+                  .attr("data-bs-toggle", "popover")
+                  .attr("data-bs-placement", "right")
+                  .attr("data-bs-html", "true")
+                  .attr("data-bs-title", (d, i) => this.clusters[i])
+                  .attr("data-bs-trigger", "hover");   ;
         }
     }
 
