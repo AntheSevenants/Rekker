@@ -16,18 +16,11 @@ class DotPlot {
         // Save the data
         this.coefficients = data["coefficients"];
 
+        this._filterValue = 0;
+
         // Compute the signs for each data point
-        this.signGroups = [ "Negative coefficients", "Positive coefficients", "Removed coefficients" ];
-        this.coefficients.forEach(row => {
-            if (row["coefficient"] == 0) {
-                row["_sign"] = this.signGroups[2];
-            }
-            else {
-                row["_sign"] = row["coefficient"] < 0 ?
-                               this.signGroups[0] :
-                               this.signGroups[1];
-            }
-        });
+        this.signGroups = [ "Negative coefficients", "Positive coefficients", "Removed coefficients", "Filtered coefficients" ];
+        this.computeSignColumn();
 
         // Compute the probability value for each data point
         this.coefficients.forEach(row => {
@@ -65,6 +58,22 @@ class DotPlot {
 
         this.originalWidth = parseInt(this.targetElement.style('width'), 10);
         this.initDimensions();
+    }
+
+    computeSignColumn() {
+        this.coefficients.forEach(row => {
+            if (row["coefficient"] == 0) {
+                row["_sign"] = this.signGroups[2];
+            }
+            else if (Math.abs(row["coefficient"]) < this.filterValue) {
+                row["_sign"] = this.signGroups[3];
+            }
+            else {
+                row["_sign"] = row["coefficient"] < 0 ?
+                               this.signGroups[0] :
+                               this.signGroups[1];
+            }
+        });
     }
 
     clear() {
@@ -183,6 +192,20 @@ class DotPlot {
         this._clusterColumn = clusterColumn;
 
         this.drawClusters();
+        this.enablePopovers();
+    }
+
+    // .filterValue
+    get filterValue() {
+        return this._filterValue;
+    }
+
+    set filterValue(filterValue) {
+        this._filterValue = filterValue;
+
+        this.computeSignColumn();
+        this.applyDefaultStyling();
+        this.applyClusterGroupInfo();
         this.enablePopovers();
     }
 

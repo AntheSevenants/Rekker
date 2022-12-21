@@ -75,3 +75,10 @@ select:disabled {
 
 	border: 1px solid grey;
 }
+
+.toolbar {
+	display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow-x: hidden;
+}

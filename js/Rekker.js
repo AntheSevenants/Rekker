@@ -18,6 +18,8 @@ class Rekker {
         this.selectClustering = d3.select("#select_clustering");
         this.selectCategoricalCoding = d3.select("#select_categorical_coding");
         this.selectNumericCoding = d3.select("#select_numeric_coding");
+        this.inputPullEffect = d3.select("#input_pull_effect");
+        this.pullEffectDisplay = d3.select("#pull_effect_display");
         this.showZeroCoefficientsCheckbox = d3.select("#checkbox_show_zero_coefficients");
         this.usePositiveNegativeGradientCheckbox = d3.select("#checkbox_positive_negative_gradient");
         this.probabilityModeCheckbox = d3.select("#checkbox_probabilities_mode");
@@ -157,6 +159,13 @@ class Rekker {
         this.usePositiveNegativeGradientCheckbox.on("change", () => {
             this.dotPlot.useGradient = this.usePositiveNegativeGradientCheckbox.node().checked;
         })
+
+        this.inputPullEffect.on("change", () => {
+            let pullFilterValue = this.inputPullEffect.node().value;
+            this.pullEffectDisplay.html(pullFilterValue);
+
+            this.dotPlot.filterValue = parseFloat(pullFilterValue);
+        });
 
         let codingVariables = [ ];
         if (this.dataSource.codingAvailable) {
