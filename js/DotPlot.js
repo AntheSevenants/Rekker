@@ -530,7 +530,7 @@ class DotPlot {
     }
 
     drawClusters() {
-        if (this._clusterColumn != null) {
+        if (this.clusterColumn != null && this.clusterColumn != "_none") {
             this.clusters = Helpers.uniqueValues(this.data, this.clusterColumn).filter(cluster => cluster != "NA").sort();
             let clusterColorScale = d3.scaleOrdinal().domain(this.clusters).range(Constants.ClusterPalette);
             let clusterColorFillScale = d3.scaleOrdinal().domain(this.clusters).range(Constants.ClusterPaletteFill);

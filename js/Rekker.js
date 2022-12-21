@@ -88,7 +88,7 @@ class Rekker {
             document.getElementById("radio_view_external_only").disabled = true;
         }
 
-        let clusterColumns = [ null ];
+        let clusterColumns = [ "_none" ];
         if (this.dataSource.clusterColumns.length != 0) {
             clusterColumns = clusterColumns.concat(this.dataSource.clusterColumns);
         }
@@ -112,7 +112,7 @@ class Rekker {
                            .enter()
                            .append("option")
                            .attr("value", d => d)
-                           .text(d => d == null ? "None" : d);
+                           .text(d => d == "_none" ? "None" : d);
 
         this.selectNumericCoding.selectAll("option")
                                 .data(["coefficient"].concat(externalVariables))
