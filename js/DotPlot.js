@@ -537,6 +537,7 @@ class DotPlot {
     drawClusters() {
         // Always remove all clusters first. In case clustering is set to none
         this.pointPlane.selectAll(".teamHull").remove();
+        this.pointPlane.selectAll(".teamHullHidden").remove();
 
         if (this.clusterColumn != null && this.clusterColumn != "_none") {
             this.clusters = Helpers.uniqueValues(this.data, this.clusterColumn).filter(cluster => cluster != "NA").sort();
@@ -570,6 +571,7 @@ class DotPlot {
             let hull = points.map(d => d3.polygonHull(d));
 
             let teamArea = this.pointPlane.selectAll(".teamHull").data(points);
+                
                 teamArea.exit().remove();
                 teamArea.enter().append("path")
                   .attr("class", "teamHull")
@@ -579,8 +581,17 @@ class DotPlot {
                   .attr("stroke", (d, i) => clusterColorScale(this.clusters[i]))
                   .attr("stroke-width", "2")
                   .attr("stroke-dashoffset", "120px")
-                  .attr("stroke-location", "outside")
-                  .style("pointer-events", "visibleStroke")
+                  .attr("stroke-location", "outside");
+
+            let teamHiddenArea = this.pointPlane.selectAll(".teamHullHidden").data(points);
+            teamHiddenArea.exit().remove();
+            teamHiddenArea.enter().append("path")
+                                                .attr("class", "teamHullHidden")
+                                                .attr("d", (points) => this.scalePath(points))
+                                                .attr("fill", "transparent")
+                                                .attr("stroke", "transparent")
+                                                .attr("stroke-width", "8")
+                  .style("pointer-events", "stroke")
                   .attr("data-bs-toggle", "popover")
                   .attr("data-bs-placement", "right")
                   .attr("data-bs-html", "true")
@@ -615,7 +626,7 @@ class DotPlot {
             clusterGroupInformation[clusterIndex][group] += 1;
         });
 
-        this.pointPlane.selectAll(".teamHull")
+        this.pointPlane.selectAll(".teamHullHidden")
                        .attr("data-bs-content", (d, i) => {
                     let base = `mean coefficient:  ${d3.format(".4r")(this.clusterMeans[i])}<br>`;
 
