@@ -183,7 +183,7 @@ class Rekker {
                     chartMode = ChartModes.ScatterPlot;
 
                     if (axisMode == AxisModes.CoefficientsExternal) {
-                        this.updateExternalColumn();
+                        this.updateExternalColumn(false);
                         this.selectExternal.attr("disabled", null);
                         this.selectExternal2D.attr("disabled", "");   
                         this.selectClustering.attr("disabled", "");  
@@ -217,8 +217,13 @@ class Rekker {
         })
     }
 
-    updateExternalColumn() {
-        this.dotPlot.externalColumn = this.selectExternal.node().value;
+    updateExternalColumn(update=true) {
+        // Save a draw call by only setting the "meta" property if updating immediately is required
+        if (update) {
+            this.dotPlot.externalColumn = this.selectExternal.node().value;
+        } else {
+            this.dotPlot._externalColumn = this.selectExternal.node().value;
+        }
     }
 
     updateExternal2DColumn() {

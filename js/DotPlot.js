@@ -111,6 +111,8 @@ class DotPlot {
             this.externalColumnX = null;
         }
 
+        console.log("External column changed. Updating plot")
+
         this.updatePlot();
     }
 
@@ -122,6 +124,7 @@ class DotPlot {
     set currentChartMode(chartMode) {
         this._currentChartMode = chartMode;
 
+        console.log("Current chart mode changed. Updating plot");
         this.updatePlot();
     }
 
@@ -157,6 +160,7 @@ class DotPlot {
     setColorPalette(colorPalette, update=true) {
         this.colorPalette = colorPalette;
         if (update) {
+            console.log("Colour palette changed. Updating plot");
             this.updatePlot();
         }
     }
@@ -168,6 +172,8 @@ class DotPlot {
 
     set probabilityMode(probabilityMode) {
         this._probabilityMode = probabilityMode;
+
+        console.log("Probability mode changed. Updating plot");
 
         this.updatePlot(); // todo check if we can just change scales
     }
@@ -281,6 +287,8 @@ class DotPlot {
     }
 
     drawPlot() {
+        console.log("Draw call");
+
         /////////
         // Y axis
         /////////
