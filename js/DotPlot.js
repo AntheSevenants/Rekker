@@ -183,6 +183,7 @@ class DotPlot {
         this._clusterColumn = clusterColumn;
 
         this.drawClusters();
+        this.enablePopovers();
     }
 
     getColorPalette(gradient) {
