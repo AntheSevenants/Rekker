@@ -707,6 +707,9 @@ class DotPlot {
         this.scatter.selectAll(".teamHull")
                     .attr("d", (points) => this.scalePath(points));
 
+        this.scatter.selectAll(".teamHullHidden")
+                    .attr("d", (points) => this.scalePath(points));
+
         this.lineX.attr("x1", this.x(0)) 
                   .attr("x2", this.x(0))
 
