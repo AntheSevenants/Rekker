@@ -53,20 +53,29 @@ class Rekker {
     prepareInterface() {
         document.getElementsByName("radio_color_coding").forEach(element => {
             element.onclick = () => { 
-                if (element.id == ColorCodings.NumericCoding) {
-                    this.updateNumericCodingColumn();
-                    this.selectCategoricalCoding.attr("disabled", "");
-                    this.selectNumericCoding.attr("disabled", null);
-                    this.dotPlot.useGradient = true;
-                } else {
-                    this.updateCategoricalCodingColumn();
-                    this.selectCategoricalCoding.attr("disabled", null);
+                switch (element.id) {
+                    case ColorCodings.PositiveNegative:
+                        this.selectCategoricalCoding.attr("disabled", "");
+                        this.selectNumericCoding.attr("disabled", "");
 
-                    // Reset the gradient manually
-                    //this.usePositiveNegativeGradientCheckbox.node().checked = false;
-                    this.dotPlot.useGradient = false;
-
-                    this.selectNumericCoding.attr("disabled", "");
+                        this.dotPlot.useGradient = false;
+                        break;
+                    case ColorCodings.NumericCoding:
+                        this.updateNumericCodingColumn();
+                        this.selectCategoricalCoding.attr("disabled", "");
+                        this.selectNumericCoding.attr("disabled", null);
+                        this.dotPlot.useGradient = true;
+                        break;
+                    case ColorCodings.CategoricalCoding:
+                        this.updateCategoricalCodingColumn();
+                        this.selectCategoricalCoding.attr("disabled", null);
+    
+                        // Reset the gradient manually
+                        //this.usePositiveNegativeGradientCheckbox.node().checked = false;
+                        this.dotPlot.useGradient = false;
+    
+                        this.selectNumericCoding.attr("disabled", "");
+                        break;
                 }
             };
         });

@@ -607,6 +607,10 @@ class DotPlot {
     }
 
     applyClusterGroupInfo() {
+        if (this.clusterColumn == null || this.clusterColumn == "_none") {
+            return;
+        }
+
         let clusterGroupInformation = this.clusters.map(d => {
                 let groupInformation = {};
                 this.groups.forEach(group => {
