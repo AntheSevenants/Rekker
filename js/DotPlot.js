@@ -81,6 +81,7 @@ class DotPlot {
         this._groupColumn = column;
         this.initColorScale();
         this.applyDefaultStyling();
+        this.applyClusterGroupInfo();
         this.drawLegend();
 
         this.enablePopovers();
@@ -536,14 +537,6 @@ class DotPlot {
 
             let points = this.clusters.map(d => []);
             let clusterCoefficients = this.clusters.map(d => []);
-            let clusterGroupInformation = this.clusters.map(d => {
-                let groupInformation = {};
-                this.groups.forEach(group => {
-                    groupInformation[group] = 0;
-                });
-
-                return groupInformation;
-            });
 
             this.coefficients.forEach(row => {
                 let cluster = row[this.clusterColumn];
@@ -559,19 +552,16 @@ class DotPlot {
 
                 // Add the coefficients of this point to the cluster total
                 clusterCoefficients[clusterIndex].push(row["coefficient"]);
-
-                // Add group count to cluster total
-                let group = row[this.groupColumn];
-                clusterGroupInformation[clusterIndex][group] += 1;
             });
 
             // Compute the means of each cluster
-            let clusterMeans = clusterCoefficients.map(coefficients =>
+            this.clusterMeans = clusterCoefficients.map(coefficients =>
                 coefficients.reduce((a,c) => a + c, 0) / coefficients.length);
     
             // Polygon
             let hull = points.map(d => d3.polygonHull(d));
     
+            // TODO RECOMPUTE AFTER GROUP CHANGE
             let teamArea = this.pointPlane.selectAll(".teamHull").data(points);
                 teamArea.exit().remove();
                 teamArea.enter().append("path")
@@ -588,8 +578,39 @@ class DotPlot {
                   .attr("data-bs-placement", "right")
                   .attr("data-bs-html", "true")
                   .attr("data-bs-title", (d, i) => this.clusters[i])
-                  .attr("data-bs-content", (d, i) => {
-                    let base = `mean coefficient:  ${d3.format(".4r")(clusterMeans[i])}<br>`;
+                  .attr("data-bs-trigger", "hover");
+
+            this.applyClusterGroupInfo();
+        }
+    }
+
+    applyClusterGroupInfo() {
+        let clusterGroupInformation = this.clusters.map(d => {
+                let groupInformation = {};
+                this.groups.forEach(group => {
+                    groupInformation[group] = 0;
+                });
+
+                return groupInformation;
+            });
+
+        this.coefficients.forEach(row => {
+            let cluster = row[this.clusterColumn];
+            let clusterIndex = this.clusters.indexOf(cluster);
+
+            // If cluster is NA, skip
+            if (clusterIndex < 0) {
+                return;
+            }
+
+            // Add group count to cluster total
+            let group = row[this.groupColumn];
+            clusterGroupInformation[clusterIndex][group] += 1;
+        });
+
+        this.pointPlane.selectAll(".teamHull")
+                       .attr("data-bs-content", (d, i) => {
+                    let base = `mean coefficient:  ${d3.format(".4r")(this.clusterMeans[i])}<br>`;
 
                     base += '<div class="tally pt-2">';
 
@@ -603,9 +624,7 @@ class DotPlot {
                     base += '</div>';
 
                     return base;
-                   })
-                  .attr("data-bs-trigger", "hover");   ;
-        }
+                   });
     }
 
     scaleX(d) {
