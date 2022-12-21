@@ -581,7 +581,8 @@ class DotPlot {
                   .attr("stroke", (d, i) => clusterColorScale(this.clusters[i]))
                   .attr("stroke-width", "2")
                   .attr("stroke-dashoffset", "120px")
-                  .attr("stroke-location", "outside");
+                  .attr("stroke-location", "outside")
+                  .style("pointer-events", "none");
 
             let teamHiddenArea = this.pointPlane.selectAll(".teamHullHidden").data(points);
             teamHiddenArea.exit().remove();
