@@ -59,6 +59,7 @@ class Rekker {
                     case ColorCodings.PositiveNegative:
                         this.selectCategoricalCoding.attr("disabled", "");
                         this.selectNumericCoding.attr("disabled", "");
+                        this.inputPullEffect.attr("disabled", null);
 
                         this.dotPlot.useGradient = false;
 
@@ -68,6 +69,7 @@ class Rekker {
                         this.updateNumericCodingColumn();
                         this.selectCategoricalCoding.attr("disabled", "");
                         this.selectNumericCoding.attr("disabled", null);
+                        this.inputPullEffect.attr("disabled", "");
                         this.dotPlot.useGradient = true;
                         break;
                     case ColorCodings.CategoricalCoding:
@@ -79,6 +81,7 @@ class Rekker {
                         this.dotPlot.useGradient = false;
     
                         this.selectNumericCoding.attr("disabled", "");
+                        this.inputPullEffect.attr("disabled", "");
                         break;
                 }
             };
