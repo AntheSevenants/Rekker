@@ -592,6 +592,7 @@ class DotPlot {
                                                 .attr("stroke", "transparent")
                                                 .attr("stroke-width", "8")
                   .style("pointer-events", "stroke")
+                  .style("cursor", "help")
                   .attr("data-bs-toggle", "popover")
                   .attr("data-bs-placement", "right")
                   .attr("data-bs-html", "true")
