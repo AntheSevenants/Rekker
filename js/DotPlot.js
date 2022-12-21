@@ -110,10 +110,6 @@ class DotPlot {
         } else {
             this.externalColumnX = null;
         }
-
-        console.log("External column changed. Updating plot")
-
-        this.updatePlot();
     }
 
     // .currentChartMode

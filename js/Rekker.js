@@ -123,10 +123,12 @@ class Rekker {
 
         this.selectExternal.on("change", () => { 
             this.updateExternalColumn();
+            this.dotPlot.updatePlot();
         });
 
         this.selectExternal2D.on("change", () => { 
             this.updateExternal2DColumn();
+            this.dotPlot.updatePlot();
         });
 
         this.selectClustering.on("change", () => { 
@@ -217,13 +219,8 @@ class Rekker {
         })
     }
 
-    updateExternalColumn(update=true) {
-        // Save a draw call by only setting the "meta" property if updating immediately is required
-        if (update) {
-            this.dotPlot.externalColumn = this.selectExternal.node().value;
-        } else {
-            this.dotPlot._externalColumn = this.selectExternal.node().value;
-        }
+    updateExternalColumn() {
+        this.dotPlot.externalColumn = this.selectExternal.node().value;
     }
 
     updateExternal2DColumn() {
