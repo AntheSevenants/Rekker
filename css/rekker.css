@@ -36,7 +36,7 @@ select:disabled {
 }
 
 .dragplane {
-	cursor: move;
+	cursor: grab;
 }
 
 .card, .list-group-item {
