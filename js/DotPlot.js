@@ -180,7 +180,7 @@ class DotPlot {
     set clusterColumn(clusterColumn) {
         this._clusterColumn = clusterColumn;
 
-        this.updatePlot();
+        this.drawClusters();
     }
 
     getColorPalette(gradient) {
@@ -530,6 +530,9 @@ class DotPlot {
     }
 
     drawClusters() {
+        // Always remove all clusters first. In case clustering is set to none
+        this.pointPlane.selectAll(".teamHull").remove();
+
         if (this.clusterColumn != null && this.clusterColumn != "_none") {
             this.clusters = Helpers.uniqueValues(this.data, this.clusterColumn).filter(cluster => cluster != "NA").sort();
             let clusterColorScale = d3.scaleOrdinal().domain(this.clusters).range(Constants.ClusterPalette);
@@ -560,8 +563,7 @@ class DotPlot {
     
             // Polygon
             let hull = points.map(d => d3.polygonHull(d));
-    
-            // TODO RECOMPUTE AFTER GROUP CHANGE
+
             let teamArea = this.pointPlane.selectAll(".teamHull").data(points);
                 teamArea.exit().remove();
                 teamArea.enter().append("path")
