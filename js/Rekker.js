@@ -190,6 +190,7 @@ class Rekker {
                         this.dotPlot._clusterColumn = null; 
                     } else if (axisMode == AxisModes.ExternalOnly) {
                         this.updateExternal2DColumn();
+                        this.updateClustering();
                         this.selectExternal2D.attr("disabled", null);
                         this.selectClustering.attr("disabled", null);
                         this.selectExternal.attr("disabled", "");   
