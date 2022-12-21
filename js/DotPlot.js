@@ -513,7 +513,8 @@ class DotPlot {
                               .style("stroke-width", 2)
                               .attr("stroke-dasharray", "8,8")
                               .style("stroke", "#a6a6a6")
-                              .style("fill", "none");
+                              .style("fill", "none")
+                              .style("pointer-events", "none");
 
         this.lineY = lineLayer.append("line")
                               .attr("id", "baseline-y")
@@ -525,7 +526,8 @@ class DotPlot {
                               .attr("stroke-dasharray", "8,8")
                               .style("stroke", "#a6a6a6")
                               .style("fill", "none")
-                              .style("visibility", !this.zoomAllowed ? "hidden" : "visible");
+                              .style("visibility", !this.zoomAllowed ? "hidden" : "visible")
+                              .style("pointer-events", "none");
 
         this.drawLegend();
         this.drawStatistics();
@@ -707,7 +709,7 @@ class DotPlot {
         this.scatter.selectAll(".teamHull")
                     .attr("d", (points) => this.scalePath(points));
 
-        this.scatter.selectAll(".teamHullHidden")
+        this.scatter.selectAll(".teamHullHidden²")
                     .attr("d", (points) => this.scalePath(points));
 
         this.lineX.attr("x1", this.x(0)) 
