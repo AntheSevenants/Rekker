@@ -59,6 +59,8 @@ class Rekker {
                         this.selectNumericCoding.attr("disabled", "");
 
                         this.dotPlot.useGradient = false;
+
+                        this.dotPlot.groupColumn = "_sign";
                         break;
                     case ColorCodings.NumericCoding:
                         this.updateNumericCodingColumn();
@@ -156,7 +158,7 @@ class Rekker {
             this.dotPlot.useGradient = this.usePositiveNegativeGradientCheckbox.node().checked;
         })
 
-        let codingVariables = [ "_sign" ];
+        let codingVariables = [ ];
         if (this.dataSource.codingAvailable) {
             codingVariables = codingVariables.concat(this.dataSource.stringColumns);
         }
