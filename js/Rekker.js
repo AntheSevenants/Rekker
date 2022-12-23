@@ -102,6 +102,7 @@ class Rekker {
         } else {
             // todo this should be adapted
             document.getElementById("radio_view_external_only").disabled = true;
+            document.getElementById("radio_color_coding_numeric").disabled = true;
         }
 
         let clusterColumns = [ "_none" ];
@@ -173,6 +174,8 @@ class Rekker {
         let codingVariables = [ ];
         if (this.dataSource.codingAvailable) {
             codingVariables = codingVariables.concat(this.dataSource.stringColumns);
+        } else {
+            document.getElementById("radio_color_coding_categorical").disabled = true;
         }
         
         this.selectCategoricalCoding.selectAll("option")
