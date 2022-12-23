@@ -38,6 +38,9 @@ class DotPlot {
         // The X column for when the external column is collapsed
         this.externalColumnX = null;
 
+        // Show guidelines?
+        this._showGuidelines = true;
+
         // Show removed zero coefficients?
         this._showZeroCoefficients = true;
 
@@ -131,6 +134,17 @@ class DotPlot {
 
         console.log("Current chart mode changed. Updating plot");
         this.updatePlot();
+    }
+
+    // .showGuidelines
+    get showGuidelines() {
+        return this._showGuidelines;
+    }
+
+    set showGuidelines(showGuidelines) {
+        this._showGuidelines = showGuidelines;
+
+        this.applyLineVisibility();
     }
 
     // .showZeroCoefficients
@@ -549,9 +563,9 @@ class DotPlot {
                               .attr("stroke-dasharray", "8,8")
                               .style("stroke", "#a6a6a6")
                               .style("fill", "none")
-                              .style("visibility", !this.zoomAllowed ? "hidden" : "visible")
                               .style("pointer-events", "none");
 
+        this.applyLineVisibility();
         this.drawLegend();
         this.drawStatistics();
 
@@ -806,6 +820,12 @@ class DotPlot {
                         });
 
         this.enablePopovers();
+    }
+
+    applyLineVisibility() {
+        this.lineX.style("visibility", this.showGuidelines ? "visible" : "hidden");
+        this.lineY.style("visibility", this.showGuidelines && this.zoomAllowed ?
+                                       "visible" : "hidden");
     }
 
     handleDuplicates() {

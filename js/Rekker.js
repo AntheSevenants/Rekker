@@ -20,6 +20,7 @@ class Rekker {
         this.selectNumericCoding = d3.select("#select_numeric_coding");
         this.inputPullEffect = d3.select("#input_pull_effect");
         this.pullEffectDisplay = d3.select("#pull_effect_display");
+        this.showGuidelinesCheckbox = d3.select("#checkbox_show_guidelines");
         this.showZeroCoefficientsCheckbox = d3.select("#checkbox_show_zero_coefficients");
         this.usePositiveNegativeGradientCheckbox = d3.select("#checkbox_positive_negative_gradient");
         this.probabilityModeCheckbox = d3.select("#checkbox_probabilities_mode");
@@ -151,6 +152,10 @@ class Rekker {
         this.selectClustering.on("change", () => { 
             this.updateClustering();
         });
+
+        this.showGuidelinesCheckbox.on("change", () => {
+            this.dotPlot.showGuidelines = this.showGuidelinesCheckbox.node().checked;
+        })
 
         this.showZeroCoefficientsCheckbox.on("change", () => {
             this.dotPlot.showZeroCoefficients = this.showZeroCoefficientsCheckbox.node().checked;
