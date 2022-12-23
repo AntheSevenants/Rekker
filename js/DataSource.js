@@ -106,7 +106,7 @@ class DataSource {
     }
 
     get externalAvailable() {
-        return this.numericColumns.length > 0;
+        return this.numericColumnsCollapsed.length > 0;
     }
 
     get external2DAvailable() {
