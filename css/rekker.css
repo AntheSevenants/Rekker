@@ -31,8 +31,9 @@ main {
 	display: none;
 }
 
-select:disabled {
+select:disabled, .toolbar.disabled {
 	opacity: 0.2 !important;
+	pointer-events: none;
 }
 
 .dragplane {

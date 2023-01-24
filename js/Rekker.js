@@ -19,11 +19,13 @@ class Rekker {
         this.selectCategoricalCoding = d3.select("#select_categorical_coding");
         this.selectNumericCoding = d3.select("#select_numeric_coding");
         this.inputPullEffect = d3.select("#input_pull_effect");
+        this.formPullEffect = d3.select("#form_pull_effect");
         this.pullEffectDisplay = d3.select("#pull_effect_display");
         this.showGuidelinesCheckbox = d3.select("#checkbox_show_guidelines");
         this.showZeroCoefficientsCheckbox = d3.select("#checkbox_show_zero_coefficients");
         this.usePositiveNegativeGradientCheckbox = d3.select("#checkbox_positive_negative_gradient");
         this.probabilityModeCheckbox = d3.select("#checkbox_probabilities_mode");
+        this.buttonSetStandardDeviation = d3.select("#button_standard_deviation");
 
         d3.select("#button_load_sample").on("click", () => {
             this.dataSource.setCoefficientsUrl("coefficients.csv");
@@ -167,6 +169,12 @@ class Rekker {
 
         this.usePositiveNegativeGradientCheckbox.on("change", () => {
             this.dotPlot.useGradient = this.usePositiveNegativeGradientCheckbox.node().checked;
+        })
+
+        this.buttonSetStandardDeviation.on("click", () => {     
+            this.dotPlot.useStandardDeviation();
+            this.pullEffectDisplay.html(d3.format(".2r")(this.dotPlot.filterValue));
+            this.inputPullEffect.node().value = this.dotPlot.filterValue;
         })
 
         this.inputPullEffect.on("change", () => {

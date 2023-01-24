@@ -49,6 +49,7 @@ class DotPlot {
 
         // Convert coefficients to probabilities
         this._probabilityMode = false;
+        this._useGradient = false;
 
         // Wha tshould we base our clusters on?
         this._clusterColumn = null;
@@ -195,6 +196,13 @@ class DotPlot {
         console.log("Probability mode changed. Updating plot");
 
         this.updatePlot(); // todo check if we can just change scales
+    }
+
+    useStandardDeviation() {
+        console.log("Computing standard deviation");
+
+        let stats = new Statistics({}, [], { "suppressWarnings": true });
+        this.filterValue = stats.standardDeviation(this.coefficients.map(row => row["coefficient"]));
     }
 
     // .clusterColumn
