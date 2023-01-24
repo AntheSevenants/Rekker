@@ -8,4 +8,7 @@ class DispersionMeasures {
 	static get InterquartileRangeNonZero () {
 		return "button_interquartile_range_non_zero"
 	}
+	static get MedianAbsoluteDeviation () {
+		return "button_median_absolute_deviation"
+	}
 }

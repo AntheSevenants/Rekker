@@ -215,6 +215,8 @@ class DotPlot {
             }
 
             this.filterValue = stats.interQuartileRange(coefficientValues);
+        } else if (measure == DispersionMeasures.MedianAbsoluteDeviation) {
+            this.filterValue = stats.medianAbsoluteDeviation(this.coefficientValues);
         }
     }
 
