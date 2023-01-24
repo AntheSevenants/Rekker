@@ -26,6 +26,7 @@
         <script src="js/Constants.js"></script>
         <script src="js/AxisModes.js"></script>
         <script src="js/ColorCodings.js"></script>
+        <script src="js/DispersionMeasures.js"></script>
         <script src="js/ChartModes.js"></script>
         <script src="js/Helpers.js"></script>
         <script src="js/DotPlot.js"></script>
@@ -107,7 +108,17 @@
                                         <input style="vertical-align: middle; width: 100%;" type="range" class="form-range" id="input_pull_effect" min="0" max="2" step="0.1" value="0" >
                                     </div>
                                 </div>
-                                <button id="button_standard_deviation" class="btn btn-light btn-sm" style="width: 100%;">Set to standard deviation</button>
+                                <div class="btn-group" role="group" style="width: 100%;">
+                                    <button type="button" class="btn btn-light btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Set to dispersion measure
+                                    </button>
+                                    <ul class="dropdown-menu" style="width: 100%;">
+                                        <li><a class="dropdown-item dispersion" id="button_standard_deviation">Standard deviation</a></li>
+                                        <li><a class="dropdown-item dispersion" id="button_interquartile_range">Interquartile range</a></li>
+                                        <li><a class="dropdown-item dispersion" id="button_interquartile_range_non_zero">Interquartile range (non-zero)</a></li>
+                                    </ul>
+                                </div>
+                                <!--<button id="button_standard_deviation" class="btn btn-light btn-sm" style="width: 100%;">Set to standard deviation</button>-->
                             </div>
                             <div class="card-header secondary text-white">
                                 <div class="form-check">

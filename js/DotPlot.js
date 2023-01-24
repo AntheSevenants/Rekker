@@ -198,11 +198,24 @@ class DotPlot {
         this.updatePlot(); // todo check if we can just change scales
     }
 
-    useStandardDeviation() {
-        console.log("Computing standard deviation");
+    useDispersionMeasure(measure) {
+        console.log("Computing dispersion measure");
 
         let stats = new Statistics({}, [], { "suppressWarnings": true });
-        this.filterValue = stats.standardDeviation(this.coefficients.map(row => row["coefficient"]));
+
+        if (measure == DispersionMeasures.StandardDeviation) {
+            this.filterValue = stats.standardDeviation(this.coefficientValues);
+        } else if (measure == DispersionMeasures.InterquartileRange || 
+                   measure == DispersionMeasures.InterquartileRangeNonZero) {
+            let coefficientValues;
+            if (measure == DispersionMeasures.InterquartileRange) {
+                coefficientValues = this.coefficientValues;
+            } else if (measure == DispersionMeasures.InterquartileRangeNonZero) {
+                coefficientValues = this.coefficientValues.filter(coefficient => coefficient != 0);
+            }
+
+            this.filterValue = stats.interQuartileRange(coefficientValues);
+        }
     }
 
     // .clusterColumn

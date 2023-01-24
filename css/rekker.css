@@ -83,3 +83,7 @@ select:disabled, .toolbar.disabled {
     align-items: center;
     overflow-x: hidden;
 }
+
+a.dropdown-item {
+	cursor: pointer;
+}
