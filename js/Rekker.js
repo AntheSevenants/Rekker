@@ -274,6 +274,7 @@ class Rekker {
             reader.onload = () => {
                 try {
                     let colorPalette = JSON.parse(reader.result);
+                    d3.select("#icon_color_palette").style("color", colorPalette[0]);
                     this.dotPlot.setColorPalette(colorPalette);
                 }
                 catch (error) {
