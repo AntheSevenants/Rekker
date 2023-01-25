@@ -19,6 +19,7 @@ class Rekker {
         this.selectCategoricalCoding = d3.select("#select_categorical_coding");
         this.selectNumericCoding = d3.select("#select_numeric_coding");
         this.selectSizeCoding = d3.select("#select_size_coding");
+        this.selectTextCoding = d3.select("#select_text_coding");
         this.inputPullEffect = d3.select("#input_pull_effect");
         this.formPullEffect = d3.select("#form_pull_effect");
         this.pullEffectDisplay = d3.select("#pull_effect_display");
@@ -203,6 +204,9 @@ class Rekker {
         let codingVariables = [ ];
         if (this.dataSource.codingAvailable) {
             codingVariables = codingVariables.concat(this.dataSource.stringColumns);
+
+            // Unlock text coding select
+            this.selectTextCoding.attr("disabled", null);
         } else {
             document.getElementById("radio_color_coding_categorical").disabled = true;
         }
@@ -213,6 +217,14 @@ class Rekker {
                            .append("option")
                            .attr("value", d => d)
                            .text(d => d == "_sign" ? "Positive/negative coefficient" : d);
+
+        this.selectTextCoding.selectAll("option")
+                             .data(["_none", "feature"].concat(codingVariables))
+                             .enter()
+                             .append("option")
+                             .attr("value", d => d)
+                             // No questions please! :-)
+                             .text(d => d == "_none" ? "None" : d);
 
         this.selectCategoricalCoding.on("change", () => { 
             this.updateCategoricalCodingColumn();
