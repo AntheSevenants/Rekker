@@ -193,12 +193,6 @@ class Rekker {
             })
         });
 
-        /*this.buttonSetStandardDeviation.on("click", () => {     
-            this.dotPlot.useDispersionMeasure("");
-            this.pullEffectDisplay.html(d3.format(".2r")(this.dotPlot.filterValue));
-            this.inputPullEffect.node().value = this.dotPlot.filterValue;
-        })*/
-
         this.inputPullEffect.on("change", () => {
             let pullFilterValue = this.inputPullEffect.node().value;
             this.pullEffectDisplay.html(pullFilterValue);
