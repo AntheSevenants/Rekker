@@ -18,6 +18,7 @@ class Rekker {
         this.selectClustering = d3.select("#select_clustering");
         this.selectCategoricalCoding = d3.select("#select_categorical_coding");
         this.selectNumericCoding = d3.select("#select_numeric_coding");
+        this.selectSizeCoding = d3.select("#select_size_coding");
         this.inputPullEffect = d3.select("#input_pull_effect");
         this.formPullEffect = d3.select("#form_pull_effect");
         this.pullEffectDisplay = d3.select("#pull_effect_display");
@@ -93,6 +94,9 @@ class Rekker {
         let externalVariables = [];
         if (this.dataSource.externalAvailable) {
             externalVariables = this.dataSource.numericColumnsCollapsed;
+
+            /* Unlock size coding */
+            this.selectSizeCoding.attr("disabled", null);
         } else {
             // todo should this go?
             document.getElementById("radio_view_external").disabled = true;
@@ -140,6 +144,13 @@ class Rekker {
                                 .append("option")
                                 .attr("value", d => d)
                                 .text(d => d);
+
+        this.selectSizeCoding.selectAll("option")
+                             .data(["_none", "coefficient"].concat(externalVariables))
+                             .enter()
+                             .append("option")
+                             .attr("value", d => d)
+                             .text(d => d == "_none" ? "None" : d);
 
         this.selectExternal.on("change", () => { 
             this.updateExternalColumn();
