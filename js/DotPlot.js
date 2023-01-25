@@ -827,6 +827,14 @@ class DotPlot {
         return this.sizeScale(d[this.sizeColumn]);
     }
 
+    computeColor(d) {
+        if (this.useGradient) {
+            return this.gradientColorScale(d[this.groupColumn]);
+        } else {
+            return this.colorScale(d[this.groupColumn]);
+        }
+    }
+
     applyDefaultStyling() {
         this.dataPoints.attr("r", d => this.computeSizing(d))
                        .attr("data-bs-content", d => {
@@ -849,13 +857,7 @@ class DotPlot {
                             return base;
                         })
                        // I mimick the R studio colour scheme
-                       .style("fill", d => { 
-                            if (this.useGradient) {
-                                return this.gradientColorScale(d[this.groupColumn]);
-                            } else {
-                                return this.colorScale(d[this.groupColumn]); }
-                            }
-                        )
+                       .style("fill", d => this.computeColor(d))
                        .style("opacity", 0.8)
                        .style("visibility", (d) => { 
                             if (d.coefficient == 0) {
@@ -922,11 +924,11 @@ class DotPlot {
     }
 
     mouseOverPoint(row, pointElement) {
-        pointElement.classed("selected", true);
+        pointElement.style("filter", `drop-shadow(0px 0px 4px ${this.computeColor(row)})`);
     }
 
     mouseOut(row, pointElement) {
-        pointElement.classed("selected", false);
+        pointElement.style("filter", null);
     }
 
     drawLegend() {
