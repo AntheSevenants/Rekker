@@ -47,10 +47,23 @@ select:disabled, .toolbar.disabled {
 
 .card-header {
 	background-color: rgba(255, 255, 255, 0.3) !important;
+	text-align: center;
+}
+
+.card-header .wrapper {
+	width: 100%;
+	height: 100%;
+	position: relative;
+}
+
+.card-header .wrapper i {
+	position: absolute;
+	left: 0;
 }
 
 .card-header.secondary {
 	background-color: rgba(255, 255, 255, 0.5) !important;
+	text-align: left;
 }
 
 .tally {
