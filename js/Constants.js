@@ -14,4 +14,8 @@ class Constants {
 	static get ClusterPaletteFill () {
 		return ["#e8f1f7","#fff2e6","#e9f5e9","#fae9e9","#f4eff8","#f3eeed","#fcf1f8","#f2f2f2","#f8f8e8","#e7f8fa"];
 	}
+
+	static get SizeScaleRange () {
+		return [4,8];
+	}
 }

@@ -146,11 +146,12 @@ class Rekker {
                                 .text(d => d);
 
         this.selectSizeCoding.selectAll("option")
-                             .data(["_none", "coefficient"].concat(externalVariables))
+                             .data(["_none", "coefficient_abs"].concat(externalVariables))
                              .enter()
                              .append("option")
                              .attr("value", d => d)
-                             .text(d => d == "_none" ? "None" : d);
+                             // No questions please! :-)
+                             .text(d => d == "_none" ? "None" : d == "coefficient_abs" ? "coefficient" : d);
 
         this.selectExternal.on("change", () => { 
             this.updateExternalColumn();
@@ -227,6 +228,10 @@ class Rekker {
             this.updateNumericCodingColumn();
         });
 
+        this.selectSizeCoding.on("change", () => { 
+            this.updateSelectSizeCodingColumn();
+        });
+
         document.getElementsByName("radio_view").forEach(element => {
             element.onclick = () => { 
                 let axisMode = element.id;
@@ -297,5 +302,9 @@ class Rekker {
 
     updateNumericCodingColumn() {
         this.dotPlot.groupColumn = this.selectNumericCoding.node().value;
+    }
+
+    updateSelectSizeCodingColumn() {
+        this.dotPlot.sizeColumn = this.selectSizeCoding.node().value;
     }
 }

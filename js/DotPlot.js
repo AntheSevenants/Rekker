@@ -27,6 +27,11 @@ class DotPlot {
             row["_prob"] = Helpers.logit2prob(row["coefficient"]);
         });
 
+        // Store the absolute value of each coefficient for each data point
+        this.coefficients.forEach(row => {
+            row["coefficient_abs"] = Math.abs(row["coefficient"]);
+        });
+
         // Compute minimum and maximum values
         this.coefficientValues = this.coefficients.map(row => +row.coefficient);
         this.minimumValue = +Math.min(...this.coefficientValues);
@@ -58,6 +63,9 @@ class DotPlot {
 
         this._currentChartMode = ChartModes.DotPlot;
 
+        // What column to use for sizing?
+        this._sizeColumn = null;
+
         this.initColorScale();
 
         this.originalWidth = parseInt(this.targetElement.style('width'), 10);
@@ -69,7 +77,7 @@ class DotPlot {
             if (row["coefficient"] == 0) {
                 row["_sign"] = this.signGroups[2];
             }
-            else if (Math.abs(row["coefficient"]) < this.filterValue) {
+            else if (row["coefficient_abs"] < this.filterValue) {
                 row["_sign"] = this.signGroups[3];
             }
             else {
@@ -196,6 +204,21 @@ class DotPlot {
         console.log("Probability mode changed. Updating plot");
 
         this.updatePlot(); // todo check if we can just change scales
+    }
+
+    // .sizeColumn
+    get sizeColumn() {
+        return this._sizeColumn;
+    }
+
+    set sizeColumn(sizeColumn) {
+        this._sizeColumn = sizeColumn;
+
+        console.log("Size column changed. Updating plot");
+
+        this.initSizeScale();
+        this.applyDefaultStyling();
+        this.drawLegend();
     }
 
     useDispersionMeasure(measure) {
@@ -331,6 +354,14 @@ class DotPlot {
                                         .domain([ this.minimumGroupValue, this.maximumGroupValue ])
                                         .range(this.getColorPalette(true));
         }
+    }
+
+    initSizeScale() {
+        let sizeValues = this.data.map(row => row[this.sizeColumn]).filter(value => value != "NA");
+
+        this.sizeScale = d3.scaleLinear()
+                           .domain(d3.extent(sizeValues))
+                           .range(Constants.SizeScaleRange);
     }
 
     initExternal() {
@@ -788,8 +819,16 @@ class DotPlot {
         const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl, { "sanitize": false }));
     }
 
+    computeSizing(d) {
+        if (this.sizeColumn == null || this.sizeColumn == "_none") {
+            return Constants.SizeScaleRange[0];
+        }
+
+        return this.sizeScale(d[this.sizeColumn]);
+    }
+
     applyDefaultStyling() {
-        this.dataPoints.attr("r", "4")
+        this.dataPoints.attr("r", d => this.computeSizing(d))
                        .attr("data-bs-content", d => {
                             let pValue =d3.format(".4r")(d["_prob"]);
                             let coefficient = d3.format(".4r")(d.coefficient);
@@ -883,13 +922,11 @@ class DotPlot {
     }
 
     mouseOverPoint(row, pointElement) {
-        pointElement.attr("r", "6")
-                    .style("opacity", 1);
+        pointElement.classed("selected", true);
     }
 
     mouseOut(row, pointElement) {
-        pointElement.attr("r", "4")
-                    .style("opacity", 0.8);
+        pointElement.classed("selected", false);
     }
 
     drawLegend() {
