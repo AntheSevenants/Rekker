@@ -66,6 +66,9 @@ class DotPlot {
         // What column to use for sizing?
         this._sizeColumn = null;
 
+        // What column to use for labels?
+        this._textColumn = null;
+
         this.initColorScale();
 
         this.originalWidth = parseInt(this.targetElement.style('width'), 10);
@@ -165,6 +168,7 @@ class DotPlot {
         this._showZeroCoefficients = showZeroCoefficients;
 
         this.applyDefaultStyling();
+        this.drawLabels();
     }
 
     // .useGradient
@@ -221,6 +225,19 @@ class DotPlot {
         this.drawLegend();
     }
 
+    // .textColumn
+    get textColumn() {
+        return this._textColumn;
+    }
+
+    set textColumn(textColumn) {
+        this._textColumn = textColumn;
+
+        console.log("Text column changed. Updating plot");
+
+        this.drawLabels();
+    }
+
     useDispersionMeasure(measure) {
         console.log("Computing dispersion measure");
 
@@ -264,6 +281,7 @@ class DotPlot {
         this._filterValue = filterValue;
 
         this.computeSignColumn();
+        this.drawLabels();
         this.applyDefaultStyling();
         this.applyClusterGroupInfo();
         this.enablePopovers();
@@ -549,6 +567,9 @@ class DotPlot {
         // Draw clusters (before data points, so they appear below them)
         this.drawClusters();
 
+        // Draw labels (before data points, so they appear below them)
+        this.drawLabels();
+
         // Draw data points
         this.dataPoints = this.pointPlane.selectAll("circle")
                                   .data(this.data)
@@ -744,6 +765,25 @@ class DotPlot {
                    });
     }
 
+    drawLabels() {
+        this.pointPlane.selectAll(".label").remove();
+
+        if (this.textColumn == null || this.textColumn == "_none") 
+        {
+            return;
+        }
+
+        this.labels = this.pointPlane.selectAll(".label")
+                                  .data(this.data)
+                                  .enter()
+                                  .append("text")
+                                  .attr("class", "label")
+                                  .attr("x", d => this.coordinates[d.feature]["x"] + 10)
+                                  .attr("y", d => this.coordinates[d.feature]["y"] + 10)
+                                  .style("visibility", d => this.computeVisibility(d, true))
+                                  .text(d => d[this.textColumn]);
+    }
+
     scaleX(d) {
         // Coefficient as logit
         if (this.externalColumnX == null) {
@@ -801,6 +841,10 @@ class DotPlot {
                     .attr('cx', d => this.scaleX(d))
                     .attr('cy', d => this.scaleY(d));
 
+        this.scatter.selectAll(".label")
+                    .attr('x', d => this.scaleX(d) + 10)
+                    .attr('y', d => this.scaleY(d) + 10);
+
         this.scatter.selectAll(".teamHull")
                     .attr("d", (points) => this.scalePath(points));
 
@@ -835,6 +879,26 @@ class DotPlot {
         }
     }
 
+    computeVisibility(d, label=false) {
+        if (d.coefficient == 0) {
+            if (!this.showZeroCoefficients) {
+                return "hidden";
+            }
+        }
+
+        if (this.externalColumn != null) {
+            if (d[this.externalColumn] == "NA") {
+                return "hidden";
+            }
+        }
+
+        if (label && d["_sign"] == this.signGroups[3]) {
+            return "hidden";
+        }
+
+        return "visible";
+    }
+
     applyDefaultStyling() {
         this.dataPoints.attr("r", d => this.computeSizing(d))
                        .attr("data-bs-content", d => {
@@ -859,21 +923,7 @@ class DotPlot {
                        // I mimick the R studio colour scheme
                        .style("fill", d => this.computeColor(d))
                        .style("opacity", 0.8)
-                       .style("visibility", (d) => { 
-                            if (d.coefficient == 0) {
-                                if (!this.showZeroCoefficients) {
-                                    return "hidden";
-                                }
-                            }
-
-                            if (this.externalColumn != null) {
-                                if (d[this.externalColumn] == "NA") {
-                                    return "hidden";
-                                }
-                            }
-
-                            return "visible";
-                        })
+                       .style("visibility", d => this.computeVisibility(d))
                        .on("mouseover", (event, row) => {
                            let pointElement = d3.select(event.target);
                            this.mouseOverPoint(row, pointElement);

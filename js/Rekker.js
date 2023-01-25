@@ -238,6 +238,10 @@ class Rekker {
             this.updateSelectSizeCodingColumn();
         });
 
+        this.selectTextCoding.on("change", () => { 
+            this.updateSelectTextCodingColumn();
+        });
+
         document.getElementsByName("radio_view").forEach(element => {
             element.onclick = () => { 
                 let axisMode = element.id;
@@ -313,5 +317,9 @@ class Rekker {
 
     updateSelectSizeCodingColumn() {
         this.dotPlot.sizeColumn = this.selectSizeCoding.node().value;
+    }
+
+    updateSelectTextCodingColumn() {
+        this.dotPlot.textColumn = this.selectTextCoding.node().value;
     }
 }
