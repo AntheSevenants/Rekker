@@ -799,8 +799,8 @@ class DotPlot {
                                   .enter()
                                   .append("text")
                                   .attr("class", "label")
-                                  .attr("x", d => this.coordinates[d.feature]["x"] + 10)
-                                  .attr("y", d => this.coordinates[d.feature]["y"] + 10)
+                                  .attr("x", d => this.scaleX(d) + 10)
+                                  .attr("y", d => this.scaleY(d) + 10)
                                   .style("visibility", d => this.computeVisibility(d, true))
                                   .text(d => d[this.textColumn]);
     }
