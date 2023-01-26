@@ -196,12 +196,9 @@ class Rekker {
             })
         });
 
-        this.inputPullEffect.on("change", () => {
-            let pullFilterValue = this.inputPullEffect.node().value;
-            this.pullEffectDisplay.html(pullFilterValue);
-
-            this.dotPlot.filterValue = parseFloat(pullFilterValue);
-        });
+        new PullEffectComponent(this.inputPullEffect,
+                                this.pullEffectDisplay,
+                                (pullFilterValue) => { this.dotPlot.filterValue = pullFilterValue});
 
         let codingVariables = [ ];
         if (this.dataSource.codingAvailable) {
