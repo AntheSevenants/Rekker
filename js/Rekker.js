@@ -186,19 +186,12 @@ class Rekker {
             this.dotPlot.useGradient = this.usePositiveNegativeGradientCheckbox.node().checked;
         })
 
-        Array.from(document.getElementsByClassName("dispersion")).forEach(element => {
-            let elementd3 = d3.select(element);
-            
-            elementd3.on("click", () => {
-                this.dotPlot.useDispersionMeasure(element.id);
-                this.pullEffectDisplay.html(d3.format(".2r")(this.dotPlot.filterValue));
-                this.inputPullEffect.node().value = this.dotPlot.filterValue;
-            })
-        });
-
         new PullEffectComponent(this.inputPullEffect,
                                 this.pullEffectDisplay,
-                                (pullFilterValue) => { this.dotPlot.filterValue = pullFilterValue});
+                                (pullFilterValue) => { this.dotPlot.filterValue = pullFilterValue; },
+                                () => { return this.dotPlot.filterValue; },
+                                d3.select("#pull_effect_dispersion_dropdown"),
+                                (dispersionMeasure) => { this.dotPlot.useDispersionMeasure(dispersionMeasure) });
 
         let codingVariables = [ ];
         if (this.dataSource.codingAvailable) {

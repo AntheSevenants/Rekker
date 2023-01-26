@@ -18,4 +18,13 @@ class Constants {
 	static get SizeScaleRange () {
 		return [4,8];
 	}
+
+	static get DispersionMeasures() {
+		return [
+			"Standard deviation",
+			"Interquartile range",
+			"Interquartile range (non-zero)",
+			"Median absolute deviation"
+		]
+	}
 }

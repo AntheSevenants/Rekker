@@ -1,14 +1,14 @@
 class DispersionMeasures {
 	static get StandardDeviation () {
-		return "button_standard_deviation"
+		return Constants.DispersionMeasures[0];
 	}
 	static get InterquartileRange () {
-		return "button_interquartile_range"
+		return Constants.DispersionMeasures[1];
 	}
 	static get InterquartileRangeNonZero () {
-		return "button_interquartile_range_non_zero"
+		return Constants.DispersionMeasures[2];
 	}
 	static get MedianAbsoluteDeviation () {
-		return "button_median_absolute_deviation"
+		return Constants.DispersionMeasures[3];
 	}
 }
