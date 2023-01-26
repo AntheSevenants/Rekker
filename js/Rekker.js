@@ -191,7 +191,14 @@ class Rekker {
                                 (pullFilterValue) => { this.dotPlot.filterValue = pullFilterValue; },
                                 () => { return this.dotPlot.filterValue; },
                                 d3.select("#pull_effect_dispersion_dropdown"),
-                                (dispersionMeasure) => { this.dotPlot.useDispersionMeasure(dispersionMeasure) });
+                                (dispersionMeasure) => { this.dotPlot.useDispersionMeasure(dispersionMeasure, "filter") });
+
+        new PullEffectComponent(d3.select("#input_pull_effect_text_precondition"),
+                                d3.select("#pull_effect_display_text_precondition"),
+                                (pullFilterValue) => { this.dotPlot.textFilterValue = pullFilterValue; },
+                                () => { return this.dotPlot.textFilterValue; },
+                                d3.select("#pull_effect_dispersion_dropdown_text_precondition"),
+                                (dispersionMeasure) => { this.dotPlot.useDispersionMeasure(dispersionMeasure, "text") });
 
         let codingVariables = [ ];
         if (this.dataSource.codingAvailable) {

@@ -17,6 +17,7 @@ class DotPlot {
         this.coefficients = data["coefficients"];
 
         this._filterValue = 0;
+        this._textFilterValue = 0;
 
         // Compute the signs for each data point
         this.signGroups = [ "Negative coefficients", "Positive coefficients", "Removed coefficients", "Filtered coefficients" ];
@@ -238,13 +239,14 @@ class DotPlot {
         this.drawLabels();
     }
 
-    useDispersionMeasure(measure) {
+    useDispersionMeasure(measure, field) {
         console.log("Computing dispersion measure");
 
         let stats = new Statistics({}, [], { "suppressWarnings": true });
 
+        let filterValue = null;
         if (measure == DispersionMeasures.StandardDeviation) {
-            this.filterValue = stats.standardDeviation(this.coefficientValues);
+            filterValue = stats.standardDeviation(this.coefficientValues);
         } else if (measure == DispersionMeasures.InterquartileRange || 
                    measure == DispersionMeasures.InterquartileRangeNonZero) {
             let coefficientValues;
@@ -254,9 +256,17 @@ class DotPlot {
                 coefficientValues = this.coefficientValues.filter(coefficient => coefficient != 0);
             }
 
-            this.filterValue = stats.interQuartileRange(coefficientValues);
+            filterValue = stats.interQuartileRange(coefficientValues);
         } else if (measure == DispersionMeasures.MedianAbsoluteDeviation) {
-            this.filterValue = stats.medianAbsoluteDeviation(this.coefficientValues);
+            filterValue = stats.medianAbsoluteDeviation(this.coefficientValues);
+        }
+
+        switch (field) {
+            case "filter":
+                this.filterValue = filterValue;
+                break;
+            case "text":
+                this.textFilterValue = filterValue;
         }
     }
 
@@ -285,6 +295,17 @@ class DotPlot {
         this.applyDefaultStyling();
         this.applyClusterGroupInfo();
         this.enablePopovers();
+    }
+
+    // .textFilterValue
+    get textFilterValue() {
+        return this._textFilterValue;
+    }
+
+    set textFilterValue(textFilterValue) {
+        this._textFilterValue = textFilterValue;
+
+        this.drawLabels();
     }
 
     getColorPalette(gradient) {
@@ -893,6 +914,10 @@ class DotPlot {
         }
 
         if (label && d["_sign"] == this.signGroups[3]) {
+            return "hidden";
+        }
+
+        if (label && d["coefficient_abs"] < this.textFilterValue) {
             return "hidden";
         }
 
