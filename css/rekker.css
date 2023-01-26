@@ -98,3 +98,7 @@ select:disabled, .toolbar.disabled {
 a.dropdown-item {
 	cursor: pointer;
 }
+
+.label {
+	pointer-events: none;
+}
