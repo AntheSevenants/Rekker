@@ -95,14 +95,10 @@ class Rekker {
         let externalVariables = [];
         if (this.dataSource.externalAvailable) {
             externalVariables = this.dataSource.numericColumnsCollapsed;
-
-            /* Unlock size coding */
-            this.selectSizeCoding.attr("disabled", null);
         } else {
             // todo should this go?
             document.getElementById("radio_view_external").disabled = true;
-        }
-        
+        }        
 
         let externalVariables2D = [];
         if (this.dataSource.external2DAvailable) {
@@ -167,6 +163,12 @@ class Rekker {
         this.selectClustering.on("change", () => { 
             this.updateClustering();
         });
+        
+        /* Unlock size coding */
+        this.selectSizeCoding.attr("disabled", null);
+
+        // Unlock text coding
+        this.selectTextCoding.attr("disabled", null);
 
         this.showGuidelinesCheckbox.on("change", () => {
             this.dotPlot.showGuidelines = this.showGuidelinesCheckbox.node().checked;
@@ -204,9 +206,6 @@ class Rekker {
         let codingVariables = [ ];
         if (this.dataSource.codingAvailable) {
             codingVariables = codingVariables.concat(this.dataSource.stringColumns);
-
-            // Unlock text coding select
-            this.selectTextCoding.attr("disabled", null);
         } else {
             document.getElementById("radio_color_coding_categorical").disabled = true;
         }
