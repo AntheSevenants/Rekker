@@ -913,10 +913,6 @@ class DotPlot {
             }
         }
 
-        if (label && d["_sign"] == this.signGroups[3]) {
-            return "hidden";
-        }
-
         if (label && d["coefficient_abs"] < this.textFilterValue) {
             return "hidden";
         }
