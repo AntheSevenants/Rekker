@@ -98,6 +98,10 @@ class DataSource {
             if (this.skipColumns.includes(column)) {
                 return false;
             }
+            // Filter regression coefficient and significance columns
+            if (column.endsWith("_coeff") || column.endsWith("_sig")) {
+                return false;
+            }
 
             let items = this.datasets["coefficients"].map(d => d[column]).filter(value => value != "NA");
 
