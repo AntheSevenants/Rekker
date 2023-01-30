@@ -25,18 +25,17 @@
     background-color: #fca00d;
 }
 
-.bg-ochre, .nav-link.active, .form-check-input:checked,
-.form-range::-webkit-slider-thumb {
+.bg-ochre, .nav-link.active, .form-check-input:checked {
     background-color: #FDB440 !important;
 }
 
 .nav-link.active {
-    color: #ffffff !important;
+    color: #111 !important;
 }
 
 a.bg-ochre:hover, a.bg-ochre:focus,
 button.bg-ochre:hover,
-button.bg-ochre:focus {
+button.bg-ochre:focus, .form-range::-webkit-slider-thumb {
     background-color: #fca00d !important;
 }
 
