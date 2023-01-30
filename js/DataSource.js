@@ -60,6 +60,11 @@ class DataSource {
         // Sometimes, columns can be two-dimensional
         // In this case, collapse these columns into one column and add them to the 2D list;
         this.numericColumnsCollapsed = this.numericColumns.map(d => {
+            // Filter regression coefficient and significance columns
+            if (d.endsWith("_coeff") || d.endsWith("_sig")) {
+                return null;
+            }
+
             let suffix = d.slice(-2);
             switch(suffix) {
                 // Column ends in .x

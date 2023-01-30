@@ -664,6 +664,7 @@ class DotPlot {
         this.applyLineVisibility();
         this.drawLegend();
         this.drawStatistics();
+        this.drawRegressionInfo();
 
         this.originalX = this.x;
         this.originalY = this.y;
@@ -1002,6 +1003,23 @@ class DotPlot {
         pointElement.style("filter", null);
     }
 
+    drawLegendCircle(cx, cy, group, index, className) {
+        this.svg.append("circle")
+        .attr("cx", cx)
+        .attr("cy", cy)
+        .attr("r", 6)
+        .attr("fill-opacity", 0.6)
+        .attr("class", className)
+        .style("fill", () => {
+            if (index <= 1 && this.useGradient) {
+                return this.getColorPalette(true)[index];
+            }
+
+            return(this.colorScale(group));
+        })
+        .style("stroke", "grey")
+    }
+
     drawLegend() {
         // Remove pre-existing legend things
         this.svg.selectAll(".legend_piece").remove();
@@ -1012,7 +1030,9 @@ class DotPlot {
                 return;
             }
 
-            this.svg.append("circle")
+            this.drawLegendCircle(this.chartRangeWidth - 10, 30 * (index + 1), group, index, "legend_piece");
+
+            /*this.svg.append("circle")
                     .attr("cx", this.chartRangeWidth - 10)
                     .attr("cy", 30 * (index + 1))
                     .attr("r", 6)
@@ -1025,7 +1045,7 @@ class DotPlot {
 
                         return(this.colorScale(group));
                     })
-                    .style("stroke", "grey")
+                    .style("stroke", "grey")*/
             
             let text = group;
 
@@ -1068,5 +1088,91 @@ class DotPlot {
                 .attr("class", "statistics")
                 .attr("alignment-baseline","middle")
                 .attr("text-anchor", "left")
+    }
+
+    generateRegressionPopoverData(axis, regressionColumns) {
+        return `coeff: ${this.data[0][regressionColumns["coefficient"][axis]]}<br>
+                sig: ${this.data[0][regressionColumns["significance"][axis]]}`
+    }
+
+    drawRegressionInfo() {
+        // Remove pre-existing regression things
+        this.svg.selectAll(".regression").remove();
+
+        if (!(this.currentChartMode == ChartModes.ScatterPlot && this.externalColumnX != null)) {
+            return;
+        }
+
+        console.log(this.externalColumnX, this.data.columns);
+
+        // Define all necessary columns
+        let regressionColumns = { "coefficient": { "x": `${this.externalColumnX}_coeff`,
+                                                   "y": `${this.externalColumn}_coeff` },
+                                  "significance": { "x": `${this.externalColumnX}_sig`,
+                                                    "y": `${this.externalColumn}_sig` } };
+
+        // Check whether all columns are present
+        let missingData = false;
+        for (let columnType in regressionColumns) {
+            for (let axis in regressionColumns[columnType]) {
+                if (!(this.data.columns.includes(regressionColumns[columnType][axis]))) {
+                    console.log(columnType, axis);
+                    missingData = true;
+                    break
+                }
+            }
+        }
+
+        if (missingData) {
+            return;
+        }
+
+        function generateCoefficientArrow(coefficient){
+            return coefficient > 0 ? "↑" : "↓"
+        }
+
+        const formatFunction = d3.format(".2f");
+        const xCoeffText = `x→ = p(    )${generateCoefficientArrow(this.data[0][regressionColumns["coefficient"]["x"]])}`;
+        const yCoeffText = `y↑ = p(    )${generateCoefficientArrow(this.data[0][regressionColumns["coefficient"]["y"]])}`;
+
+        this.svg.append("text")
+                .attr("x", this.chartRangeWidth - 80)
+                .attr("y", this.chartRangeHeight - 25)
+                .text(xCoeffText)
+                .style("font-size", "15px")
+                .style("white-space", "pre")
+                .style("user-select", "none")
+                .attr("class", "statistics")
+                .attr("alignment-baseline","middle")
+                .attr("text-anchor", "left")
+                .attr("data-bs-toggle", "popover")
+                .attr("data-bs-placement", "right")
+                .attr("data-bs-html", "true")
+                .attr("data-bs-title", this.externalColumnX)
+                .attr("data-bs-content", this.generateRegressionPopoverData("x", regressionColumns))
+                .attr("data-bs-trigger", "hover");
+
+        this.drawLegendCircle(this.chartRangeWidth - 20.5, this.chartRangeHeight - 25, this.groups[1], 1, "regression");
+
+        this.svg.append("text")
+                .attr("x", 25)
+                .attr("y", 30)
+                .text(yCoeffText)
+                .style("font-size", "15px")
+                .style("white-space", "pre")
+                .style("user-select", "none")
+                .attr("class", "statistics")
+                .attr("alignment-baseline","middle")
+                .attr("text-anchor", "left")
+                .attr("data-bs-toggle", "popover")
+                .attr("data-bs-placement", "top")
+                .attr("data-bs-html", "true")
+                .attr("data-bs-title", this.externalColumn)
+                .attr("data-bs-content", this.generateRegressionPopoverData("y", regressionColumns))
+                .attr("data-bs-trigger", "hover");
+
+        this.drawLegendCircle(79.5, 29, this.groups[1], 1, "regression");
+
+        this.enablePopovers();
     }
 }
