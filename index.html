@@ -49,156 +49,172 @@
         </head>
         <body>
             <main class="d-flex flex-nowrap">
-                <div class="d-flex flex-column flex-shrink-0 p-3 sidebar" style="width: 325px;">
+                <div class="d-flex flex-column flex-shrink-0 p-3 sidebar" style="width: 325px; overflow-y: scroll;">
                     <a href="./" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
                         <img class="bi pe-none me-2" width="32" height="32" src="img/rubber-bands.png" alt="Rubber-bands icons created by Freepik - Flaticon">
                         <span class="fs-4">Rekker</span>
                     </a>
-                    <hr>
+                    <div>
+                        <hr>
+                    </div>
+                    <ul class="nav nav-pills mb-3 justify-content-center" id="pills-tab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                          <button class="nav-link active" id="pills-axes-tab" data-bs-toggle="pill" data-bs-target="#pills-axes" type="button" role="tab" aria-controls="pills-axes" aria-selected="true"><i class="bi bi-graph-up"></i> Axes</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                          <button class="nav-link" id="pills-coding-tab" data-bs-toggle="pill" data-bs-target="#pills-coding" type="button" role="tab" aria-controls="pills-coding" aria-selected="false"><i class="bi bi-brush"></i> Coding</button>
+                        </li>
+                    </ul>
                     <div class="flex-column mb-auto">
-                        <div class="card mb-3">
-                            <div class="card-header text-white">
-                                <div class="wrapper"><i class="bi bi-graph-up"></i></div> Axes</div>
-                            <div class="card-header secondary text-white">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="radio_view" id="radio_view_coefficients" checked>
-                                    <label class="form-check-label" for="radio_view_coefficients">Coefficients only</label>
-                                </div>
-                            </div>
-                            <div class="card-header secondary text-white">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="radio_view" id="radio_view_external">
-                                    <label class="form-check-label" for="radio_view_external">Coefficients + external data</label>
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <select class="form-select mb-2" aria-label="Dropdown external variable selection" id="select_external" disabled>
-                            
-                                </select>
-                            </div>
-                            <div class="card-header secondary text-white">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="radio_view" id="radio_view_external_only">
-                                    <label class="form-check-label" for="radio_view_external_only">External data only</label>
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <select class="form-select mb-2" aria-label="Dropdown external two-dimensional variable selection"
-                                        id="select_external_2D" disabled>
-                            
-                                </select>
-                                <p class="text-white mb-2">Clustering:</p>
-                                <select class="form-select mb-2" aria-label="Dropdown clustering selection"
-                                        id="select_clustering" disabled>
-                            
-                                </select>
-                            </div>
-                        </div>
-                        <div class="card mb-2">
-                            <div class="card-header text-white">
-                                <div class="wrapper"><i class="bi bi-paint-bucket"></i></div> Colour coding</div>
-                            <div class="card-header secondary text-white">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="radio_color_coding" id="radio_color_coding_sign" checked>
-                                    <label class="form-check-label" for="radio_color_coding_sign">Positive/negative</label>
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <p class="text-white mb-2">Pull effect threshold:</p>
-                                <div class="toolbar pb-3" id="form_pull_effect">
-                                    <div id="pull_effect_display" class="text-white" style="width: 3em; padding-right: 1em;">0</div>
-                                    <div style="width: 100%;">
-                                        <input style="vertical-align: middle; width: 100%;" type="range" class="form-range" id="input_pull_effect" min="0" max="2" step="0.1" value="0" >
+                        <div class="tab-content" id="pills-tabContent">
+                            <div class="tab-pane show active" id="pills-axes" role="tabpanel" aria-labelledby="pills-axes-tab" tabindex="0">
+                                <div class="card mb-3">
+                                    <div class="card-header text-white">
+                                        <div class="wrapper"><i class="bi bi-graph-up"></i></div> Axes</div>
+                                    <div class="card-header secondary text-white">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="radio_view" id="radio_view_coefficients" checked>
+                                            <label class="form-check-label" for="radio_view_coefficients">Coefficients only</label>
+                                        </div>
+                                    </div>
+                                    <div class="card-header secondary text-white">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="radio_view" id="radio_view_external">
+                                            <label class="form-check-label" for="radio_view_external">Coefficients + external data</label>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <select class="form-select mb-2" aria-label="Dropdown external variable selection" id="select_external" disabled>
+                                        
+                                        </select>
+                                    </div>
+                                    <div class="card-header secondary text-white">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="radio_view" id="radio_view_external_only">
+                                            <label class="form-check-label" for="radio_view_external_only">External data only</label>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <select class="form-select mb-2" aria-label="Dropdown external two-dimensional variable selection"
+                                                id="select_external_2D" disabled>
+                                    
+                                        </select>
+                                        <p class="text-white mb-2">Clustering:</p>
+                                        <select class="form-select mb-2" aria-label="Dropdown clustering selection"
+                                                id="select_clustering" disabled>
+                                    
+                                        </select>
                                     </div>
                                 </div>
-                                <div class="btn-group" role="group" style="width: 100%;">
-                                    <button type="button" class="btn btn-light btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <div class="wrapper"><i class="bi bi-list-nested"></i></div> Set to dispersion measure
-                                    </button>
-                                    <ul id="pull_effect_dispersion_dropdown" class="dropdown-menu" style="width: 100%;">
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="card-header secondary text-white">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="radio_color_coding" id="radio_color_coding_categorical">
-                                    <label class="form-check-label" for="radio_color_coding_categorical">Categorical</label>
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <select class="form-select mb-2" aria-label="Dropdown categorical coding selection" id="select_categorical_coding" disabled>
-                                 
-                                </select>
-                            </div>
-                            <div class="card-header secondary text-white">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="radio_color_coding" id="radio_color_coding_numeric">
-                                    <label class="form-check-label" for="radio_color_coding_numeric">Numeric</label>
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <select class="form-select" aria-label="Dropdown numeric coding selection" id="select_numeric_coding" disabled>
-                                 
-                                </select>
-                            </div>
-                        </div>
-                        <div class="card mb-2">
-                            <div class="card-header text-white">
-                                <div class="wrapper"><i class="bi bi-rulers"></i></div> Size coding</div>
-                            <div class="card-body">
-                                <select class="form-select" aria-label="Dropdown numeric size coding selection" id="select_size_coding" disabled>
-                                 
-                                </select>
-                            </div>
-                        </div>
-                        <div class="card mb-2">
-                            <div class="card-header text-white">
-                                <div class="wrapper"><i class="bi bi-cursor-text"></i></div> Text coding</div>
-                            <div class="card-body">
-                                <select class="form-select mb-2" aria-label="Dropdown text coding selection" id="select_text_coding" disabled>
-                                 
-                                </select>
-                                <p class="text-white mb-2">Pull effect precondition:</p>
-                                <div class="toolbar pb-3">
-                                    <div id="pull_effect_display_text_precondition" class="text-white" style="width: 3em; padding-right: 1em;">0</div>
-                                    <div style="width: 100%;">
-                                        <input style="vertical-align: middle; width: 100%;" type="range" class="form-range" id="input_pull_effect_text_precondition" min="0" max="2" step="0.1" value="0" >
+                                <div class="card">
+                                    <div class="card-header text-white">
+                                        <div class="wrapper"><i class="bi bi-sliders"></i></div> Various</div>
+                                    <div class="card-body">
+                                        <div class="form-check form-switch text-white pb-2">
+                                            <input class="form-check-input" type="checkbox" role="switch" id="checkbox_show_guidelines" checked>
+                                            <label class="form-check-label" for="checkbox_show_guidelines">Show guidelines</label>
+                                        </div>
+                                        <div class="form-check form-switch text-white pb-2">
+                                            <input class="form-check-input" type="checkbox" role="switch" id="checkbox_show_zero_coefficients" checked>
+                                            <label class="form-check-label" for="checkbox_show_zero_coefficients">Show removed coefficients</label>
+                                        </div>
+                                        <div class="form-check form-switch text-white pb-2">
+                                            <input class="form-check-input" type="checkbox" role="switch" id="checkbox_probabilities_mode">
+                                            <label class="form-check-label" for="checkbox_p_value_mode">Coefficients as probabilities</label>
+                                        </div>
+                                        <div class="text-white">
+                                            <label for="input_color_palette" class="btn btn-light btn-sm" style="width: 100%;"><div class="wrapper"><i class="bi bi-palette"    id="icon_color_palette"></i></div>  Load colour palette</label>
+                                            <input accept=".json" class="form-control form-control-sm" type="file" id="input_color_palette" style="display: none;">
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="btn-group" role="group" style="width: 100%;">
-                                    <button type="button" class="btn btn-light btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <div class="wrapper"><i class="bi bi-list-nested"></i></div> Set to dispersion measure
-                                    </button>
-                                    <ul id="pull_effect_dispersion_dropdown_text_precondition" class="dropdown-menu" style="width: 100%;">
-                                    </ul>
-                                </div>
                             </div>
-                        </div>
-                        <div class="card">
-                            <div class="card-header text-white">
-                                <div class="wrapper"><i class="bi bi-sliders"></i></div> Various</div>
-                            <div class="card-body">
-                                <div class="form-check form-switch text-white pb-2">
-                                    <input class="form-check-input" type="checkbox" role="switch" id="checkbox_show_guidelines" checked>
-                                    <label class="form-check-label" for="checkbox_show_guidelines">Show guidelines</label>
+                            <div class="tab-pane" id="pills-coding" role="tabpanel" aria-labelledby="pills-coding-tab" tabindex="0">
+                                <div class="card mb-2">
+                                    <div class="card-header text-white">
+                                        <div class="wrapper"><i class="bi bi-paint-bucket"></i></div> Colour coding</div>
+                                    <div class="card-header secondary text-white">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="radio_color_coding" id="radio_color_coding_sign" checked>
+                                            <label class="form-check-label" for="radio_color_coding_sign">Positive/negative</label>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="text-white mb-2">Pull effect threshold:</p>
+                                        <div class="toolbar pb-3" id="form_pull_effect">
+                                            <div id="pull_effect_display" class="text-white" style="width: 3em; padding-right: 1em;">0</div>
+                                            <div style="width: 100%;">
+                                                <input style="vertical-align: middle; width: 100%;" type="range" class="form-range" id="input_pull_effect" min="0" max="2" step="0.1" value="0" >
+                                            </div>
+                                        </div>
+                                        <div class="btn-group" role="group" style="width: 100%;">
+                                            <button type="button" class="btn btn-light btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <div class="wrapper"><i class="bi bi-list-nested"></i></div> Set to dispersion measure
+                                            </button>
+                                            <ul id="pull_effect_dispersion_dropdown" class="dropdown-menu" style="width: 100%;">
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="card-header secondary text-white">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="radio_color_coding" id="radio_color_coding_categorical">
+                                            <label class="form-check-label" for="radio_color_coding_categorical">Categorical</label>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <select class="form-select mb-2" aria-label="Dropdown categorical coding selection" id="select_categorical_coding" disabled>
+                                        
+                                        </select>
+                                    </div>
+                                    <div class="card-header secondary text-white">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="radio_color_coding" id="radio_color_coding_numeric">
+                                            <label class="form-check-label" for="radio_color_coding_numeric">Numeric</label>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <select class="form-select" aria-label="Dropdown numeric coding selection" id="select_numeric_coding" disabled>
+                                        
+                                        </select>
+                                    </div>
                                 </div>
-                                <div class="form-check form-switch text-white pb-2">
-                                    <input class="form-check-input" type="checkbox" role="switch" id="checkbox_show_zero_coefficients" checked>
-                                    <label class="form-check-label" for="checkbox_show_zero_coefficients">Show removed coefficients</label>
+                                <div class="card mb-2">
+                                    <div class="card-header text-white">
+                                        <div class="wrapper"><i class="bi bi-rulers"></i></div> Size coding</div>
+                                    <div class="card-body">
+                                        <select class="form-select" aria-label="Dropdown numeric size coding selection" id="select_size_coding" disabled>
+                                        
+                                        </select>
+                                    </div>
                                 </div>
-                                <div class="form-check form-switch text-white pb-2">
-                                    <input class="form-check-input" type="checkbox" role="switch" id="checkbox_probabilities_mode">
-                                    <label class="form-check-label" for="checkbox_p_value_mode">Coefficients as probabilities</label>
-                                </div>
-                                <div class="text-white">
-                                    <label for="input_color_palette" class="btn btn-light btn-sm" style="width: 100%;"><div class="wrapper"><i class="bi bi-palette" id="icon_color_palette"></i></div>  Load colour palette</label>
-                                    <input accept=".json" class="form-control form-control-sm" type="file" id="input_color_palette" style="display: none;">
+                                <div class="card mb-2">
+                                    <div class="card-header text-white">
+                                        <div class="wrapper"><i class="bi bi-cursor-text"></i></div> Text coding</div>
+                                    <div class="card-body">
+                                        <select class="form-select mb-2" aria-label="Dropdown text coding selection" id="select_text_coding" disabled>
+                                        
+                                        </select>
+                                        <p class="text-white mb-2">Pull effect precondition:</p>
+                                        <div class="toolbar pb-3">
+                                            <div id="pull_effect_display_text_precondition" class="text-white" style="width: 3em; padding-right: 1em;">0</div>
+                                            <div style="width: 100%;">
+                                                <input style="vertical-align: middle; width: 100%;" type="range" class="form-range"     id="input_pull_effect_text_precondition"    min="0" max="2" step="0.1" value="0" >
+                                            </div>
+                                        </div>
+                                        <div class="btn-group" role="group" style="width: 100%;">
+                                            <button type="button" class="btn btn-light btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <div class="wrapper"><i class="bi bi-list-nested"></i></div> Set to dispersion measure
+                                            </button>
+                                            <ul id="pull_effect_dispersion_dropdown_text_precondition" class="dropdown-menu" style="width: 100%;">
+                                            </ul>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <hr>
                     <div class="text-white">
+                        <hr>
                         <span href="#" class="d-flex align-items-center text-white text-decoration-none">
                             <img src="https://github.com/AntheSevenants.png" alt="" width="32" height="32" class="rounded-circle me-2">
                             <strong>by Anthe Sevenants</strong>
