@@ -1031,21 +1031,6 @@ class DotPlot {
             }
 
             this.drawLegendCircle(this.chartRangeWidth - 10, 30 * (index + 1), group, index, "legend_piece");
-
-            /*this.svg.append("circle")
-                    .attr("cx", this.chartRangeWidth - 10)
-                    .attr("cy", 30 * (index + 1))
-                    .attr("r", 6)
-                    .attr("fill-opacity", 0.6)
-                    .attr("class", "legend_piece")
-                    .style("fill", () => {
-                        if (index <= 1 && this.useGradient) {
-                            return this.getColorPalette(true)[index];
-                        }
-
-                        return(this.colorScale(group));
-                    })
-                    .style("stroke", "grey")*/
             
             let text = group;
 
