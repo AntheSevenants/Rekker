@@ -309,6 +309,7 @@ class DotPlot {
         this.applyDefaultStyling();
         this.applyClusterGroupInfo();
         this.drawLegend();
+        this.selectedCoefficients.callback();
         this.enablePopovers();
     }
 
@@ -703,6 +704,7 @@ class DotPlot {
         this.drawLegend();
         this.drawStatistics();
         this.drawRegressionInfo();
+        this.selectedCoefficients.callback()
 
         this.originalX = this.x;
         this.originalY = this.y;
