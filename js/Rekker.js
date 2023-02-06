@@ -254,6 +254,7 @@ class Rekker {
                     this.selectExternal.attr("disabled", "");
                     this.selectExternal2D.attr("disabled", "");
                     this.selectClustering.attr("disabled", "");
+                    this.brushActiveCheckbox.attr("disabled", ""); 
                     this.dotPlot.externalColumn = null;
                     this.dotPlot.externalColumnX = null;
                     this.dotPlot._clusterColumn = null;
@@ -264,13 +265,15 @@ class Rekker {
                         this.updateExternalColumn(false);
                         this.selectExternal.attr("disabled", null);
                         this.selectExternal2D.attr("disabled", "");   
-                        this.selectClustering.attr("disabled", "");  
+                        this.selectClustering.attr("disabled", ""); 
+                        this.brushActiveCheckbox.attr("disabled", ""); 
                         this.dotPlot._clusterColumn = null; 
                     } else if (axisMode == AxisModes.ExternalOnly) {
                         this.updateExternal2DColumn();
                         this.updateClustering();
                         this.selectExternal2D.attr("disabled", null);
                         this.selectClustering.attr("disabled", null);
+                        this.brushActiveCheckbox.attr("disabled", null);
                         this.selectExternal.attr("disabled", "");   
                     }
                 }
