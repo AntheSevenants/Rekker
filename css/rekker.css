@@ -11,7 +11,8 @@ main {
 
 .sidebar {
 	background-color: #212529;
-	overflow-y: auto;
+	overflow-y: scroll;
+	width: 325px; 
 }
 
 .sidebar hr {
