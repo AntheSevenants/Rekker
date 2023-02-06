@@ -1028,7 +1028,7 @@ class DotPlot {
                         })
                        // I mimick the R studio colour scheme
                        .style("fill", d => this.computeColor(d))
-                       .style("fill-opacity", 0.4)
+                       .style("fill-opacity", 0.5)
                        .style("visibility", d => this.computeVisibility(d))
                        .classed("selected", (d, i) => this.selectedCoefficients.items.includes(d["feature"]))
                        .on("click", (event, row) => {
