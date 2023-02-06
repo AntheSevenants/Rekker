@@ -317,6 +317,11 @@ class Rekker {
         let listGroups = {};
         let groupColors = {};
         let notices = {};
+        let groupFrequencies = {};
+
+        this.dotPlot.signGroups.forEach(signGroup => {
+            groupFrequencies[signGroup] = 0;
+        });
 
         this.dotPlot.signGroups.forEach(signGroup => {
             let card = document.createElement("div");
@@ -356,6 +361,7 @@ class Rekker {
         });
 
         const formatFunction = d3.format(".2f");
+        const percentageFunction = d3.format(".0%");
 
         this.dotPlot.coefficients.forEach(row => {
             if (!(this.dotPlot.selectedCoefficients.items.includes(row["feature"]))) {
@@ -374,10 +380,54 @@ class Rekker {
             listGroupItem.appendChild(coefficientPill);
 
             listGroups[row["_sign"]].appendChild(listGroupItem);
+            groupFrequencies[row["_sign"]]++;
 
             // Disable notice for this sign group
             notices[row["_sign"]].style("display", "none");
         })
+
+        // Selection stats table
+        let table = d3.select("#table_selection_stats");
+        table.html(""); // reset table
+
+        // Table header
+        table.style("text-align", "center")
+             .append('thead')
+             .append('tr')
+             .selectAll('th')
+             .data(this.dotPlot.signGroups)
+             .enter()
+             .append("th")
+             .html(signGroup => `<i style="color: ${groupColors[signGroup]};" class="bi bi-circle-fill"></i>`);
+
+        // Frequencies
+        table.append('tbody')
+             .append('tr')
+             .selectAll('td')
+             .data(Object.values(groupFrequencies))
+             .enter()
+             .append('td')
+             .html(d => d);
+
+        // Relative frequencies
+        table.append('tbody')
+             .append('tr')
+             .selectAll('td')
+             .data(Object.values(groupFrequencies))
+             .enter()
+             .append('td')
+             .html(d => d != 0 ? percentageFunction(d / this.dotPlot.selectedCoefficients.count) : "/");
+
+        const totalDefinite = groupFrequencies[this.dotPlot.signGroups[0]] + groupFrequencies[this.dotPlot.signGroups[1]];
+        
+        // Relative frequencies (only defined)
+        table.append('tbody')
+             .append('tr')
+             .selectAll('td')
+             .data(Object.values(groupFrequencies))
+             .enter()
+             .append('td')
+             .html((d, i) => (d != 0 && i <= 1) ? percentageFunction(d / totalDefinite) : "/");
     }
 
     updateExternalColumn() {
