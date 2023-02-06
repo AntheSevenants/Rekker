@@ -931,7 +931,7 @@ class DotPlot {
             const selected = extent[0][0] <= el.attr("cx") && extent[1][0] >= el.attr("cx") && extent[0][1] <= el.attr("cy") && extent[1][1] >= el.attr("cy");
 
             if (selected) {
-                this.selectedCoefficients.push(i);
+                this.selectedCoefficients.push(d["feature"]);
             }
 
             return selected;
@@ -1005,7 +1005,7 @@ class DotPlot {
                        .style("fill", d => this.computeColor(d))
                        .style("fill-opacity", 0.4)
                        .style("visibility", d => this.computeVisibility(d))
-                       .classed("selected", (d, i) => this.selectedCoefficients.includes(i))
+                       .classed("selected", (d, i) => this.selectedCoefficients.includes(d["feature"]))
                        .on("click", (event, row) => {
                             let pointElement = d3.select(event.target);
                             this.clickPoint(row, pointElement);
@@ -1060,7 +1060,14 @@ class DotPlot {
     }
 
     clickPoint(row, pointElement) {
-        pointElement.classed("selected", true);
+        let isAlreadySelected = this.selectedCoefficients.includes(row["feature"]);
+        pointElement.classed("selected", !isAlreadySelected);
+
+        if (!isAlreadySelected) {
+            this.selectedCoefficients.push(row["feature"]);
+        } else {
+            this.selectedCoefficients = this.selectedCoefficients.filter(feature => feature != row["feature"]);
+        }
     }
 
     mouseOverPoint(row, pointElement) {
