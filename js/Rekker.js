@@ -216,6 +216,16 @@ class Rekker {
             }
         });
 
+        d3.select("#button_download_selection").on("click", () => {
+            const dataString = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(this.dotPlot.selectedCoefficients.items));
+            let downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href", dataString);
+            downloadAnchorNode.setAttribute("download", "rekker-selection.json");
+            document.body.appendChild(downloadAnchorNode);
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
+        });
+
         let codingVariables = [ ];
         if (this.dataSource.codingAvailable) {
             codingVariables = codingVariables.concat(this.dataSource.stringColumns);
