@@ -1195,8 +1195,6 @@ class DotPlot {
             return;
         }
 
-        console.log(this.externalColumnX, this.data.columns);
-
         // Define all necessary columns
         let regressionColumns = { "coefficient": { "x": `${this.externalColumnX}_coeff`,
                                                    "y": `${this.externalColumn}_coeff` },
@@ -1208,7 +1206,6 @@ class DotPlot {
         for (let columnType in regressionColumns) {
             for (let axis in regressionColumns[columnType]) {
                 if (!(this.data.columns.includes(regressionColumns[columnType][axis]))) {
-                    console.log(columnType, axis);
                     missingData = true;
                     break
                 }
