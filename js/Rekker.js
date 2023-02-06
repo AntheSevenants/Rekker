@@ -385,6 +385,7 @@ class Rekker {
             let coefficientPill = document.createElement("span");
             coefficientPill.className = "badge rounded-pill";
             coefficientPill.style.backgroundColor = groupColors[row["_sign"]];
+            coefficientPill.style.color = shouldTextBeBlack(groupColors[row["_sign"]]) ? "#111" : "#fff";
             coefficientPill.innerText = formatFunction(row["coefficient"]);
 
             listGroupItem.appendChild(coefficientPill);
