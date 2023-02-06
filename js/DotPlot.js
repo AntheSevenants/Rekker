@@ -1,5 +1,5 @@
 class DotPlot {
-    constructor(targetElementName, data, margin={ top: 30,
+    constructor(targetElementName, data, onUpdateSelection, margin={ top: 30,
                                                   right: 30,
                                                   bottom: 30,
                                                   left: 50 }) {
@@ -75,7 +75,7 @@ class DotPlot {
         this._brushActive = false;
         this.brush = null;
 
-        this.selectedCoefficients = [];
+        this.selectedCoefficients = new ItemSelection(onUpdateSelection);
 
         this.initColorScale();
 
@@ -924,14 +924,14 @@ class DotPlot {
 			return;
 		}
 
-        this.selectedCoefficients = [];
+        this.selectedCoefficients.clear();
 
         this.dataPoints.classed("selected", (d, i, dataPoints) => {
             const el = d3.select(dataPoints[i]);
             const selected = extent[0][0] <= el.attr("cx") && extent[1][0] >= el.attr("cx") && extent[0][1] <= el.attr("cy") && extent[1][1] >= el.attr("cy");
 
             if (selected) {
-                this.selectedCoefficients.push(d["feature"]);
+                this.selectedCoefficients.add(d["feature"]);
             }
 
             return selected;
@@ -1005,7 +1005,7 @@ class DotPlot {
                        .style("fill", d => this.computeColor(d))
                        .style("fill-opacity", 0.4)
                        .style("visibility", d => this.computeVisibility(d))
-                       .classed("selected", (d, i) => this.selectedCoefficients.includes(d["feature"]))
+                       .classed("selected", (d, i) => this.selectedCoefficients.items.includes(d["feature"]))
                        .on("click", (event, row) => {
                             let pointElement = d3.select(event.target);
                             this.clickPoint(row, pointElement);
@@ -1060,14 +1060,9 @@ class DotPlot {
     }
 
     clickPoint(row, pointElement) {
-        let isAlreadySelected = this.selectedCoefficients.includes(row["feature"]);
+        let isAlreadySelected = this.selectedCoefficients.items.includes(row["feature"]);
         pointElement.classed("selected", !isAlreadySelected);
-
-        if (!isAlreadySelected) {
-            this.selectedCoefficients.push(row["feature"]);
-        } else {
-            this.selectedCoefficients = this.selectedCoefficients.filter(feature => feature != row["feature"]);
-        }
+        this.selectedCoefficients.toggle(row["feature"]);
     }
 
     mouseOverPoint(row, pointElement) {

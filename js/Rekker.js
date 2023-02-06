@@ -51,7 +51,7 @@ class Rekker {
             return;
         }
 
-        this.dotPlot = new DotPlot(this.dotPlotElementName, this.dataSource.datasets);
+        this.dotPlot = new DotPlot(this.dotPlotElementName, this.dataSource.datasets, (selectedFeatures) => { /* todo */ });
         this.dotPlot.initPlot();
         this.dotPlot.drawPlot();
 
