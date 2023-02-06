@@ -930,8 +930,11 @@ class DotPlot {
     }
 
     destroyBrush() {
-        //this.pointPlane.call(this.brush.move, null);
         this.svg.select(".brush").remove();
+    }
+    
+    cancelBrush() {
+        this.brushArea.call(this.brush.move, null);
     }
 
     onBrush(event) {
