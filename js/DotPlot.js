@@ -1005,6 +1005,7 @@ class DotPlot {
                        .style("fill", d => this.computeColor(d))
                        .style("fill-opacity", 0.4)
                        .style("visibility", d => this.computeVisibility(d))
+                       .classed("selected", (d, i) => this.selectedCoefficients.includes(i))
                        .on("click", (event, row) => {
                             let pointElement = d3.select(event.target);
                             this.clickPoint(row, pointElement);
