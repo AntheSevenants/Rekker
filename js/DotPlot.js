@@ -37,6 +37,7 @@ class DotPlot {
         this.coefficientValues = this.coefficients.map(row => +row.coefficient);
         this.minimumValue = +Math.min(...this.coefficientValues);
         this.maximumValue = +Math.max(...this.coefficientValues);
+        this.coefficientsNo = this.coefficientValues.length;
 
         this._externalColumn = null;
         this._groupColumn = "_sign";
@@ -77,6 +78,11 @@ class DotPlot {
     }
 
     computeSignColumn() {
+        this.signFrequencies = {};
+        this.signGroups.forEach(signGroup => {
+            this.signFrequencies[signGroup] = 0;
+        });
+
         this.coefficients.forEach(row => {
             if (row["coefficient"] == 0) {
                 row["_sign"] = this.signGroups[2];
@@ -89,6 +95,8 @@ class DotPlot {
                                this.signGroups[0] :
                                this.signGroups[1];
             }
+
+            this.signFrequencies[row["_sign"]]++;
         });
     }
 
@@ -1030,18 +1038,30 @@ class DotPlot {
                 return;
             }
 
-            this.drawLegendCircle(this.chartRangeWidth - 10, 30 * (index + 1), group, index, "legend_piece");
+            this.drawLegendCircle(this.chartRangeWidth - 60, 30 * (index + 1), group, index, "legend_piece");
             
             let text = group;
 
             this.svg.append("text")
-                    .attr("x", this.chartRangeWidth - 25)
+                    .attr("x", this.chartRangeWidth - 75)
                     .attr("y", 30 * (index + 1))
                     .text(text)
                     .style("font-size", "15px")
                     .attr("class", "legend_piece")
                     .attr("alignment-baseline","middle")
                     .attr("text-anchor", "end")
+
+            const frequencyPercent = this.signFrequencies[group] / this.coefficientsNo;
+            const frequencyInfo = `${this.signFrequencies[group]} / ${d3.format(".0%")(frequencyPercent)}`;
+
+            this.svg.append("text")
+                    .attr("x", this.chartRangeWidth - 45)
+                    .attr("y", 30 * (index + 1))
+                    .text(frequencyInfo)
+                    .style("font-size", "15px")
+                    .attr("class", "legend_piece")
+                    .attr("alignment-baseline","middle")
+                    .attr("text-anchor", "start")
         });
     }
 
