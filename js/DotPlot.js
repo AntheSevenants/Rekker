@@ -71,6 +71,12 @@ class DotPlot {
         // What column to use for labels?
         this._textColumn = null;
 
+        // Brushing active?
+        this._brushActive = false;
+        this.brush = null;
+
+        this.selectedCoefficients = [];
+
         this.initColorScale();
 
         this.originalWidth = parseInt(this.targetElement.style('width'), 10);
@@ -315,6 +321,28 @@ class DotPlot {
         this._textFilterValue = textFilterValue;
 
         this.drawLabels();
+    }
+
+    // .brushActive
+
+    get brushActive() {
+        return this._brushActive;
+    }
+
+    set brushActive(brushActive) {
+        this._brushActive = brushActive;
+
+        if (this._brushActive) {
+            this.brush = d3.brush()
+                .extent([[0, 0], [this.chartRangeWidth, this.   chartRangeHeight]])
+                .on("brush", (event) => { this.onBrush(event); });
+            this.brushArea = this.svg.append("g")
+        		.attr("class", "brush")
+        		.call(this.brush);
+        } else {
+            //this.pointPlane.call(this.brush.move, null);
+            this.svg.select(".brush").remove();
+        }
     }
 
     getColorPalette(gradient) {
@@ -889,6 +917,25 @@ class DotPlot {
                   .attr("y2", this.y(0))
     }
 
+    onBrush(event) {
+        const extent = event.selection;
+
+        if (extent == null) {
+			return;
+		}
+
+        this.selectedCoefficients = [];
+
+        this.dataPoints.classed("selected", (d, i, dataPoints) => {
+            const el = d3.select(dataPoints[i]);
+            this.selectedCoefficients.push(i);
+            const selected = extent[0][0] <= el.attr("cx") && extent[1][0] >= el.attr("cx") && extent[0][1] <= el.attr("cy") && extent[1][1] >= el.attr("cy");
+
+            return selected;
+        });
+                       
+    }
+
     enablePopovers() {
         const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
         const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl, { "sanitize": false }));
@@ -953,8 +1000,12 @@ class DotPlot {
                         })
                        // I mimick the R studio colour scheme
                        .style("fill", d => this.computeColor(d))
-                       .style("opacity", 0.8)
+                       .style("fill-opacity", 0.4)
                        .style("visibility", d => this.computeVisibility(d))
+                       .on("click", (event, row) => {
+                            let pointElement = d3.select(event.target);
+                            this.clickPoint(row, pointElement);
+                       })
                        .on("mouseover", (event, row) => {
                            let pointElement = d3.select(event.target);
                            this.mouseOverPoint(row, pointElement);
@@ -1002,6 +1053,10 @@ class DotPlot {
                 secondaryDataPoint.style("display", "none");
             });
         }
+    }
+
+    clickPoint(row, pointElement) {
+        pointElement.classed("selected", true);
     }
 
     mouseOverPoint(row, pointElement) {

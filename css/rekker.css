@@ -102,3 +102,7 @@ a.dropdown-item {
 .label {
 	pointer-events: none;
 }
+
+circle.selected {
+	fill-opacity: 1 !important;
+}

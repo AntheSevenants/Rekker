@@ -27,6 +27,7 @@ class Rekker {
         this.showZeroCoefficientsCheckbox = d3.select("#checkbox_show_zero_coefficients");
         this.usePositiveNegativeGradientCheckbox = d3.select("#checkbox_positive_negative_gradient");
         this.probabilityModeCheckbox = d3.select("#checkbox_probabilities_mode");
+        this.brushActiveCheckbox = d3.select("#checkbox_brush_active");
         this.buttonSetStandardDeviation = d3.select("#button_standard_deviation");
 
         d3.select("#button_load_sample").on("click", () => {
@@ -184,6 +185,10 @@ class Rekker {
 
         this.usePositiveNegativeGradientCheckbox.on("change", () => {
             this.dotPlot.useGradient = this.usePositiveNegativeGradientCheckbox.node().checked;
+        })
+
+        this.brushActiveCheckbox.on("change", () => {
+            this.dotPlot.brushActive = this.brushActiveCheckbox.node().checked;
         })
 
         new PullEffectComponent(this.inputPullEffect,
