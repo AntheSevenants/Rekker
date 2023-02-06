@@ -409,6 +409,10 @@ class Rekker {
              .append('td')
              .html(d => d);
 
+        if (this.dotPlot.selectedCoefficients.count == 0) {
+            return;
+        }
+
         // Relative frequencies
         table.append('tbody')
              .append('tr')
@@ -416,10 +420,10 @@ class Rekker {
              .data(Object.values(groupFrequencies))
              .enter()
              .append('td')
-             .html(d => d != 0 ? percentageFunction(d / this.dotPlot.selectedCoefficients.count) : "/");
+             .html(d => d != 0 ? percentageFunction(d / this.dotPlot.selectedCoefficients.count) : "&nbsp;");
 
         const totalDefinite = groupFrequencies[this.dotPlot.signGroups[0]] + groupFrequencies[this.dotPlot.signGroups[1]];
-        
+
         // Relative frequencies (only defined)
         table.append('tbody')
              .append('tr')
@@ -427,7 +431,7 @@ class Rekker {
              .data(Object.values(groupFrequencies))
              .enter()
              .append('td')
-             .html((d, i) => (d != 0 && i <= 1) ? percentageFunction(d / totalDefinite) : "/");
+             .html((d, i) => (d != 0 && i <= 1) ? percentageFunction(d / totalDefinite) : "&nbsp;");
     }
 
     updateExternalColumn() {
