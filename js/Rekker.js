@@ -29,6 +29,7 @@ class Rekker {
         this.probabilityModeCheckbox = d3.select("#checkbox_probabilities_mode");
         this.brushActiveCheckbox = d3.select("#checkbox_brush_active");
         this.buttonSetStandardDeviation = d3.select("#button_standard_deviation");
+        this.selectionInfoPane = d3.select("#selection_info_pane");
 
         d3.select("#button_load_sample").on("click", () => {
             this.dataSource.setCoefficientsUrl("coefficients.csv");
@@ -51,7 +52,9 @@ class Rekker {
             return;
         }
 
-        this.dotPlot = new DotPlot(this.dotPlotElementName, this.dataSource.datasets, (selectedFeatures) => { /* todo */ });
+        this.dotPlot = new DotPlot(this.dotPlotElementName, this.dataSource.datasets, (selectedFeatures) => {
+            this.selectionUpdate();
+        });
         this.dotPlot.initPlot();
         this.dotPlot.drawPlot();
 
@@ -296,6 +299,55 @@ class Rekker {
                 }
             }
             reader.readAsText(event.target.files[0])
+        })
+    }
+
+    selectionUpdate() {
+        // Clear current selection pane
+        this.selectionInfoPane.html("");
+
+        let listGroups = {};
+
+        this.dotPlot.signGroups.forEach(signGroup => {
+            let card = document.createElement("div");
+            card.className = "card mb-3";
+
+            let cardHeader = document.createElement("div");
+            cardHeader.className = "card-header text-white";
+            cardHeader.innerHTML = `<div class="wrapper"><i class="bi bi-line"></i></div> ${signGroup}</div>`;
+
+            let cardBody = document.createElement("div");
+            cardBody.className = "card-body text-white";
+
+            card.appendChild(cardHeader);
+            card.appendChild(cardBody);
+
+            let listGroup = document.createElement("ul");
+            listGroup.className = "list-group";
+            listGroup.id = `group_${signGroup}`;
+
+            listGroups[signGroup] = listGroup;
+
+            cardBody.appendChild(listGroup);
+
+            // TODO this doesn't use the right frequency
+            if (this.dotPlot.signFrequencies[signGroup] == 0) {
+                cardBody.innerHTML = "No selected features in this group."
+            }
+
+            this.selectionInfoPane.node().appendChild(card);
+        });
+
+        this.dotPlot.coefficients.forEach(row => {
+            if (!(this.dotPlot.selectedCoefficients.items.includes(row["feature"]))) {
+                return;
+            }
+
+            let listGroupItem = document.createElement("li");
+            listGroupItem.className = "list-group-item d-flex justify-content-between align-items-center text-white";
+            listGroupItem.innerText = row["feature"];
+
+            listGroups[row["_sign"]].appendChild(listGroupItem);
         })
     }
 

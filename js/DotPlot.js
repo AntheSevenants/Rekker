@@ -335,7 +335,8 @@ class DotPlot {
         if (this._brushActive) {
             this.brush = d3.brush()
                 .extent([[0, 0], [this.chartRangeWidth, this.   chartRangeHeight]])
-                .on("brush", (event) => { this.onBrush(event); });
+                .on("brush", (event) => { this.onBrush(event); })
+                .on("end", (event) => { this.selectedCoefficients.callback(); /* callback only on brush end */ });
             this.brushArea = this.svg.append("g")
         		.attr("class", "brush")
         		.call(this.brush);
@@ -924,14 +925,14 @@ class DotPlot {
 			return;
 		}
 
-        this.selectedCoefficients.clear();
+        this.selectedCoefficients.clear(false);
 
         this.dataPoints.classed("selected", (d, i, dataPoints) => {
             const el = d3.select(dataPoints[i]);
             const selected = extent[0][0] <= el.attr("cx") && extent[1][0] >= el.attr("cx") && extent[0][1] <= el.attr("cy") && extent[1][1] >= el.attr("cy");
 
             if (selected) {
-                this.selectedCoefficients.add(d["feature"]);
+                this.selectedCoefficients.add(d["feature"], false);
             }
 
             return selected;
