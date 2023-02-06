@@ -333,18 +333,7 @@ class DotPlot {
     set brushActive(brushActive) {
         this._brushActive = brushActive;
 
-        if (this._brushActive) {
-            this.brush = d3.brush()
-                .extent([[0, 0], [this.chartRangeWidth, this.   chartRangeHeight]])
-                .on("brush", (event) => { this.onBrush(event); })
-                .on("end", (event) => { this.selectedCoefficients.callback(); /* callback only on brush end */ });
-            this.brushArea = this.svg.append("g")
-        		.attr("class", "brush")
-        		.call(this.brush);
-        } else {
-            //this.pointPlane.call(this.brush.move, null);
-            this.svg.select(".brush").remove();
-        }
+        this.toggleBrush();
     }
 
     getColorPalette(gradient) {
@@ -704,7 +693,8 @@ class DotPlot {
         this.drawLegend();
         this.drawStatistics();
         this.drawRegressionInfo();
-        this.selectedCoefficients.callback()
+        this.toggleBrush();
+        this.selectedCoefficients.callback();
 
         this.originalX = this.x;
         this.originalY = this.y;
@@ -918,6 +908,30 @@ class DotPlot {
 
         this.lineY.attr("y1", this.y(0)) 
                   .attr("y2", this.y(0))
+    }
+
+    toggleBrush() {
+        if (this.brushActive && this.externalColumnX != null) {
+            this.applyBrush();
+        } else {
+            this.destroyBrush();
+        }
+    }
+
+    applyBrush() {
+        this.brush = d3.brush()
+            .extent([[0, 0], [this.chartRangeWidth, this.   chartRangeHeight]])
+            .on("brush", (event) => { this.onBrush(event); })
+            .on("end", (event) => { this.selectedCoefficients.callback(); /* callback only on brush end */ });
+        this.brushArea = this.svg.append("g")
+            .attr("class", "brush")
+            .call(this.brush);
+
+    }
+
+    destroyBrush() {
+        //this.pointPlane.call(this.brush.move, null);
+        this.svg.select(".brush").remove();
     }
 
     onBrush(event) {
