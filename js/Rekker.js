@@ -381,8 +381,18 @@ class Rekker {
             }
 
             let listGroupItem = document.createElement("li");
-            listGroupItem.className = "list-group-item d-flex justify-content-between align-items-center text-white";
+            listGroupItem.className = "list-group-item list-group-item-action d-flex justify-content-between align-items-center text-white";
             listGroupItem.innerText = row["feature"];
+
+            let element = d3.select(`circle[feature='${row["feature"]}']`);
+
+            listGroupItem.onmouseover = () => {
+                this.dotPlot.mouseOverPoint(row, element);
+            };
+            
+            listGroupItem.onmouseleave = () => {
+                this.dotPlot.mouseOut(row, element);
+            };
 
             let coefficientPill = document.createElement("span");
             coefficientPill.className = "badge rounded-pill";

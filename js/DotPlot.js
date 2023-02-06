@@ -1026,6 +1026,7 @@ class DotPlot {
 
                             return base;
                         })
+                       .attr("feature", d => d["feature"])
                        // I mimick the R studio colour scheme
                        .style("fill", d => this.computeColor(d))
                        .style("fill-opacity", 0.5)
