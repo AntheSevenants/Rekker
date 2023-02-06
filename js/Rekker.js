@@ -313,8 +313,11 @@ class Rekker {
             card.className = "card mb-3";
 
             let cardHeader = document.createElement("div");
+            let signColour = this.dotPlot.colorScale(signGroup);
             cardHeader.className = "card-header text-white";
-            cardHeader.innerHTML = `<div class="wrapper"><i class="bi bi-line"></i></div> ${signGroup}</div>`;
+            cardHeader.innerHTML = `<div class="wrapper">
+                                    <i style="color: ${signColour};" class="bi bi-circle-fill"></i></div> 
+                                    ${signGroup}</div>`;
 
             let cardBody = document.createElement("div");
             cardBody.className = "card-body text-white";
