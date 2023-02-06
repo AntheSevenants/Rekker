@@ -308,6 +308,7 @@ class Rekker {
 
         let listGroups = {};
         let groupColors = {};
+        let notices = {};
 
         this.dotPlot.signGroups.forEach(signGroup => {
             let card = document.createElement("div");
@@ -337,10 +338,11 @@ class Rekker {
 
             cardBody.appendChild(listGroup);
 
-            // TODO this doesn't use the right frequency
-            if (this.dotPlot.signFrequencies[signGroup] == 0) {
-                cardBody.innerHTML = "No selected features in this group."
-            }
+            let noFeaturesNotice = document.createElement("span");
+            noFeaturesNotice.innerHTML = "No features in selection.";
+            notices[signGroup] = d3.select(noFeaturesNotice);
+
+            cardBody.appendChild(noFeaturesNotice);
 
             this.selectionInfoPane.node().appendChild(card);
         });
@@ -364,6 +366,9 @@ class Rekker {
             listGroupItem.appendChild(coefficientPill);
 
             listGroups[row["_sign"]].appendChild(listGroupItem);
+
+            // Disable notice for this sign group
+            notices[row["_sign"]].style("display", "none");
         })
     }
 
