@@ -31,6 +31,8 @@ class Rekker {
         this.buttonSetStandardDeviation = d3.select("#button_standard_deviation");
         this.buttonClearSelection = d3.select("#button_clear_selection");
         this.selectionInfoPane = d3.select("#selection_info_pane");
+        this.spanSelectionCount = d3.select("#span_selection_count");
+        this.spanSelectionFilterCount = d3.select("#span_selection_filter_count");
 
         d3.select("#button_load_sample").on("click", () => {
             this.dataSource.setCoefficientsUrl("coefficients.csv");
@@ -324,6 +326,9 @@ class Rekker {
         // Clear current selection pane
         this.selectionInfoPane.html("");
 
+        this.spanSelectionCount.html(this.dotPlot.selectedCoefficients.count);
+        this.spanSelectionFilterCount.html(this.dotPlot.selectedCoefficients.count);
+
         let listGroups = {};
         let groupColors = {};
         let groupTextColors = {};
@@ -446,6 +451,7 @@ class Rekker {
              .html(d => d != 0 ? percentageFunction(d / this.dotPlot.selectedCoefficients.count) : "&nbsp;");
 
         const totalDefinite = groupFrequencies[this.dotPlot.signGroups[0]] + groupFrequencies[this.dotPlot.signGroups[1]];
+        this.spanSelectionFilterCount.html(totalDefinite);
 
         // Relative frequencies (only defined)
         table.append('tbody')
