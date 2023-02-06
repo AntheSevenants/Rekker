@@ -307,16 +307,20 @@ class Rekker {
         this.selectionInfoPane.html("");
 
         let listGroups = {};
+        let groupColors = {};
 
         this.dotPlot.signGroups.forEach(signGroup => {
             let card = document.createElement("div");
             card.className = "card mb-3";
 
             let cardHeader = document.createElement("div");
-            let signColour = this.dotPlot.colorScale(signGroup);
+
+            let signColor = this.dotPlot.colorScale(signGroup);
+            groupColors[signGroup] = signColor;
+
             cardHeader.className = "card-header text-white";
             cardHeader.innerHTML = `<div class="wrapper">
-                                    <i style="color: ${signColour};" class="bi bi-circle-fill"></i></div> 
+                                    <i style="color: ${signColor};" class="bi bi-circle-fill"></i></div> 
                                     ${signGroup}</div>`;
 
             let cardBody = document.createElement("div");
@@ -341,6 +345,8 @@ class Rekker {
             this.selectionInfoPane.node().appendChild(card);
         });
 
+        const formatFunction = d3.format(".2f");
+
         this.dotPlot.coefficients.forEach(row => {
             if (!(this.dotPlot.selectedCoefficients.items.includes(row["feature"]))) {
                 return;
@@ -349,6 +355,13 @@ class Rekker {
             let listGroupItem = document.createElement("li");
             listGroupItem.className = "list-group-item d-flex justify-content-between align-items-center text-white";
             listGroupItem.innerText = row["feature"];
+
+            let coefficientPill = document.createElement("span");
+            coefficientPill.className = "badge rounded-pill";
+            coefficientPill.style.backgroundColor = groupColors[row["_sign"]];
+            coefficientPill.innerText = formatFunction(row["coefficient"]);
+
+            listGroupItem.appendChild(coefficientPill);
 
             listGroups[row["_sign"]].appendChild(listGroupItem);
         })
