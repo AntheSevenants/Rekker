@@ -911,7 +911,7 @@ class DotPlot {
     }
 
     toggleBrush() {
-        if (this.brushActive && this.externalColumnX != null) {
+        if (this.brushActive) {
             this.applyBrush();
         } else {
             this.destroyBrush();
