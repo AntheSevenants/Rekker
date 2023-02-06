@@ -29,6 +29,7 @@ class Rekker {
         this.probabilityModeCheckbox = d3.select("#checkbox_probabilities_mode");
         this.brushActiveCheckbox = d3.select("#checkbox_brush_active");
         this.buttonSetStandardDeviation = d3.select("#button_standard_deviation");
+        this.buttonClearSelection = d3.select("#button_clear_selection");
         this.selectionInfoPane = d3.select("#selection_info_pane");
 
         d3.select("#button_load_sample").on("click", () => {
@@ -207,6 +208,13 @@ class Rekker {
                                 () => { return this.dotPlot.textFilterValue; },
                                 d3.select("#pull_effect_dispersion_dropdown_text_precondition"),
                                 (dispersionMeasure) => { this.dotPlot.useDispersionMeasure(dispersionMeasure, "text") });
+
+        this.buttonClearSelection.on("click", () => { 
+            this.dotPlot.manualClearSelection();
+            if (this.dotPlot.brush != null) {
+                this.dotPlot.cancelBrush();
+            }
+        });
 
         let codingVariables = [ ];
         if (this.dataSource.codingAvailable) {
