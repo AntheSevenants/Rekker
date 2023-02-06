@@ -302,6 +302,7 @@ class DotPlot {
         this.drawLabels();
         this.applyDefaultStyling();
         this.applyClusterGroupInfo();
+        this.drawLegend();
         this.enablePopovers();
     }
 
