@@ -326,6 +326,7 @@ class Rekker {
 
         let listGroups = {};
         let groupColors = {};
+        let groupTextColors = {};
         let notices = {};
         let groupFrequencies = {};
 
@@ -341,6 +342,7 @@ class Rekker {
 
             let signColor = this.dotPlot.colorScale(signGroup);
             groupColors[signGroup] = signColor;
+            groupTextColors[signGroup] = shouldTextBeBlack(signColor) ? "#111" : "#fff";;
 
             cardHeader.className = "card-header text-white";
             cardHeader.innerHTML = `<div class="wrapper">
@@ -385,7 +387,7 @@ class Rekker {
             let coefficientPill = document.createElement("span");
             coefficientPill.className = "badge rounded-pill";
             coefficientPill.style.backgroundColor = groupColors[row["_sign"]];
-            coefficientPill.style.color = shouldTextBeBlack(groupColors[row["_sign"]]) ? "#111" : "#fff";
+            coefficientPill.style.color = groupTextColors[row["_sign"]];
             coefficientPill.innerText = formatFunction(row["coefficient"]);
 
             listGroupItem.appendChild(coefficientPill);
