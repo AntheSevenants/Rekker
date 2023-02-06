@@ -928,8 +928,11 @@ class DotPlot {
 
         this.dataPoints.classed("selected", (d, i, dataPoints) => {
             const el = d3.select(dataPoints[i]);
-            this.selectedCoefficients.push(i);
             const selected = extent[0][0] <= el.attr("cx") && extent[1][0] >= el.attr("cx") && extent[0][1] <= el.attr("cy") && extent[1][1] >= el.attr("cy");
+
+            if (selected) {
+                this.selectedCoefficients.push(i);
+            }
 
             return selected;
         });
