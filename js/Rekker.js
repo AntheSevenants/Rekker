@@ -356,7 +356,7 @@ class Rekker {
             card.appendChild(cardBody);
 
             let listGroup = document.createElement("ul");
-            listGroup.className = "list-group";
+            listGroup.className = "list-group list-group-flush";
             listGroup.id = `group_${signGroup}`;
 
             listGroups[signGroup] = listGroup;
