@@ -284,6 +284,11 @@ class DotPlot {
     }
 
     set clusterColumn(clusterColumn) {
+        // No updates if cluster column has remained the same
+        if (clusterColumn == this.clusterColumn) {
+            return;
+        }
+
         this._clusterColumn = clusterColumn;
 
         this.drawClusters();
