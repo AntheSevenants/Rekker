@@ -4,6 +4,8 @@ class SelectionStats {
         this.spanSelectionCount = spanSelectionCount;
         this.spanSelectionFilterCount = spanSelectionFilterCount;
         this.dotPlot = dotPlot;
+
+        this.sortColumn = "coefficient";
     }
 
     update() {
@@ -26,6 +28,8 @@ class SelectionStats {
         this.dotPlot.signGroups.forEach(signGroup => {
             this.appendGroupCard(signGroup);
         });
+
+        this.dotPlot.coefficients.sort((a, b) => Helpers.sortGeneral(a, b, this.sortColumn));
 
         // Go over each coefficient and check what group it belongs to
         this.dotPlot.coefficients.forEach(row => {

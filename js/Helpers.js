@@ -34,6 +34,19 @@ class Helpers {
 		return a - b;
 	};
 
+	// https://stackoverflow.com/a/1129270
+	static sortGeneral(a, b, column) {
+		if ( a[column] < b[column] ){
+			return -1;
+		}
+		
+		if ( a[column] > b[column] ){
+			return 1;
+		}
+		
+		return 0;
+	}
+
 	static round(number, decimalPlaces) {
 		return Math.ceil(number * Math.pow(10, decimalPlaces)) / Math.pow(10, decimalPlaces);
 	}

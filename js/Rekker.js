@@ -61,7 +61,7 @@ class Rekker {
                                                  d3.select("#span_selection_count"),
                                                  d3.select("#span_selection_filter_count"),
                                                  this.dotPlot);
-                                                 
+
         this.dotPlot.initPlot();
         this.dotPlot.drawPlot();
 
@@ -279,6 +279,10 @@ class Rekker {
             this.updateSelectTextCodingColumn();
         });
 
+        this.selectSelectionSort.on("change", () => { 
+            this.updateSelectSelectionSort();
+        });
+
         document.getElementsByName("radio_view").forEach(element => {
             element.onclick = () => { 
                 let axisMode = element.id;
@@ -365,5 +369,10 @@ class Rekker {
 
     updateSelectTextCodingColumn() {
         this.dotPlot.textColumn = this.selectTextCoding.node().value;
+    }
+
+    updateSelectSelectionSort() {
+        this.selectionStats.sortColumn = this.selectSelectionSort.node().value;
+        this.selectionUpdate();
     }
 }
