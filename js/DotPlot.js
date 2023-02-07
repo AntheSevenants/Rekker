@@ -115,6 +115,7 @@ class DotPlot {
         this.applyDefaultStyling();
         this.applyClusterGroupInfo();
         this.drawLegend();
+        this.selectedCoefficients.callback();
 
         this.enablePopovers();
     }
