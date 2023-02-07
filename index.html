@@ -235,10 +235,15 @@
                                             <input class="form-check-input" type="checkbox" role="switch" id="checkbox_brush_active">
                                             <label class="form-check-label" for="checkbox_brush_active">Brush to select</label>
                                         </div>
-                                        <div class="form-floating">
-                                            <select class="form-select mb-2" aria-label="Dropdown selection ordering" id="select_selection_sort">
-                                            </select>
-                                            <label for="select_external">Sort by:</label>
+                                        <div class="input-group mb-2">
+                                            <div class="form-floating flex-grow-1">
+                                                <select class="form-select" aria-label="Dropdown selection ordering" id="select_selection_sort">
+                                                </select>
+                                                <label for="select_external">Sort by:</label>
+                                            </div>
+                                            <button class="input-group-text" id="button_selection_sort">
+                                                <i id="button_selection_sort_icon" class="bi bi-sort-up"></i>
+                                            </button>
                                         </div>
                                         <div class="btn-group pb-2" role="group" style="width: 100%;">
                                             <button type="button" class="btn btn-light btn-sm" id="button_clear_selection">
