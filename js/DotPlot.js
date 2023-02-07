@@ -216,7 +216,7 @@ class DotPlot {
 
         console.log("Probability mode changed. Updating plot");
 
-        this.updatePlot(); // todo check if we can just change scales
+        this.updatePlot();
     }
 
     // .sizeColumn
