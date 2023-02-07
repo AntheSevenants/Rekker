@@ -19,14 +19,13 @@ class SelectionStats {
         this.groupFrequencies = {};
 
         /* Prepare frequency object by setting frequency counts to zero */
-        this.dotPlot.signGroups.forEach(signGroup => {
-            this.groupFrequencies[signGroup] = 0;
+        this.dotPlot.groups.forEach(group => {
+            this.groupFrequencies[group] = 0;
         });
 
-        /* Create a card for each sign group */
-        // TODO: should this just become each *group*?
-        this.dotPlot.signGroups.forEach(signGroup => {
-            this.appendGroupCard(signGroup);
+        /* Create a card for each group */
+        this.dotPlot.groups.forEach(group => {
+            this.appendGroupCard(group);
         });
 
         this.dotPlot.coefficients.sort((a, b) => Helpers.sortGeneral(a, b, this.sortColumn));
@@ -49,7 +48,7 @@ class SelectionStats {
         this.spanSelectionFilterCount.html(this.dotPlot.selectedCoefficients.count);
     }
 
-    appendGroupCard(signGroup) {
+    appendGroupCard(group) {
         // Create required elements
         let card = document.createElement("div");
         card.className = "card mb-3";
@@ -57,15 +56,15 @@ class SelectionStats {
         let cardHeader = document.createElement("div");
 
         // Get the right colours for this group
-        let signColor = this.dotPlot.colorScale(signGroup);
-        this.groupColors[signGroup] = signColor;
-        this.groupTextColors[signGroup] = shouldTextBeBlack(signColor) ? "#111" : "#fff";;
+        let groupColor = this.dotPlot.colorScale(group);
+        this.groupColors[group] = groupColor;
+        this.groupTextColors[group] = shouldTextBeBlack(groupColor) ? "#111" : "#fff";;
 
         // Set the appropriate group name and colour
         cardHeader.className = "card-header text-white";
         cardHeader.innerHTML = `<div class="wrapper">
-                            <i style="color: ${signColor};" class="bi bi-circle-fill"></i></div> 
-                            ${signGroup}</div>`;
+                            <i style="color: ${groupColor};" class="bi bi-circle-fill"></i></div> 
+                            ${group}</div>`;
 
         let cardBody = document.createElement("div");
         cardBody.className = "card-body text-white";
@@ -76,16 +75,16 @@ class SelectionStats {
         // This is the list group to which items will be appended
         let listGroup = document.createElement("ul");
         listGroup.className = "list-group list-group-flush";
-        listGroup.id = `group_${signGroup}`;
+        listGroup.id = `group_${group}`;
 
-        this.listGroups[signGroup] = listGroup;
+        this.listGroups[group] = listGroup;
 
         cardBody.appendChild(listGroup);
 
         // We build a "no features" notice and hide it when an item is added to the group
         let noFeaturesNotice = document.createElement("span");
         noFeaturesNotice.innerHTML = "No features in selection.";
-        this.notices[signGroup] = d3.select(noFeaturesNotice);
+        this.notices[group] = d3.select(noFeaturesNotice);
 
         cardBody.appendChild(noFeaturesNotice);
 
@@ -116,17 +115,17 @@ class SelectionStats {
 
         let coefficientPill = document.createElement("span");
         coefficientPill.className = "badge rounded-pill";
-        coefficientPill.style.backgroundColor = this.groupColors[row["_sign"]];
-        coefficientPill.style.color = this.groupTextColors[row["_sign"]];
+        coefficientPill.style.backgroundColor = this.groupColors[row[this.dotPlot.groupColumn]];
+        coefficientPill.style.color = this.groupTextColors[row[this.dotPlot.groupColumn]];
         coefficientPill.innerText = formatFunction(row["coefficient"]);
 
         listGroupItem.appendChild(coefficientPill);
 
-        this.listGroups[row["_sign"]].appendChild(listGroupItem);
-        this.groupFrequencies[row["_sign"]]++;
+        this.listGroups[row[this.dotPlot.groupColumn]].appendChild(listGroupItem);
+        this.groupFrequencies[row[this.dotPlot.groupColumn]]++;
 
-        // Disable notice for this sign group
-        this.notices[row["_sign"]].style("display", "none");
+        // Disable notice for this group
+        this.notices[row[this.dotPlot.groupColumn]].style("display", "none");
     }
 
     buildTable() {
@@ -141,10 +140,10 @@ class SelectionStats {
             .append('thead')
             .append('tr')
             .selectAll('th')
-            .data(this.dotPlot.signGroups)
+            .data(this.dotPlot.groups)
             .enter()
             .append("th")
-            .html(signGroup => `<i style="color: ${this.groupColors[signGroup]};" class="bi bi-circle-fill"></i>`);
+            .html(group => `<i style="color: ${this.groupColors[group]};" class="bi bi-circle-fill"></i>`);
 
         // Frequencies
         table.append('tbody')
@@ -168,7 +167,7 @@ class SelectionStats {
             .append('td')
             .html(d => d != 0 ? percentageFunction(d / this.dotPlot.selectedCoefficients.count) : "&nbsp;");
 
-        const totalDefinite = this.groupFrequencies[this.dotPlot.signGroups[0]] + this.groupFrequencies[this.dotPlot.signGroups[1]];
+        const totalDefinite = this.groupFrequencies[this.dotPlot.groups[0]] + this.groupFrequencies[this.dotPlot.groups[1]];
         this.spanSelectionFilterCount.html(totalDefinite);
 
         // Relative frequencies (only defined)
