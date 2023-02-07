@@ -1,12 +1,36 @@
 class SelectionStats {
-    constructor(selectionInfoPane, spanSelectionCount, spanSelectionFilterCount, dotPlot, defaultColumns) {
-        this.selectionInfoPane = selectionInfoPane;
-        this.spanSelectionCount = spanSelectionCount;
-        this.spanSelectionFilterCount = spanSelectionFilterCount;
+    constructor(dotPlot, defaultColumns) {
+        this.selectionInfoPane = d3.select("#selection_info_pane");
+        this.spanSelectionCount = d3.select("#span_selection_count");
+        this.spanSelectionFilterCount = d3.select("#span_selection_filter_count");
+
+        this.buttonSelectionSort = d3.select("#button_selection_sort");
+        this.buttonSelectionSortIcon = d3.select("#button_selection_sort_icon");
+
         this.dotPlot = dotPlot;
         this.defaultColumns = defaultColumns;
 
         this.sortColumn = "coefficient";
+        this._ascending = true;
+
+        this.prepareInterface();
+    }
+
+    get ascending() {
+        return this._ascending;
+    }
+
+    set ascending(ascending) {
+        this._ascending = ascending;
+
+        // Set the right item
+        this.buttonSelectionSortIcon.attr("class", this.getOrderIcon());
+        // Update view
+        this.update();
+    }
+
+    prepareInterface() {
+        this.buttonSelectionSort.on("click", () => { this.ascending = !this.ascending; });
     }
 
     update() {
@@ -30,6 +54,9 @@ class SelectionStats {
         });
 
         this.dotPlot.coefficients.sort((a, b) => Helpers.sortGeneral(a, b, this.sortColumn));
+        if (!this.ascending) {
+            this.dotPlot.coefficients.reverse();
+        }
 
         // The contents of badge on the group item depends on what the sortColumn is
         let defaultBadge = this.defaultColumns.includes(this.sortColumn);
@@ -44,6 +71,10 @@ class SelectionStats {
     reset() {
         // Clear current selection pane
         this.selectionInfoPane.html("");
+    }
+
+    getOrderIcon() {
+        return this.ascending ? "bi bi-sort-up" : "bi bi-sort-down";
     }
 
     updateCount() {
