@@ -116,8 +116,6 @@ class DotPlot {
         this.applyClusterGroupInfo();
         this.drawLegend();
         this.selectedCoefficients.callback();
-
-        this.enablePopovers();
     }
 
     // .externalColumn
@@ -292,7 +290,6 @@ class DotPlot {
         this._clusterColumn = clusterColumn;
 
         this.drawClusters();
-        this.enablePopovers();
     }
 
     // .filterValue
@@ -309,7 +306,6 @@ class DotPlot {
         this.applyClusterGroupInfo();
         this.drawLegend();
         this.selectedCoefficients.callback();
-        this.enablePopovers();
     }
 
     // .textFilterValue
@@ -775,7 +771,8 @@ class DotPlot {
                   .attr("data-bs-placement", "right")
                   .attr("data-bs-html", "true")
                   .attr("data-bs-title", (d, i) => this.clusters[i])
-                  .attr("data-bs-trigger", "hover");
+                  .attr("data-bs-trigger", "hover")
+                  .on("mouseover", (event) => showPopover(event.target));
 
             this.applyClusterGroupInfo();
         }
@@ -975,11 +972,6 @@ class DotPlot {
         this.applyDefaultStyling();
     }
 
-    enablePopovers() {
-        const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
-        const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl, { "sanitize": false }));
-    }
-
     computeSizing(d) {
         if (this.sizeColumn == null || this.sizeColumn == "_none") {
             return Constants.SizeScaleRange[0];
@@ -1055,8 +1047,6 @@ class DotPlot {
                            let pointElement = d3.select(event.target);
                            this.mouseOut(row, pointElement);
                         });
-
-        this.enablePopovers();
     }
 
     applyLineVisibility() {
@@ -1103,6 +1093,7 @@ class DotPlot {
     }
 
     mouseOverPoint(row, pointElement) {
+        showPopover(pointElement.node());
         pointElement.style("filter", `drop-shadow(0px 0px 4px ${this.computeColor(row)})`);
     }
 
@@ -1251,7 +1242,8 @@ class DotPlot {
                 .attr("data-bs-html", "true")
                 .attr("data-bs-title", this.externalColumnX)
                 .attr("data-bs-content", this.generateRegressionPopoverData("x", regressionColumns))
-                .attr("data-bs-trigger", "hover");
+                .attr("data-bs-trigger", "hover")
+                .on("mouseover", (event) => showPopover(event.target));
 
         this.drawLegendCircle(this.chartRangeWidth - 20.5, this.chartRangeHeight - 25, this.groups[1], 1, "regression");
 
@@ -1270,10 +1262,9 @@ class DotPlot {
                 .attr("data-bs-html", "true")
                 .attr("data-bs-title", this.externalColumn)
                 .attr("data-bs-content", this.generateRegressionPopoverData("y", regressionColumns))
-                .attr("data-bs-trigger", "hover");
+                .attr("data-bs-trigger", "hover")
+                .on("mouseover", (event) => showPopover(event.target));
 
         this.drawLegendCircle(79.5, 29, this.groups[1], 1, "regression");
-
-        this.enablePopovers();
     }
 }
