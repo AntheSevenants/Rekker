@@ -84,11 +84,6 @@ class DotPlot {
     }
 
     computeSignColumn() {
-        this.signFrequencies = {};
-        this.signGroups.forEach(signGroup => {
-            this.signFrequencies[signGroup] = 0;
-        });
-
         this.coefficients.forEach(row => {
             if (row["coefficient"] == 0) {
                 row["_sign"] = this.signGroups[2];
@@ -101,8 +96,6 @@ class DotPlot {
                                this.signGroups[0] :
                                this.signGroups[1];
             }
-
-            this.signFrequencies[row["_sign"]]++;
         });
     }
 
@@ -420,6 +413,18 @@ class DotPlot {
             this.gradientColorScale = d3.scaleLinear()
                                         .domain([ this.minimumGroupValue, this.maximumGroupValue ])
                                         .range(this.getColorPalette(true));
+        }
+
+        // Compute frequencies
+        if (this.groupColumn != null) {
+            this.externalFrequencies = {};
+            this.groups.forEach(group => {
+                this.externalFrequencies[group] = 0;
+            });
+
+            this.coefficients.forEach(row => {
+                this.externalFrequencies[row[this.groupColumn]]++;
+            });
         }
     }
 
@@ -1139,8 +1144,8 @@ class DotPlot {
                     .attr("alignment-baseline","middle")
                     .attr("text-anchor", "end")
 
-            const frequencyPercent = this.signFrequencies[group] / this.coefficientsNo;
-            const frequencyInfo = `${this.signFrequencies[group]} / ${d3.format(".0%")(frequencyPercent)}`;
+            const frequencyPercent = this.externalFrequencies[group] / this.coefficientsNo;
+            const frequencyInfo = `${this.externalFrequencies[group]} / ${d3.format(".0%")(frequencyPercent)}`;
 
             this.svg.append("text")
                     .attr("x", this.chartRangeWidth - 45)
