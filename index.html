@@ -27,6 +27,7 @@
         <script src="js/Constants.js"></script>
         <script src="js/Color.js"></script>
         <script src="js/ItemSelection.js"></script>
+        <script src="js/SelectionStats.js"></script>
         <script src="js/AxisModes.js"></script>
         <script src="js/ColorCodings.js"></script>
         <script src="js/DispersionMeasures.js"></script>
@@ -233,6 +234,11 @@
                                         <div class="form-check form-switch text-white pb-2">
                                             <input class="form-check-input" type="checkbox" role="switch" id="checkbox_brush_active">
                                             <label class="form-check-label" for="checkbox_brush_active">Brush to select</label>
+                                        </div>
+                                        <div class="form-floating">
+                                            <select class="form-select mb-2" aria-label="Dropdown selection ordering" id="select_selection_sort">
+                                            </select>
+                                            <label for="select_external">Sort by:</label>
                                         </div>
                                         <div class="btn-group pb-2" role="group" style="width: 100%;">
                                             <button type="button" class="btn btn-light btn-sm" id="button_clear_selection">

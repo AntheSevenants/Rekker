@@ -20,6 +20,7 @@ class Rekker {
         this.selectNumericCoding = d3.select("#select_numeric_coding");
         this.selectSizeCoding = d3.select("#select_size_coding");
         this.selectTextCoding = d3.select("#select_text_coding");
+        this.selectSelectionSort = d3.select("#select_selection_sort");
         this.inputPullEffect = d3.select("#input_pull_effect");
         this.formPullEffect = d3.select("#form_pull_effect");
         this.pullEffectDisplay = d3.select("#pull_effect_display");
@@ -30,9 +31,6 @@ class Rekker {
         this.brushActiveCheckbox = d3.select("#checkbox_brush_active");
         this.buttonSetStandardDeviation = d3.select("#button_standard_deviation");
         this.buttonClearSelection = d3.select("#button_clear_selection");
-        this.selectionInfoPane = d3.select("#selection_info_pane");
-        this.spanSelectionCount = d3.select("#span_selection_count");
-        this.spanSelectionFilterCount = d3.select("#span_selection_filter_count");
 
         d3.select("#button_load_sample").on("click", () => {
             this.dataSource.setCoefficientsUrl("coefficients.csv");
@@ -58,6 +56,12 @@ class Rekker {
         this.dotPlot = new DotPlot(this.dotPlotElementName, this.dataSource.datasets, (selectedFeatures) => {
             this.selectionUpdate();
         });
+
+        this.selectionStats = new SelectionStats(d3.select("#selection_info_pane"),
+                                                 d3.select("#span_selection_count"),
+                                                 d3.select("#span_selection_filter_count"),
+                                                 this.dotPlot);
+                                                 
         this.dotPlot.initPlot();
         this.dotPlot.drawPlot();
 
@@ -156,6 +160,15 @@ class Rekker {
                              .attr("value", d => d)
                              // No questions please! :-)
                              .text(d => d == "_none" ? "None" : d == "coefficient_abs" ? "coefficient" : d);
+
+        this.dataSource.skipColumns.sort();
+        let selectionSortValues = this.dataSource.skipColumns.concat(this.dataSource.stringColumns).concat(this.dataSource.numericColumnsCollapsed);
+        this.selectSelectionSort.selectAll("option")
+                                .data(selectionSortValues)
+                                .enter()
+                                .append("option")
+                                .attr("value", d => d)
+                                .text(d => d);
 
         this.selectExternal.on("change", () => { 
             this.updateExternalColumn();
@@ -323,144 +336,7 @@ class Rekker {
     }
 
     selectionUpdate() {
-        // Clear current selection pane
-        this.selectionInfoPane.html("");
-
-        this.spanSelectionCount.html(this.dotPlot.selectedCoefficients.count);
-        this.spanSelectionFilterCount.html(this.dotPlot.selectedCoefficients.count);
-
-        let listGroups = {};
-        let groupColors = {};
-        let groupTextColors = {};
-        let notices = {};
-        let groupFrequencies = {};
-
-        this.dotPlot.signGroups.forEach(signGroup => {
-            groupFrequencies[signGroup] = 0;
-        });
-
-        this.dotPlot.signGroups.forEach(signGroup => {
-            let card = document.createElement("div");
-            card.className = "card mb-3";
-
-            let cardHeader = document.createElement("div");
-
-            let signColor = this.dotPlot.colorScale(signGroup);
-            groupColors[signGroup] = signColor;
-            groupTextColors[signGroup] = shouldTextBeBlack(signColor) ? "#111" : "#fff";;
-
-            cardHeader.className = "card-header text-white";
-            cardHeader.innerHTML = `<div class="wrapper">
-                                    <i style="color: ${signColor};" class="bi bi-circle-fill"></i></div> 
-                                    ${signGroup}</div>`;
-
-            let cardBody = document.createElement("div");
-            cardBody.className = "card-body text-white";
-
-            card.appendChild(cardHeader);
-            card.appendChild(cardBody);
-
-            let listGroup = document.createElement("ul");
-            listGroup.className = "list-group list-group-flush";
-            listGroup.id = `group_${signGroup}`;
-
-            listGroups[signGroup] = listGroup;
-
-            cardBody.appendChild(listGroup);
-
-            let noFeaturesNotice = document.createElement("span");
-            noFeaturesNotice.innerHTML = "No features in selection.";
-            notices[signGroup] = d3.select(noFeaturesNotice);
-
-            cardBody.appendChild(noFeaturesNotice);
-
-            this.selectionInfoPane.node().appendChild(card);
-        });
-
-        const formatFunction = d3.format(".2f");
-        const percentageFunction = d3.format(".0%");
-
-        this.dotPlot.coefficients.forEach(row => {
-            if (!(this.dotPlot.selectedCoefficients.items.includes(row["feature"]))) {
-                return;
-            }
-
-            let listGroupItem = document.createElement("li");
-            listGroupItem.className = "list-group-item list-group-item-action d-flex justify-content-between align-items-center text-white";
-            listGroupItem.innerText = row["feature"];
-
-            let element = d3.select(`circle[feature='${row["feature"]}']`);
-
-            listGroupItem.onmouseover = () => {
-                this.dotPlot.mouseOverPoint(row, element);
-            };
-            
-            listGroupItem.onmouseleave = () => {
-                this.dotPlot.mouseOut(row, element);
-            };
-
-            let coefficientPill = document.createElement("span");
-            coefficientPill.className = "badge rounded-pill";
-            coefficientPill.style.backgroundColor = groupColors[row["_sign"]];
-            coefficientPill.style.color = groupTextColors[row["_sign"]];
-            coefficientPill.innerText = formatFunction(row["coefficient"]);
-
-            listGroupItem.appendChild(coefficientPill);
-
-            listGroups[row["_sign"]].appendChild(listGroupItem);
-            groupFrequencies[row["_sign"]]++;
-
-            // Disable notice for this sign group
-            notices[row["_sign"]].style("display", "none");
-        })
-
-        // Selection stats table
-        let table = d3.select("#table_selection_stats");
-        table.html(""); // reset table
-
-        // Table header
-        table.style("text-align", "center")
-             .append('thead')
-             .append('tr')
-             .selectAll('th')
-             .data(this.dotPlot.signGroups)
-             .enter()
-             .append("th")
-             .html(signGroup => `<i style="color: ${groupColors[signGroup]};" class="bi bi-circle-fill"></i>`);
-
-        // Frequencies
-        table.append('tbody')
-             .append('tr')
-             .selectAll('td')
-             .data(Object.values(groupFrequencies))
-             .enter()
-             .append('td')
-             .html(d => d);
-
-        if (this.dotPlot.selectedCoefficients.count == 0) {
-            return;
-        }
-
-        // Relative frequencies
-        table.append('tbody')
-             .append('tr')
-             .selectAll('td')
-             .data(Object.values(groupFrequencies))
-             .enter()
-             .append('td')
-             .html(d => d != 0 ? percentageFunction(d / this.dotPlot.selectedCoefficients.count) : "&nbsp;");
-
-        const totalDefinite = groupFrequencies[this.dotPlot.signGroups[0]] + groupFrequencies[this.dotPlot.signGroups[1]];
-        this.spanSelectionFilterCount.html(totalDefinite);
-
-        // Relative frequencies (only defined)
-        table.append('tbody')
-             .append('tr')
-             .selectAll('td')
-             .data(Object.values(groupFrequencies))
-             .enter()
-             .append('td')
-             .html((d, i) => (d != 0 && i <= 1) ? percentageFunction(d / totalDefinite) : "&nbsp;");
+        this.selectionStats.update();
     }
 
     updateExternalColumn() {
