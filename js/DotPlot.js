@@ -1092,8 +1092,10 @@ class DotPlot {
         this.selectedCoefficients.toggle(row["feature"]);
     }
 
-    mouseOverPoint(row, pointElement) {
-        showPopover(pointElement.node());
+    mouseOverPoint(row, pointElement, popover=true) {
+        if (popover) {
+            showPopover(pointElement.node());
+        }
         pointElement.style("filter", `drop-shadow(0px 0px 4px ${this.computeColor(row)})`);
     }
 

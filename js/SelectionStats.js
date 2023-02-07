@@ -140,7 +140,7 @@ class SelectionStats {
         let element = d3.select(`circle[feature='${row["feature"]}']`);
 
         listGroupItem.onmouseover = () => {
-            this.dotPlot.mouseOverPoint(row, element);
+            this.dotPlot.mouseOverPoint(row, element, false);
         };
 
         listGroupItem.onmouseleave = () => {
