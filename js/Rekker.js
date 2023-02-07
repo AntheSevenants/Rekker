@@ -60,7 +60,8 @@ class Rekker {
         this.selectionStats = new SelectionStats(d3.select("#selection_info_pane"),
                                                  d3.select("#span_selection_count"),
                                                  d3.select("#span_selection_filter_count"),
-                                                 this.dotPlot);
+                                                 this.dotPlot,
+                                                 this.dataSource.skipColumns);
 
         this.dotPlot.initPlot();
         this.dotPlot.drawPlot();

@@ -1,9 +1,10 @@
 class SelectionStats {
-    constructor(selectionInfoPane, spanSelectionCount, spanSelectionFilterCount, dotPlot) {
+    constructor(selectionInfoPane, spanSelectionCount, spanSelectionFilterCount, dotPlot, defaultColumns) {
         this.selectionInfoPane = selectionInfoPane;
         this.spanSelectionCount = spanSelectionCount;
         this.spanSelectionFilterCount = spanSelectionFilterCount;
         this.dotPlot = dotPlot;
+        this.defaultColumns = defaultColumns;
 
         this.sortColumn = "coefficient";
     }
@@ -30,9 +31,11 @@ class SelectionStats {
 
         this.dotPlot.coefficients.sort((a, b) => Helpers.sortGeneral(a, b, this.sortColumn));
 
+        // The contents of badge on the group item depends on what the sortColumn is
+        let defaultBadge = this.defaultColumns.includes(this.sortColumn);
         // Go over each coefficient and check what group it belongs to
         this.dotPlot.coefficients.forEach(row => {
-            this.appendFeature(row);
+            this.appendFeature(row, defaultBadge);
         });
 
         this.buildTable();
@@ -92,7 +95,7 @@ class SelectionStats {
 
     }
 
-    appendFeature(row) {
+    appendFeature(row, defaultBadge=true) {
         if (!(this.dotPlot.selectedCoefficients.items.includes(row["feature"]))) {
             return;
         }
@@ -117,7 +120,13 @@ class SelectionStats {
         coefficientPill.className = "badge rounded-pill";
         coefficientPill.style.backgroundColor = this.groupColors[row[this.dotPlot.groupColumn]];
         coefficientPill.style.color = this.groupTextColors[row[this.dotPlot.groupColumn]];
-        coefficientPill.innerText = formatFunction(row["coefficient"]);
+
+        if (defaultBadge) {
+            coefficientPill.innerText = formatFunction(row["coefficient"]);
+        } else {
+            coefficientPill.innerText = row[this.sortColumn];
+        }
+        
 
         listGroupItem.appendChild(coefficientPill);
 
