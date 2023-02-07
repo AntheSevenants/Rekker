@@ -162,7 +162,7 @@ class Rekker {
                              .text(d => d == "_none" ? "None" : d == "coefficient_abs" ? "coefficient" : d);
 
         this.dataSource.skipColumns.sort();
-        let selectionSortValues = this.dataSource.skipColumns.concat(this.dataSource.stringColumns).concat(this.dataSource.numericColumnsCollapsed);
+        let selectionSortValues = this.dataSource.skipColumns.concat(this.dataSource.numericColumnsCollapsed);
         this.selectSelectionSort.selectAll("option")
                                 .data(selectionSortValues)
                                 .enter()
