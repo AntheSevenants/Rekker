@@ -105,7 +105,6 @@ class Rekker {
         if (this.dataSource.externalAvailable) {
             externalVariables = this.dataSource.numericColumnsCollapsed;
         } else {
-            // todo should this go?
             document.getElementById("radio_view_external").disabled = true;
         }        
 
@@ -113,7 +112,6 @@ class Rekker {
         if (this.dataSource.external2DAvailable) {
             externalVariables2D = this.dataSource.numericColumns2D;
         } else {
-            // todo this should be adapted
             document.getElementById("radio_view_external_only").disabled = true;
             document.getElementById("radio_color_coding_numeric").disabled = true;
         }
