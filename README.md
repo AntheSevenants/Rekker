@@ -1,4 +1,7 @@
 #  <img src="https://raw.githubusercontent.com/AntheSevenants/Rekker/main/img/rubber-bands.png" style="height: 1em; width: auto;"> Rekker
+
+[![DOI](https://zenodo.org/badge/558759691.svg)](https://zenodo.org/badge/latestdoi/558759691)
+
 Finally, a natural way to explore Elastic Net coefficients. *Amai mijne rekker*.
 
 [Live demo](https://anthesevenants.github.io/Rekker/)
