@@ -873,6 +873,10 @@ class DotPlot {
     }
 
     scalePath(points) {
+        if (points.length <= 1) {
+            return null;
+        }
+
         // Scale points
         // We have to get the original values into the .data thing because we need them for zooming
         points = points.map(coordinates => [ this.x(coordinates[0]),
