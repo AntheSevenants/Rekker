@@ -108,6 +108,11 @@ class DataSource {
                 return false;
             }
 
+            // Filter clustering colums
+            if (column.startsWith("cluster.")) {
+                return false;
+            }
+
             let items = this.datasets["coefficients"].map(d => d[column]).filter(value => value != "NA");
 
             return items.every(i => typeof i === "string"); });
