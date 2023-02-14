@@ -841,6 +841,7 @@ class DotPlot {
                                   .attr("x", d => this.scaleX(d) + 10)
                                   .attr("y", d => this.scaleY(d) + 10)
                                   .style("visibility", d => this.computeVisibility(d, true))
+                                  .style("fill", d => this.colorScale(d[this.groupColumn]))
                                   .text(d => d[this.textColumn]);
     }
 
