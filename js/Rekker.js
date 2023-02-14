@@ -13,6 +13,8 @@ class Rekker {
             reader.readAsDataURL(event.target.files[0])
         })
 
+        this.axisMode = AxisModes.CoefficientsOnly;
+
         this.selectExternal = d3.select("#select_external");
         this.selectExternal2D = d3.select("#select_external_2D");
         this.selectClustering = d3.select("#select_clustering");
@@ -115,11 +117,6 @@ class Rekker {
             document.getElementById("radio_view_external_only").disabled = true;
             document.getElementById("radio_color_coding_numeric").disabled = true;
         }
-
-        let clusterColumns = [ "_none" ];
-        if (this.dataSource.clusterColumns.length != 0) {
-            clusterColumns = clusterColumns.concat(this.dataSource.clusterColumns);
-        }
         
         this.selectExternal.selectAll("option")
                            .data(externalVariables)
@@ -134,13 +131,8 @@ class Rekker {
                            .append("option")
                            .attr("value", d => d)
                            .text(d => d);
-        
-        this.selectClustering.selectAll("option")
-                           .data(clusterColumns)
-                           .enter()
-                           .append("option")
-                           .attr("value", d => d)
-                           .text(d => d == "_none" ? "None" : d);
+
+        this.populateClustering();
 
         this.selectNumericCoding.selectAll("option")
                                 .data(["coefficient"].concat(externalVariables))
@@ -281,10 +273,10 @@ class Rekker {
 
         document.getElementsByName("radio_view").forEach(element => {
             element.onclick = () => { 
-                let axisMode = element.id;
+                this.axisMode = element.id;
                 let chartMode;
 
-                if (axisMode == AxisModes.CoefficientsOnly) {
+                if (this.axisMode == AxisModes.CoefficientsOnly) {
                     chartMode = ChartModes.DotPlot;
 
                     this.selectExternal.attr("disabled", "");
@@ -297,14 +289,14 @@ class Rekker {
                 } else {
                     chartMode = ChartModes.ScatterPlot;
 
-                    if (axisMode == AxisModes.CoefficientsExternal) {
+                    if (this.axisMode == AxisModes.CoefficientsExternal) {
                         this.updateExternalColumn(false);
                         this.selectExternal.attr("disabled", null);
                         this.selectExternal2D.attr("disabled", "");   
                         this.selectClustering.attr("disabled", ""); 
                         //this.brushActiveCheckbox.attr("disabled", ""); 
                         this.dotPlot._clusterColumn = null; 
-                    } else if (axisMode == AxisModes.ExternalOnly) {
+                    } else if (this.axisMode == AxisModes.ExternalOnly) {
                         this.updateExternal2DColumn();
                         this.updateClustering();
                         this.selectExternal2D.attr("disabled", null);
@@ -345,6 +337,30 @@ class Rekker {
 
     updateExternal2DColumn() {
         this.dotPlot.externalColumn = `${this.selectExternal2D.node().value}²`;
+        this.populateClustering();
+        this.updateClustering();
+    }
+
+    populateClustering() {
+        let clusterColumns = [ "_none" ];
+        if (this.dataSource.clusterColumns.length != 0) {
+            if (this.axisMode == AxisModes.ExternalOnly) {
+                clusterColumns = clusterColumns.concat(this.dataSource.clusterColumns.filter(
+                    clusterColumn => clusterColumn.includes(this.selectExternal2D.node().value)
+                ));
+            }
+        }
+
+        let toRemove = `cluster.${this.selectExternal2D.node().value}.`
+
+        this.selectClustering.html("")
+                           .selectAll("option")
+                           .data(clusterColumns)
+                           .enter()
+                           .append("option")
+                           .attr("value", d => d)
+                           .text(d => d == "_none" ? "None" :
+                                      d.replace(toRemove, ""));
     }
 
     updateClustering() {
