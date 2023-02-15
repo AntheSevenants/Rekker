@@ -55,6 +55,9 @@ class DotPlot {
         // Show removed zero coefficients?
         this._showZeroCoefficients = true;
 
+        // Show filtered coefficients?
+        this._showFilteredCoefficients = true;
+
         // Use gradient?
         this._useGradient = false;
 
@@ -186,6 +189,18 @@ class DotPlot {
 
     set showZeroCoefficients(showZeroCoefficients) {
         this._showZeroCoefficients = showZeroCoefficients;
+
+        this.applyDefaultStyling();
+        this.drawLabels();
+    }
+
+    // .showFilteredCoefficients
+    get showFilteredCoefficients() {
+        return this._showFilteredCoefficients;
+    }
+
+    set showFilteredCoefficients(showFilteredCoefficients) {
+        this._showFilteredCoefficients = showFilteredCoefficients;
 
         this.applyDefaultStyling();
         this.drawLabels();
@@ -1027,6 +1042,10 @@ class DotPlot {
             if (!this.showZeroCoefficients) {
                 return "hidden";
             }
+        }
+
+        if (d["_sign"] == this.signGroups[3] && !this.showFilteredCoefficients) {
+            return "hidden";
         }
 
         if (this.externalColumn != null) {
