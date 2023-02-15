@@ -332,6 +332,7 @@ class DotPlot {
         this.drawLabels();
         this.applyDefaultStyling();
         this.applyClusterGroupInfo();
+        this.computeExternalFrequencies();
         this.drawLegend();
         this.selectedCoefficients.callback();
     }
@@ -348,6 +349,7 @@ class DotPlot {
         this.drawLabels();
         this.applyDefaultStyling();
         this.applyClusterGroupInfo();
+        this.computeExternalFrequencies();
         this.drawLegend();
         this.selectedCoefficients.callback();
     }
@@ -461,6 +463,10 @@ class DotPlot {
                                         .range(this.getColorPalette(true));
         }
 
+        this.computeExternalFrequencies();
+    }
+
+    computeExternalFrequencies() {
         // Compute frequencies
         if (this.groupColumn != null) {
             this.externalFrequencies = {};
