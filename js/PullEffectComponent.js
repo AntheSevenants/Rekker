@@ -23,6 +23,7 @@ class PullEffectComponent {
 
     reset() {
         this.displayElement.html("0");
+        this.sliderElement.node().value = 0;
         this.onUpdate(0);
     }
 
