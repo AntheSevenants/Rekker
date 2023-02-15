@@ -206,6 +206,9 @@ class Rekker {
                                 d3.select("#pull_effect_dispersion_dropdown"),
                                 (dispersionMeasure) => { this.dotPlot.useDispersionMeasure(dispersionMeasure, "filter") });
 
+        let topNComponent = new TopNComponent(d3.select("#input_top_n"),
+                          (topN) => { this.dotPlot.topN = topN; });
+
         new PullEffectComponent(d3.select("#input_pull_effect_text_precondition"),
                                 d3.select("#pull_effect_display_text_precondition"),
                                 (pullFilterValue) => { this.dotPlot.textFilterValue = pullFilterValue; },
@@ -217,10 +220,20 @@ class Rekker {
         // the d3 query selectors are NOT working and I do not know why
         document.querySelectorAll('a[data-bs-toggle="pill"]').forEach(element =>
             element.addEventListener("shown.bs.tab", (event) => {
-                console.log(event);
+                // Moving away from
                 switch (event.relatedTarget.id) {
                     case "pills-filter-coefficient-threshold-tab":
                         filterPullEffect.reset();
+                        break;
+                    case "pills-filter-top-n-tab":
+                        topNComponent.reset();
+                        break;
+                }
+
+                // Going to
+                switch (event.target.id) {
+                    case "pills-filter-top-n-tab":
+                        topNComponent.setOnChange();
                         break;
                 }
         }));

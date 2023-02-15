@@ -17,11 +17,15 @@ class DotPlot {
         this.coefficients = data["coefficients"];
 
         this._filterValue = 0;
+        this._topN = null;
         this._textFilterValue = 0;
 
         // Compute the signs for each data point
         this.signGroups = [ "Negative coefficients", "Positive coefficients", "Removed coefficients", "Filtered coefficients" ];
         this.computeSignColumn();
+
+        // Sort rows by coefficient value
+        this.coefficients.sort((a,b) => { return +a.coefficient - +b.coefficient });
 
         // Compute the probability value for each data point
         this.coefficients.forEach(row => {
@@ -84,11 +88,11 @@ class DotPlot {
     }
 
     computeSignColumn() {
-        this.coefficients.forEach(row => {
+        this.coefficients.forEach((row, index) => {
             if (row["coefficient"] == 0) {
                 row["_sign"] = this.signGroups[2];
             }
-            else if (row["coefficient_abs"] < this.filterValue) {
+            else if (row["coefficient_abs"] < this.filterValue || this.topNFilter(index)) {
                 row["_sign"] = this.signGroups[3];
             }
             else {
@@ -97,6 +101,15 @@ class DotPlot {
                                this.signGroups[1];
             }
         });
+    }
+
+    topNFilter(i) {    
+        if (this.topN == null) {
+            return false;
+        }
+
+        const topNHalf = Math.round(this.topN / 2);
+        return (i >= topNHalf) && (i < this.coefficients.length - topNHalf)
     }
 
     clear() {
@@ -299,6 +312,22 @@ class DotPlot {
 
     set filterValue(filterValue) {
         this._filterValue = filterValue;
+
+        this.computeSignColumn();
+        this.drawLabels();
+        this.applyDefaultStyling();
+        this.applyClusterGroupInfo();
+        this.drawLegend();
+        this.selectedCoefficients.callback();
+    }
+
+    // .topN
+    get topN() {
+        return this._topN;
+    }
+
+    set topN(topN) {
+        this._topN = topN;
 
         this.computeSignColumn();
         this.drawLabels();

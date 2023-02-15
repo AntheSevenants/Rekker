@@ -4,7 +4,11 @@ class TopNComponent {
         this.onChange = onChange;
 
         this.inputElement.on("change",
-                             () => { this.onChange(this.inputElement.value); });
+                             () => { this.setOnChange(); });
+    }
+
+    setOnChange() {
+        this.onChange(this.inputElement.node().value);
     }
 
     reset() {
