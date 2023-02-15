@@ -21,6 +21,11 @@ class PullEffectComponent {
         });
     }
 
+    reset() {
+        this.displayElement.html("0");
+        this.onUpdate(0);
+    }
+
     setDispersionButton() {
         Constants.DispersionMeasures.forEach(dispersionMeasure => {
             let dropdownMenuItem = document.createElement("li");

@@ -33,6 +33,7 @@ class Rekker {
         this.brushActiveCheckbox = d3.select("#checkbox_brush_active");
         this.buttonSetStandardDeviation = d3.select("#button_standard_deviation");
         this.buttonClearSelection = d3.select("#button_clear_selection");
+        this.filterTabBar = d3.select("#filter-pills-tab");
 
         d3.select("#button_load_sample").on("click", () => {
             this.dataSource.setCoefficientsUrl("coefficients.csv");
@@ -198,7 +199,7 @@ class Rekker {
             this.dotPlot.brushActive = this.brushActiveCheckbox.node().checked;
         })
 
-        new PullEffectComponent(this.inputPullEffect,
+        let filterPullEffect = new PullEffectComponent(this.inputPullEffect,
                                 this.pullEffectDisplay,
                                 (pullFilterValue) => { this.dotPlot.filterValue = pullFilterValue; },
                                 () => { return this.dotPlot.filterValue; },
@@ -211,6 +212,18 @@ class Rekker {
                                 () => { return this.dotPlot.textFilterValue; },
                                 d3.select("#pull_effect_dispersion_dropdown_text_precondition"),
                                 (dispersionMeasure) => { this.dotPlot.useDispersionMeasure(dispersionMeasure, "text") });
+
+        // d3 is letting me down and I need this stuff working
+        // the d3 query selectors are NOT working and I do not know why
+        document.querySelectorAll('a[data-bs-toggle="pill"]').forEach(element =>
+            element.addEventListener("shown.bs.tab", (event) => {
+                console.log(event);
+                switch (event.relatedTarget.id) {
+                    case "pills-filter-coefficient-threshold-tab":
+                        filterPullEffect.reset();
+                        break;
+                }
+        }));
 
         this.buttonClearSelection.on("click", () => { 
             this.dotPlot.manualClearSelection();
@@ -270,6 +283,7 @@ class Rekker {
         this.selectSelectionSort.on("change", () => { 
             this.updateSelectSelectionSort();
         });
+        
 
         document.getElementsByName("radio_view").forEach(element => {
             element.onclick = () => { 
