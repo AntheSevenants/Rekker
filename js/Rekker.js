@@ -214,13 +214,6 @@ class Rekker {
         let topNComponent = new TopNComponent(d3.select("#input_top_n"),
                           (topN) => { this.dotPlot.topN = topN; });
 
-        new PullEffectComponent(d3.select("#input_pull_effect_text_precondition"),
-                                d3.select("#pull_effect_display_text_precondition"),
-                                (pullFilterValue) => { this.dotPlot.textFilterValue = pullFilterValue; },
-                                () => { return this.dotPlot.textFilterValue; },
-                                d3.select("#pull_effect_dispersion_dropdown_text_precondition"),
-                                (dispersionMeasure) => { this.dotPlot.useDispersionMeasure(dispersionMeasure, "text") });
-
         // d3 is letting me down and I need this stuff working
         // the d3 query selectors are NOT working and I do not know why
         document.querySelectorAll('a[data-bs-toggle="pill"]').forEach(element =>
