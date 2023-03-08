@@ -537,6 +537,10 @@ class DotPlot {
             }
         });
 
+        yAxis.selectAll("text")
+             .style("fill", feature => feature.charAt(0) == "_" ? "#cc0000" : "initial")
+             .style("font-weight", feature => feature.charAt(0) == "_" ? "bold" : "initial");
+
         this.yAxis = yAxis;
 
         this.margin["left"] = recommendedLeftMargin + 10;
