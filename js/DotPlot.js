@@ -537,9 +537,11 @@ class DotPlot {
             }
         });
 
-        yAxis.selectAll("text")
-             .style("fill", feature => feature.charAt(0) == "_" ? "#cc0000" : "initial")
-             .style("font-weight", feature => feature.charAt(0) == "_" ? "bold" : "initial");
+        if (this.currentChartMode == ChartModes.DotPlot) {
+            yAxis.selectAll("text")
+                 .style("fill", feature => feature.charAt(0) == "_" ? "#cc0000" : "initial")
+                 .style("font-weight", feature => feature.charAt(0) == "_" ? "bold" : "initial");
+        }
 
         this.yAxis = yAxis;
 
