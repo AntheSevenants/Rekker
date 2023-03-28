@@ -14,6 +14,8 @@ class ModelInfoPane {
 
         // Selection stats table
         let table = this.modelInfoTable;
+        // Show table
+        table.classed("d-none", false);
         table.html(""); // reset table
 
         console.log(table);
@@ -22,7 +24,9 @@ class ModelInfoPane {
         let modelInfo = this.modelInfo.map(row => {
             let value = row["object"];
 
+            // If number and including ., we need to format this number
             if (typeof row["object"] == "number" && row["object"].toString().includes(".")) {
+                // If ratio, convert to percentage
                 if (row["predicate"].includes("ratio")) {
                     value = d3.format(".0%")(value);
                 } else {
