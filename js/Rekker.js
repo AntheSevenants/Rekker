@@ -3,6 +3,7 @@ class Rekker {
         this.dotPlotElementName = "dotplot";
 
         this.dataSource = new DataSource();
+        this.modelInfo = null;
 
         d3.select("#input_dataset").on("change", (event) => {
             let reader = new FileReader()
@@ -349,7 +350,19 @@ class Rekker {
                 }
             }
             reader.readAsText(event.target.files[0])
-        })
+        });
+
+        // Model info upload
+        d3.select("#input_model_info").on("change", (event) => {
+            let reader = new FileReader()
+            reader.onload = () => {
+                this.modelInfo = new ModelInfo(reader.result);
+                this.modelInfo.load().then(data => {
+                    new ModelInfoPane(data);
+                });
+            }
+            reader.readAsDataURL(event.target.files[0])
+        });
     }
 
     selectionUpdate() {

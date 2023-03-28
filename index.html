@@ -38,6 +38,8 @@
         <script src="js/Helpers.js"></script>
         <script src="js/DotPlot.js"></script>
         <script src="js/DataSource.js"></script>
+        <script src="js/ModelInfo.js"></script>
+        <script src="js/ModelInfoPane.js"></script>
         <script src="js/Rekker.js"></script>
 
         <!-- Favicon related resources -->
@@ -65,13 +67,16 @@
                     </div>
                     <ul class="nav nav-pills mb-3 justify-content-center" id="pills-tab" role="tablist">
                         <li class="nav-item" role="presentation">
-                          <button class="nav-link active" id="pills-axes-tab" data-bs-toggle="pill" data-bs-target="#pills-axes" type="button" role="tab" aria-controls="pills-axes" aria-selected="true"><i class="bi bi-graph-up"></i> Axes</button>
+                          <button title="Axes" class="nav-link active" id="pills-axes-tab" data-bs-toggle="pill" data-bs-target="#pills-axes" type="button" role="tab" aria-controls="pills-axes" aria-selected="true"><i class="bi bi-graph-up"></i></button>
                         </li>
                         <li class="nav-item" role="presentation">
-                          <button class="nav-link" id="pills-coding-tab" data-bs-toggle="pill" data-bs-target="#pills-coding" type="button" role="tab" aria-controls="pills-coding" aria-selected="false"><i class="bi bi-brush"></i> Coding</button>
+                          <button title="Data point coding" class="nav-link" id="pills-coding-tab" data-bs-toggle="pill" data-bs-target="#pills-coding" type="button" role="tab" aria-controls="pills-coding" aria-selected="false"><i class="bi bi-brush"></i></button>
                         </li>
                         <li class="nav-item" role="presentation">
-                          <button class="nav-link" id="pills-selection-tab" data-bs-toggle="pill" data-bs-target="#pills-selection" type="button" role="tab" aria-controls="pills-selection" aria-selected="false"><i class="bi bi-list-check"></i> List</button>
+                          <button title="Selection" class="nav-link" id="pills-selection-tab" data-bs-toggle="pill" data-bs-target="#pills-selection" type="button" role="tab" aria-controls="pills-selection" aria-selected="false"><i class="bi bi-list-check"></i></button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                          <button title="Info" class="nav-link" id="pills-info-tab" data-bs-toggle="pill" data-bs-target="#pills-info" type="button" role="tab" aria-controls="pills-info" aria-selected="false"><i class="bi bi-info-circle"></i></button>
                         </li>
                     </ul>
                     <div class="flex-column mb-auto">
@@ -143,9 +148,13 @@
                                             <input class="form-check-input" type="checkbox" role="switch" id="checkbox_probabilities_mode">
                                             <label class="form-check-label" for="checkbox_p_value_mode">Coefficients as probabilities</label>
                                         </div>
-                                        <div class="text-white">
+                                        <div class="text-white pb-2">
                                             <label for="input_color_palette" class="btn btn-light btn-sm" style="width: 100%;" id="label_color_palette"><div class="wrapper"><i class="bi bi-palette" id="icon_color_palette"></i></div>  Load colour palette</label>
                                             <input accept=".json" class="form-control form-control-sm" type="file" id="input_color_palette" style="display: none;">
+                                        </div>
+                                        <div class="text-white">
+                                            <label for="input_model_info" class="btn btn-light btn-sm" style="width: 100%;" id="label_model_info"><div class="wrapper"><i class="bi bi-info-circle" id="icon_color_palette"></i></div>  Load model information</label>
+                                            <input accept=".csv" class="form-control form-control-sm" type="file" id="input_model_info" style="display: none;">
                                         </div>
                                     </div>
                                 </div>
@@ -278,6 +287,17 @@
                                     </div>
                                 </div>
                                 <div id="selection_info_pane"></div>
+                            </div>
+                            <div class="tab-pane" id="pills-info" role="tabpanel" aria-labelledby="pills-info-tab" tabindex="0">
+                                <div class="card mb-3">
+                                    <div class="card-header text-white">
+                                        <div class="wrapper"><i class="bi bi-info-circle"></i></div> Model information</div>
+                                    <div class="card-body text-white">
+                                        <p class="mb-0" id="notice_model_info">Load a model information file to see model info.</p>
+                                        <table class="table table-striped-columns text-white" id="table_model_info">
+                                        </table>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
