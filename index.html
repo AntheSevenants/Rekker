@@ -38,7 +38,7 @@
         <script src="js/Helpers.js"></script>
         <script src="js/DotPlot.js"></script>
         <script src="js/DataSource.js"></script>
-        <script src="js/ModelInfo.js"></script>
+        <script src="js/MetaInfo.js"></script>
         <script src="js/ModelInfoPane.js"></script>
         <script src="js/Rekker.js"></script>
 
@@ -76,7 +76,7 @@
                           <button title="Selection" class="nav-link" id="pills-selection-tab" data-bs-toggle="pill" data-bs-target="#pills-selection" type="button" role="tab" aria-controls="pills-selection" aria-selected="false"><i class="bi bi-list-check"></i></button>
                         </li>
                         <li class="nav-item" role="presentation">
-                          <button title="Info" class="nav-link" id="pills-info-tab" data-bs-toggle="pill" data-bs-target="#pills-info" type="button" role="tab" aria-controls="pills-info" aria-selected="false"><i class="bi bi-info-circle"></i></button>
+                          <button title="Meta information" class="nav-link" id="pills-info-tab" data-bs-toggle="pill" data-bs-target="#pills-info" type="button" role="tab" aria-controls="pills-info" aria-selected="false"><i class="bi bi-info-circle"></i></button>
                         </li>
                     </ul>
                     <div class="flex-column mb-auto">
@@ -287,13 +287,19 @@
                             <div class="tab-pane" id="pills-info" role="tabpanel" aria-labelledby="pills-info-tab" tabindex="0">
                                 <div class="card mb-3">
                                     <div class="card-header text-white">
-                                        <div class="wrapper"><i class="bi bi-info-circle"></i></div> Model information</div>
+                                        <div class="wrapper"><i class="bi bi-info-circle"></i></div> Meta information</div>
                                     <div class="card-body text-white">
-                                        <div class="text-white pb-2">
-                                            <label for="input_model_info" class="btn btn-light btn-sm" style="width: 100%;" id="label_model_info"><div class="wrapper"><i class="bi bi-info-circle" id="icon_color_palette"></i></div>  Load model information</label>
+                                        <div class="text-white">
+                                            <label for="input_model_info" class="btn btn-light btn-sm" style="width: 100%;" id="label_model_info"><div class="wrapper"><i class="bi bi-upload" id="icon_color_palette"></i></div>  Load meta information</label>
                                             <input accept=".csv" class="form-control form-control-sm" type="file" id="input_model_info" style="display: none;">
                                         </div>
-                                        <p class="mb-0" id="notice_model_info">Load a model information file to see model info.</p>
+                                    </div>
+                                </div>
+                                <div class="card mb-3">
+                                    <div class="card-header text-white">
+                                        <div class="wrapper"><i class="bi bi-boxes"></i></div> Model information</div>
+                                    <div class="card-body text-white">
+                                        <p class="mb-0" id="notice_model_info">Load a meta information file to see model info.</p>
                                         <table class="table table-striped-columns text-white d-none" id="table_model_info">
                                         </table>
                                     </div>

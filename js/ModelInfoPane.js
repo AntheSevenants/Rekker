@@ -1,6 +1,6 @@
 class ModelInfoPane {
     constructor(modelInfo) {
-        this.modelInfo = modelInfo.filter(row => row["subject"] == "model");
+        this.modelInfo = modelInfo;
 
         this.modelInfoNotice = d3.select("#notice_model_info");
         this.modelInfoTable = d3.select("#table_model_info");
@@ -21,13 +21,13 @@ class ModelInfoPane {
         console.log(table);
 
         let columns = ["property", "value"];
-        let modelInfo = this.modelInfo.map(row => {
-            let value = row["object"];
+        let modelInfo = Object.keys(this.modelInfo).map(property => {
+            let value = this.modelInfo[property];
 
             // If number and including ., we need to format this number
-            if (typeof row["object"] == "number" && row["object"].toString().includes(".")) {
+            if (typeof value == "number" && value.toString().includes(".")) {
                 // If ratio, convert to percentage
-                if (row["predicate"].includes("ratio")) {
+                if (property.includes("ratio")) {
                     value = d3.format(".0%")(value);
                 } else {
                     value = d3.format(".4f")(value);
@@ -35,7 +35,7 @@ class ModelInfoPane {
             }
 
             return {
-                "property": row["predicate"],
+                "property": property,
                 "value": value
             }
         });

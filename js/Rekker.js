@@ -356,8 +356,8 @@ class Rekker {
         d3.select("#input_model_info").on("change", (event) => {
             let reader = new FileReader()
             reader.onload = () => {
-                this.modelInfo = new ModelInfo(reader.result);
-                this.modelInfo.load().then(data => {
+                this.metaInfo = new MetaInfo(reader.result);
+                this.metaInfo.load().then(data => {
                     new ModelInfoPane(data);
                 });
             }
