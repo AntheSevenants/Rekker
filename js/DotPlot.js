@@ -20,6 +20,10 @@ class DotPlot {
         this._topN = null;
         this._textFilterValue = 0;
 
+        // Intercept value
+        this.intercept = 0;
+        this._addIntercept = false;
+
         // Compute the signs for each data point
         this.signGroups = [ "Negative coefficients", "Positive coefficients", "Removed coefficients", "Filtered coefficients" ];
         this.computeSignColumn();
@@ -27,20 +31,7 @@ class DotPlot {
         // Sort rows by coefficient value
         this.coefficients.sort((a,b) => { return +a.coefficient - +b.coefficient });
 
-        // Compute the probability value for each data point
-        this.coefficients.forEach(row => {
-            row["_prob"] = Helpers.logit2prob(row["coefficient"]);
-        });
-
-        // Store the absolute value of each coefficient for each data point
-        this.coefficients.forEach(row => {
-            row["coefficient_abs"] = Math.abs(row["coefficient"]);
-        });
-
-        // Compute minimum and maximum values
-        this.coefficientValues = this.coefficients.map(row => +row.coefficient);
-        this.minimumValue = +Math.min(...this.coefficientValues);
-        this.maximumValue = +Math.max(...this.coefficientValues);
+        this.computeCoefficients();
         this.coefficientsNo = this.coefficientValues.length;
 
         this._externalColumn = null;
@@ -88,6 +79,34 @@ class DotPlot {
 
         this.originalWidth = parseInt(this.targetElement.style('width'), 10);
         this.initDimensions();
+    }
+
+    computeCoefficients() {
+        let intercept = 0;
+        if (this.addIntercept) {
+            intercept = this.intercept;
+        }
+
+        // Compute the adjusted coefficients
+        // Will just be regular coefficients if intercept is disabled
+        this.coefficients.forEach(row => {
+            row["coefficient_adj"] = row["coefficient"] + intercept;
+        });
+
+        // Compute the probability value for each data point
+        this.coefficients.forEach(row => {
+            row["_prob"] = Helpers.logit2prob(row["coefficient"] + intercept);
+        });
+
+        // Store the absolute value of each coefficient for each data point
+        this.coefficients.forEach(row => {
+            row["coefficient_abs"] = Math.abs(row["coefficient"] + intercept);
+        });
+
+        // Compute minimum and maximum values
+        this.coefficientValues = this.coefficients.map(row => +row.coefficient + intercept);
+        this.minimumValue = +Math.min(...this.coefficientValues);
+        this.maximumValue = +Math.max(...this.coefficientValues);
     }
 
     computeSignColumn() {
@@ -375,6 +394,20 @@ class DotPlot {
         this._brushActive = brushActive;
 
         this.toggleBrush();
+    }
+
+    // .addIntercept
+    get addIntercept() {
+        return this._addIntercept;
+    }
+
+    set addIntercept(addIntercept) {
+        this._addIntercept = addIntercept;
+
+        console.log("Add intercept mode changed. Recomputing coefficients and updating plot");
+
+        this.computeCoefficients();
+        this.updatePlot();
     }
 
     getColorPalette(gradient) {
@@ -752,6 +785,21 @@ class DotPlot {
                               .style("fill", "none")
                               .style("pointer-events", "none");
 
+        if (this.addIntercept && this.externalColumnX == null) {
+            console.log("hallo");
+            let interceptLine = lineLayer.append("line")
+                .attr("id", "baseline")
+                .attr("x1", this.x(this.intercept))
+                .attr("y1", 0)
+                .attr("x2", this.x(this.intercept))
+                .attr("y2", this.chartRangeHeight)
+                .style("stroke-width", 2)
+                .attr("stroke-dasharray", "8,8")
+                .style("stroke", "#BC3F67")
+                .style("fill", "none")
+                .style("pointer-events", "none");
+        }
+
         this.applyLineVisibility();
         this.drawLegend();
         this.drawStatistics();
@@ -905,7 +953,7 @@ class DotPlot {
         // Coefficient as logit
         if (this.externalColumnX == null) {
             if (!this.probabilityMode) {
-                return this.x(d.coefficient);
+                return this.x(d["coefficient_adj"]);
             // Coefficient as probability
             } else {
                 return this.x(d["_prob"]);

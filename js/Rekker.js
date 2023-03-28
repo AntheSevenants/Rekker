@@ -27,6 +27,7 @@ class Rekker {
         this.inputPullEffect = d3.select("#input_pull_effect");
         this.formPullEffect = d3.select("#form_pull_effect");
         this.pullEffectDisplay = d3.select("#pull_effect_display");
+        this.addInterceptCheckbox = d3.select("#checkbox_add_intercept");
         this.showGuidelinesCheckbox = d3.select("#checkbox_show_guidelines");
         this.showZeroCoefficientsCheckbox = d3.select("#checkbox_show_zero_coefficients");
         this.showFilteredCoefficientsCheckbox = d3.select("#checkbox_show_filtered_coefficients");
@@ -180,6 +181,10 @@ class Rekker {
 
         // Unlock text coding
         this.selectTextCoding.attr("disabled", null);
+
+        this.addInterceptCheckbox.on("change", () => {
+            this.dotPlot.addIntercept = this.addInterceptCheckbox.node().checked;
+        })
 
         this.showGuidelinesCheckbox.on("change", () => {
             this.dotPlot.showGuidelines = this.showGuidelinesCheckbox.node().checked;
@@ -357,8 +362,15 @@ class Rekker {
             let reader = new FileReader()
             reader.onload = () => {
                 this.metaInfo = new MetaInfo(reader.result);
-                this.metaInfo.load().then(data => {
-                    new ModelInfoPane(data);
+                this.metaInfo.load().then(modelInfo => {
+                    new ModelInfoPane(modelInfo);
+
+                    // If intercept in model info, enable 
+                    if ("intercept" in modelInfo) {
+                        console.log(modelInfo["intercept"]);
+                        this.dotPlot.intercept = modelInfo["intercept"];
+                        this.addInterceptCheckbox.attr("disabled", null);
+                    }
                 });
             }
             reader.readAsDataURL(event.target.files[0])
