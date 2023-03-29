@@ -37,15 +37,15 @@ class DotPlot {
         // Other coefficient values
         this.otherCoefficientValuesTotal = 0;
 
-        // Compute the signs for each data point
-        this.signGroups = [ "Negative coefficients", "Positive coefficients", "Removed coefficients", "Filtered coefficients" ];
-        this.computeSignColumn();
-
         // Sort rows by coefficient value
         this.coefficients.sort((a,b) => { return +a.coefficient - +b.coefficient });
 
         this.computeCoefficients();
         this.coefficientsNo = this.coefficientValues.length;
+
+        // Compute the signs for each data point
+        this.signGroups = [ "Negative coefficients", "Positive coefficients", "Removed coefficients", "Filtered coefficients" ];
+        this.computeSignColumn();
 
         this._externalColumn = null;
         this._groupColumn = "_sign";
@@ -93,6 +93,7 @@ class DotPlot {
                 this.otherCoefficientValuesTotal += this.otherCoefficientValues[feature];
             });
             this.computeCoefficients();
+            this.computeSignColumn();
             this.updatePlot(); });
 
         this.initColorScale();
@@ -138,7 +139,7 @@ class DotPlot {
                 row["_sign"] = this.signGroups[3];
             }
             else {
-                row["_sign"] = row["coefficient"] < 0 ?
+                row["_sign"] = row["coefficient_adj"] < 0 ?
                                this.signGroups[0] :
                                this.signGroups[1];
             }
@@ -427,6 +428,7 @@ class DotPlot {
         console.log("Add intercept mode changed. Recomputing coefficients and updating plot");
 
         this.computeCoefficients();
+        this.computeSignColumn();
         this.updatePlot();
     }
 
