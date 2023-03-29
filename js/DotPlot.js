@@ -16,6 +16,13 @@ class DotPlot {
         // Save the data
         this.coefficients = data["coefficients"];
 
+        this.otherCoefficientValues = {};
+        this.coefficients.forEach(row => {
+            if (row["feature"].startsWith("_is_")) {
+                this.otherCoefficientValues[row["feature"]] = row["coefficient"];
+            } 
+        });
+
         this._filterValue = 0;
         this._topN = null;
         this._textFilterValue = 0;
@@ -23,6 +30,9 @@ class DotPlot {
         // Intercept value
         this.intercept = 0;
         this._addIntercept = false;
+
+        // Other coefficient values
+        this.otherCoefficientValuesTotal = 0;
 
         // Compute the signs for each data point
         this.signGroups = [ "Negative coefficients", "Positive coefficients", "Removed coefficients", "Filtered coefficients" ];
@@ -74,6 +84,13 @@ class DotPlot {
         this.brush = null;
 
         this.selectedCoefficients = new ItemSelection(onUpdateSelection);
+        this.selectedOtherCoefficients = new ItemSelection(() => { 
+            this.otherCoefficientValuesTotal = 0;
+            this.selectedOtherCoefficients.items.forEach(feature => {
+                this.otherCoefficientValuesTotal += this.otherCoefficientValues[feature];
+            });
+            this.computeCoefficients();
+            this.updatePlot(); });
 
         this.initColorScale();
 
@@ -90,21 +107,21 @@ class DotPlot {
         // Compute the adjusted coefficients
         // Will just be regular coefficients if intercept is disabled
         this.coefficients.forEach(row => {
-            row["coefficient_adj"] = row["coefficient"] + intercept;
+            row["coefficient_adj"] = row["coefficient"] + intercept + this.otherCoefficientValuesTotal;
         });
 
         // Compute the probability value for each data point
         this.coefficients.forEach(row => {
-            row["_prob"] = Helpers.logit2prob(row["coefficient"] + intercept);
+            row["_prob"] = Helpers.logit2prob(row["coefficient"] + intercept + this.otherCoefficientValuesTotal);
         });
 
         // Store the absolute value of each coefficient for each data point
         this.coefficients.forEach(row => {
-            row["coefficient_abs"] = Math.abs(row["coefficient"] + intercept);
+            row["coefficient_abs"] = Math.abs(row["coefficient"] + intercept + this.otherCoefficientValuesTotal);
         });
 
         // Compute minimum and maximum values
-        this.coefficientValues = this.coefficients.map(row => +row.coefficient + intercept);
+        this.coefficientValues = this.coefficients.map(row => +row.coefficient + intercept + this.otherCoefficientValuesTotal);
         this.minimumValue = +Math.min(...this.coefficientValues);
         this.maximumValue = +Math.max(...this.coefficientValues);
     }
@@ -1124,11 +1141,19 @@ class DotPlot {
     applyDefaultStyling() {
         this.dataPoints.attr("r", d => this.computeSizing(d))
                        .attr("data-bs-content", d => {
-                            let pValue =d3.format(".4r")(d["_prob"]);
-                            let coefficient = d3.format(".4r")(d.coefficient);
+                            let formatFunction = d3.format(".4r");
+
+                            let pValue = formatFunction(d["_prob"]);
+                            let coefficient = formatFunction(d.coefficient);
 
                             let base = `coefficient: <i>${coefficient}</i><br>`;
-                                base += `probability: <i>${pValue}</i>`;
+
+                            if (d.coefficient != d["coefficient_adj"]) {
+                                let coefficient_adj = formatFunction(d["coefficient_adj"]);
+                                base += `adjusted: <i>${coefficient_adj}</i><br>`;
+                            }
+
+                            base += `probability: <i>${pValue}</i>`;
 
                             if (this.currentChartMode == ChartModes.ScatterPlot && this.externalColumnX == null) {
                                 let externalValue = d3.format(".4r")(d[this.externalColumn]);

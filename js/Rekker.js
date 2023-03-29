@@ -70,6 +70,15 @@ class Rekker {
         this.dotPlot.drawPlot();
 
         this.prepareInterface();
+
+        // We give all feature names to the other coefficients pane, 
+        // so it can extract which features are eligible to be shown in this pane
+        this.paneOtherCoefficients = new PaneOtherCoefficients(
+            this.dataSource.datasets["coefficients"].map(
+                row => row.feature),
+            // We toggle an "other coefficient" when it is clicked
+            (feature) => this.dotPlot.selectedOtherCoefficients.toggle(feature));
+        this.paneOtherCoefficients.buildInterface();
     }
 
     prepareInterface() {
