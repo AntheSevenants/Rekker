@@ -24,7 +24,7 @@ class DotPlot {
         });
 
         // Remove special features
-        this.coefficients.filter(row => row["feature"].charAt(0) != "_");
+        this.coefficients = this.coefficients.filter(row => row["feature"].charAt(0) != "_");
 
         this._filterValue = 0;
         this._topN = null;
