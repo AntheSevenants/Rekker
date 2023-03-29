@@ -808,12 +808,16 @@ class DotPlot {
                               .style("pointer-events", "none");
 
         if (this.addIntercept && this.externalColumnX == null) {
-            console.log("hallo");
+            let intercept = this.intercept;
+            if (this.probabilityMode) {
+                intercept = Helpers.logit2prob(intercept);
+            }
+
             let interceptLine = lineLayer.append("line")
                 .attr("id", "baseline")
-                .attr("x1", this.x(this.intercept))
+                .attr("x1", this.x(intercept))
                 .attr("y1", 0)
-                .attr("x2", this.x(this.intercept))
+                .attr("x2", this.x(intercept))
                 .attr("y2", this.chartRangeHeight)
                 .style("stroke-width", 2)
                 .attr("stroke-dasharray", "8,8")
