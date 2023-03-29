@@ -114,5 +114,4 @@ Each unique group will receive its own colour coding. You can add multiple group
 ## Future work
 
 * dynamic resizing
-* display model info
 * more interactivity
