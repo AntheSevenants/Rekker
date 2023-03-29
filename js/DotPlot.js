@@ -18,10 +18,13 @@ class DotPlot {
 
         this.otherCoefficientValues = {};
         this.coefficients.forEach(row => {
-            if (row["feature"].startsWith("_is_")) {
+            if (row["feature"].charAt(0) == "_") {
                 this.otherCoefficientValues[row["feature"]] = row["coefficient"];
             } 
         });
+
+        // Remove special features
+        this.coefficients.filter(row => row["feature"].charAt(0) != "_");
 
         this._filterValue = 0;
         this._topN = null;
@@ -587,11 +590,11 @@ class DotPlot {
             }
         });
 
-        if (this.currentChartMode == ChartModes.DotPlot) {
+        /*if (this.currentChartMode == ChartModes.DotPlot) {
             yAxis.selectAll("text")
                  .style("fill", feature => feature.charAt(0) == "_" ? "#cc0000" : "initial")
                  .style("font-weight", feature => feature.charAt(0) == "_" ? "bold" : "initial");
-        }
+        }*/
 
         this.yAxis = yAxis;
 

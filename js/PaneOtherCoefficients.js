@@ -1,7 +1,7 @@
 class PaneOtherCoefficients {
     constructor(features, onUpdate) {
         // Filter only "other" features
-        features = features.filter(feature => feature.startsWith("_is_"));
+        features = features.filter(feature => feature.charAt(0) == "_");
 
         this.features = features;
         this.onUpdate = onUpdate;
