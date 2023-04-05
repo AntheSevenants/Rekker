@@ -1359,8 +1359,6 @@ class DotPlot {
         if (this.metaInfo == null) {
             return;
         }
-        
-        console.log("k3");
 
         // Define all necessary data and keys
         const columns = [ this.externalColumnX, this.externalColumn ];
@@ -1392,8 +1390,6 @@ class DotPlot {
             return;
         }
         
-        console.log("k4");
-
         function generateCoefficientArrow(coefficient){
             return coefficient > 0 ? "↑" : "↓"
         }
@@ -1401,8 +1397,6 @@ class DotPlot {
         const formatFunction = d3.format(".2f");
         const xCoeffText = `x→ = p(    )${generateCoefficientArrow(this.metaInfo.free[this.externalColumnX]["coefficient"])}`
         const yCoeffText = `y↑ = p(    )${generateCoefficientArrow(this.metaInfo.free[this.externalColumn]["coefficient"])}`
-
-        console.log(xCoeffText, yCoeffText);
 
         this.svg.append("text")
                 .attr("x", this.chartRangeWidth - 80)
