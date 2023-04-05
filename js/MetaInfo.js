@@ -17,10 +17,15 @@ class MetaInfo {
 
     process(data) {
         this.model = {};
+        this.free = {};
 
         data.forEach(row => {
             if (row["subject"] != "model") {
-                return;
+                if (!(row["subject"] in this.free)) {
+                    this.free[row["subject"]] = {};
+                }
+
+                this.free[row["subject"]][row["predicate"]] = row["object"];
             }
 
             this.model[row["predicate"]] = row["object"];
