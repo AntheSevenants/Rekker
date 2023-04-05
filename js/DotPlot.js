@@ -87,7 +87,7 @@ class DotPlot {
         this.brush = null;
 
         // Meta information about the model
-        this.metaInfo = null;
+        this._metaInfo = null;
 
         this.selectedCoefficients = new ItemSelection(onUpdateSelection);
         this.selectedOtherCoefficients = new ItemSelection(() => { 
@@ -437,6 +437,19 @@ class DotPlot {
         this.computeCoefficients();
         this.computeSignColumn();
         this.updatePlot();
+    }
+
+    // .metaInfo
+    get metaInfo() {
+        return this._metaInfo;
+    }
+
+    set metaInfo(metaInfo) {
+        this._metaInfo = metaInfo;
+
+        console.log("Meta info bound -- drawing regression");
+
+        this.drawRegressionInfo();
     }
 
     getColorPalette(gradient) {
