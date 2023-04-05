@@ -1341,9 +1341,11 @@ class DotPlot {
                 .attr("text-anchor", "left")
     }
 
-    generateRegressionPopoverData(axis, regressionColumns) {
-        return `coeff: ${this.data[0][regressionColumns["coefficient"][axis]]}<br>
-                sig: ${this.data[0][regressionColumns["significance"][axis]]}`
+    generateRegressionPopoverData(meta) {
+        const is_significant = meta["is_significant"] == 1 ? "yes" : "no"; 
+
+        return `coeff: ${meta["coefficient"]}<br>
+                sig: ${is_significant}`
     }
 
     drawRegressionInfo() {
@@ -1354,19 +1356,34 @@ class DotPlot {
             return;
         }
 
-        // Define all necessary columns
-        let regressionColumns = { "coefficient": { "x": `${this.externalColumnX}_coeff`,
-                                                   "y": `${this.externalColumn}_coeff` },
-                                  "significance": { "x": `${this.externalColumnX}_sig`,
-                                                    "y": `${this.externalColumn}_sig` } };
+        if (this.metaInfo == null) {
+            return;
+        }
+        
+        console.log("k3");
+
+        // Define all necessary data and keys
+        const columns = [ this.externalColumnX, this.externalColumn ];
+        let regressionPredicates = [ "coefficient", "is_significant" ];
 
         // Check whether all columns are present
         let missingData = false;
-        for (let columnType in regressionColumns) {
-            for (let axis in regressionColumns[columnType]) {
-                if (!(this.data.columns.includes(regressionColumns[columnType][axis]))) {
+        for (let i = 0; i < columns.length; i++) {
+            const column = columns[i];
+
+            if (!(column in this.metaInfo.free)) {
+                missingData = true;
+                console.log("missing column", column);
+                break;
+            }
+            
+            for (let j = 0; j < regressionPredicates.length; j++) {
+                const predicate = regressionPredicates[j];
+
+                if (!(predicate in this.metaInfo.free[column])) {
                     missingData = true;
-                    break
+                    console.log("missing predicate", predicate);
+                    break;
                 }
             }
         }
@@ -1374,14 +1391,18 @@ class DotPlot {
         if (missingData) {
             return;
         }
+        
+        console.log("k4");
 
         function generateCoefficientArrow(coefficient){
             return coefficient > 0 ? "↑" : "↓"
         }
 
         const formatFunction = d3.format(".2f");
-        const xCoeffText = `x→ = p(    )${generateCoefficientArrow(this.data[0][regressionColumns["coefficient"]["x"]])}`;
-        const yCoeffText = `y↑ = p(    )${generateCoefficientArrow(this.data[0][regressionColumns["coefficient"]["y"]])}`;
+        const xCoeffText = `x→ = p(    )${generateCoefficientArrow(this.metaInfo.free[this.externalColumnX]["coefficient"])}`
+        const yCoeffText = `y↑ = p(    )${generateCoefficientArrow(this.metaInfo.free[this.externalColumn]["coefficient"])}`
+
+        console.log(xCoeffText, yCoeffText);
 
         this.svg.append("text")
                 .attr("x", this.chartRangeWidth - 80)
@@ -1397,7 +1418,7 @@ class DotPlot {
                 .attr("data-bs-placement", "right")
                 .attr("data-bs-html", "true")
                 .attr("data-bs-title", this.externalColumnX)
-                .attr("data-bs-content", this.generateRegressionPopoverData("x", regressionColumns))
+                .attr("data-bs-content", this.generateRegressionPopoverData(this.metaInfo.free[this.externalColumnX]))
                 .attr("data-bs-trigger", "hover")
                 .on("mouseover", (event) => showPopover(event.target));
 
@@ -1417,7 +1438,7 @@ class DotPlot {
                 .attr("data-bs-placement", "top")
                 .attr("data-bs-html", "true")
                 .attr("data-bs-title", this.externalColumn)
-                .attr("data-bs-content", this.generateRegressionPopoverData("y", regressionColumns))
+                .attr("data-bs-content", this.generateRegressionPopoverData(this.metaInfo.free[this.externalColumn]))
                 .attr("data-bs-trigger", "hover")
                 .on("mouseover", (event) => showPopover(event.target));
 
