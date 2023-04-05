@@ -26,6 +26,7 @@ class MetaInfo {
                 }
 
                 this.free[row["subject"]][row["predicate"]] = row["object"];
+                return;
             }
 
             this.model[row["predicate"]] = row["object"];
