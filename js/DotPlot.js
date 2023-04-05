@@ -86,6 +86,9 @@ class DotPlot {
         this._brushActive = false;
         this.brush = null;
 
+        // Meta information about the model
+        this.metaInfo = null;
+
         this.selectedCoefficients = new ItemSelection(onUpdateSelection);
         this.selectedOtherCoefficients = new ItemSelection(() => { 
             this.otherCoefficientValuesTotal = 0;
@@ -100,6 +103,10 @@ class DotPlot {
 
         this.originalWidth = parseInt(this.targetElement.style('width'), 10);
         this.initDimensions();
+    }
+
+    bindMetaInfo(metaInfo) {
+        this.metaInfo = metaInfo;
     }
 
     computeCoefficients() {

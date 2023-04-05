@@ -380,6 +380,8 @@ class Rekker {
                         this.dotPlot.intercept = modelInfo["intercept"];
                         this.addInterceptCheckbox.attr("disabled", null);
                     }
+
+                    this.dotPlot.bindMetaInfo(this.metaInfo);
                 });
             }
             reader.readAsDataURL(event.target.files[0])
