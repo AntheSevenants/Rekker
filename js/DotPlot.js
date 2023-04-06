@@ -469,7 +469,14 @@ class DotPlot {
         this.initColorScale();
         this.initDimensions();
         this.initPlot();
-        this.drawPlot();
+
+        if (this.currentChartMode != ChartModes.Histogram) {
+            this.drawPlot();
+        } else {
+            this.setMargins();
+            new Histogram(this);
+            this.drawLegend();
+        }
     }
 
     initDimensions() {
@@ -480,6 +487,7 @@ class DotPlot {
                 this.targetElement.style("width", `${this.originalWidth}px`);
                 break;
             case ChartModes.ScatterPlot:
+            case ChartModes.Histogram:
                 this.targetElement.style("height", `${window.innerHeight - 50}px`);
                 this.targetElement.style("width", `${window.innerHeight - 50}px`);
                 break;

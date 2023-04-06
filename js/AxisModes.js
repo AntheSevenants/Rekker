@@ -8,4 +8,7 @@ class AxisModes {
 	static get ExternalOnly () {
 		return "radio_view_external_only";
 	}
+	static get CoefficientsDistribution () {
+		return "radio_view_coefficients_distribution";
+	}
 }

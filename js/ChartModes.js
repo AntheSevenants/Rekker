@@ -5,4 +5,7 @@ class ChartModes {
 	static get ScatterPlot () {
 		return "radio_view_external";
 	}
+	static get Histogram () {
+		return "radio_view_coefficients_distribution";
+	}
 }

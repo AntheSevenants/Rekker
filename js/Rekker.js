@@ -315,8 +315,12 @@ class Rekker {
                 this.axisMode = element.id;
                 let chartMode;
 
-                if (this.axisMode == AxisModes.CoefficientsOnly) {
-                    chartMode = ChartModes.DotPlot;
+                if (this.axisMode == AxisModes.CoefficientsOnly || this.axisMode == AxisModes.CoefficientsDistribution) {
+                    if (this.axisMode == AxisModes.CoefficientsOnly) {
+                        chartMode = ChartModes.DotPlot;
+                    } else if (this.axisMode == AxisModes.CoefficientsDistribution) {
+                        chartMode = ChartModes.Histogram;
+                    }
 
                     this.selectExternal.attr("disabled", "");
                     this.selectExternal2D.attr("disabled", "");
