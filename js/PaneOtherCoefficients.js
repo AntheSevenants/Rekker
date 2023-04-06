@@ -1,7 +1,6 @@
 class PaneOtherCoefficients {
     constructor(features, onUpdate) {
-        // Filter only "other" features
-        features = features.filter(feature => feature.charAt(0) == "_");
+        features = features;
 
         this.features = features;
         this.onUpdate = onUpdate;
@@ -19,7 +18,13 @@ class PaneOtherCoefficients {
           .text("Other coefficients:")
           .classed("mb-0", false);
 
-        this.features.forEach(feature => {
+        this.features.forEach(row => {
+            const feature = row.feature;
+            const value = row.coefficient;
+
+            let parentDiv = document.createElement("div");
+            parentDiv.className = "d-flex justify-content-between text-white";
+
             let formDiv = document.createElement("div");
             formDiv.className = "form-check form-switch text-white";
 
@@ -43,7 +48,13 @@ class PaneOtherCoefficients {
             formDiv.appendChild(input);
             formDiv.appendChild(label);
 
-            otherCoefficientsParent.node().appendChild(formDiv);
+            let valueDiv = document.createElement("div");
+            valueDiv.innerHTML = d3.format(".4f")(value);
+
+            parentDiv.appendChild(formDiv);
+            parentDiv.appendChild(valueDiv);
+
+            otherCoefficientsParent.node().appendChild(parentDiv);
         });
     }
 }
