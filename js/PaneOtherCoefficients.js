@@ -37,7 +37,7 @@ class PaneOtherCoefficients {
 
             let label = document.createElement("label");
             label.className = "form-check-label";
-            label.for = inputId;
+            label.htmlFor = inputId;
             label.innerHTML = feature;
 
             formDiv.appendChild(input);
