@@ -5,6 +5,14 @@ class Rekker {
         this.dataSource = new DataSource();
         this.modelInfo = null;
 
+        // Get all query parameters and automatically load a dataset if necessary
+        this.urlParams = new URLSearchParams(window.location.search);
+        // If coefficients parameter exists, load coefficients from file given
+        if (this.urlParams.has("coefficients")) {
+            this.dataSource.setCoefficientsUrl(this.urlParams.get("coefficients"));
+            this.load();
+        }
+
         d3.select("#input_dataset").on("change", (event) => {
             let reader = new FileReader()
             reader.onload = () => {
@@ -78,6 +86,19 @@ class Rekker {
             // We toggle an "other coefficient" when it is clicked
             (feature) => this.dotPlot.selectedOtherCoefficients.toggle(feature));
         this.paneOtherCoefficients.buildInterface();
+
+        this.loadAdditionalDatasets();
+    }
+
+    // If additional datasets are given, also load them in
+    loadAdditionalDatasets() {
+        if (this.urlParams.has("meta")) {
+            this.loadMetaInfo(this.urlParams.get("meta"));
+        }
+
+        if (this.urlParams.has("palette")) {
+            this.loadColorPalette(this.urlParams.get("palette"));
+        }
     }
 
     prepareInterface() {
@@ -353,37 +374,41 @@ class Rekker {
         d3.select("#input_color_palette").on("change", (event) => {
             let reader = new FileReader()
             reader.onload = () => {
-                try {
-                    let colorPalette = JSON.parse(reader.result);
-                    d3.select("#label_color_palette").style("background-color", colorPalette[0]);
-                    this.dotPlot.setColorPalette(colorPalette);
-                }
-                catch (error) {
-                    console.log(error);
-                }
+                this.loadColorPalette(reader.result);
             }
-            reader.readAsText(event.target.files[0])
+            reader.readAsDataURL(event.target.files[0])
         });
 
         // Model info upload
         d3.select("#input_model_info").on("change", (event) => {
             let reader = new FileReader()
             reader.onload = () => {
-                this.metaInfo = new MetaInfo(reader.result);
-                this.metaInfo.load().then(modelInfo => {
-                    new ModelInfoPane(modelInfo);
-
-                    // If intercept in model info, enable 
-                    if ("intercept" in modelInfo) {
-                        console.log(modelInfo["intercept"]);
-                        this.dotPlot.intercept = modelInfo["intercept"];
-                        this.addInterceptCheckbox.attr("disabled", null);
-                    }
-
-                    this.dotPlot.bindMetaInfo(this.metaInfo);
-                });
+                this.loadMetaInfo(reader.result);
             }
             reader.readAsDataURL(event.target.files[0])
+        });
+    }
+
+    loadMetaInfo(url) {
+        this.metaInfo = new MetaInfo(url);
+        this.metaInfo.load().then(modelInfo => {
+            new ModelInfoPane(modelInfo);
+
+            // If intercept in model info, enable 
+            if ("intercept" in modelInfo) {
+                console.log(modelInfo["intercept"]);
+                this.dotPlot.intercept = modelInfo["intercept"];
+                this.addInterceptCheckbox.attr("disabled", null);
+            }
+
+            this.dotPlot.bindMetaInfo(this.metaInfo);
+        });
+    }
+
+    loadColorPalette(url) {
+        d3.json(url).then(colorPalette => {
+            d3.select("#label_color_palette").style("background-color", colorPalette[0]);
+            this.dotPlot.setColorPalette(colorPalette);
         });
     }
 
