@@ -1028,22 +1028,15 @@ class DotPlot {
     }
 
     drawHeatmapComponents() {
-        // TODO remove hardcoding
-        const myColor = d3.scaleLinear()
-            .range(["#A51626", "#FFFDBF", "#006837"])
-            // TODO maybe remove hardcoding
-            .domain([-0.5, 0, 0.5]);
-
         // Add dots
         this.pointPlane.selectAll("path.heatmap-point")
             .data(this.heatmapData)
             .enter()
             .append("path")
-            .attr("transform", (d) => `translate(${this.x(d["mds.all.x"])}, ${this.y(d["mds.all.y"])})`)
+            .attr("transform", (d) => `translate(${this.x(d[this.externalColumnX])}, ${this.y(d[this.externalColumn])})`)
             //.attr("cy", (d) => this.y(d["mds.all.y"]))
             .attr("d", d3.symbol().type(d3.symbolSquare).size(100)())
-            .attr("class", "heatmap-point")
-            .style("fill", (d) => myColor(d["fit"]));
+            .attr("class", "heatmap-point");
     }
 
     scaleX(d) {
@@ -1103,9 +1096,8 @@ class DotPlot {
         this.xAxis.call(d3.axisBottom(this.x))
         this.yAxis.call(d3.axisLeft(this.y))
 
-        // Todo fix hardcoding
         this.scatter.selectAll("path.heatmap-point")
-                    .attr("transform", (d) => `translate(${this.x(d["mds.all.x"])}, ${this.y(d["mds.all.y"])}) scale(${event.transform.k})`)
+                    .attr("transform", (d) => `translate(${this.x(d[this.externalColumnX])}, ${this.y(d[this.externalColumn])}) scale(${event.transform.k})`)
 
         this.scatter.selectAll("circle")
                     .attr('cx', d => this.scaleX(d))
@@ -1269,6 +1261,18 @@ class DotPlot {
                            let pointElement = d3.select(event.target);
                            this.mouseOut(row, pointElement);
                         });
+        
+                        
+        // TODO remove hardcoding
+        const heatmapColor = d3.scaleLinear()
+        .range([ this.getColorPalette(false)[0], 
+                 this.getColorPalette(false)[4],
+                 this.getColorPalette(false)[1]])
+        // TODO maybe remove hardcoding
+        .domain([-0.5, 0, 0.5]);
+
+        this.pointPlane.selectAll("path.heatmap-point")
+                       .style("fill", (d) => heatmapColor(d["fit"]));
     }
 
     applyLineVisibility() {
