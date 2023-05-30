@@ -89,6 +89,10 @@ class DotPlot {
         // Meta information about the model
         this._metaInfo = null;
 
+        // Heatmap dataset
+        this._heatmapData = null;
+        this._heatmapEnabled = false;
+
         this.selectedCoefficients = new ItemSelection(onUpdateSelection);
         this.selectedOtherCoefficients = new ItemSelection(() => { 
             this.otherCoefficientValuesTotal = 0;
@@ -103,11 +107,6 @@ class DotPlot {
 
         this.originalWidth = parseInt(this.targetElement.style('width'), 10);
         this.initDimensions();
-
-        // TODO remove hardcoding
-        d3.csv("df_pred.csv").then((data) => {
-            this.heatmapData = data;
-        });
     }
 
     bindMetaInfo(metaInfo) {
@@ -457,6 +456,30 @@ class DotPlot {
         this.drawRegressionInfo();
     }
 
+    // .heatmapEnabled
+    get heatmapEnabled() {
+        return this._heatmapEnabled;
+    }
+
+    set heatmapEnabled(bool) {
+        this._heatmapEnabled = bool;
+
+        this.updatePlot();
+    }
+
+    // .heatmapData
+    get heatmapData() {
+        return this._heatmapData;
+    }
+
+    set heatmapData(data) {
+        this._heatmapData = data;
+
+        if (this.heatmapEnabled) {
+            this.updatePlot();
+        }
+    }
+
     getColorPalette(gradient) {
         if (this.colorPalette != null) {
             return this.colorPalette;
@@ -698,7 +721,9 @@ class DotPlot {
 
             this.pointPlane = this.scatter;
 
-            this.drawHeatmapComponents(null);
+            if (this.heatmapEnabled) {
+                this.drawHeatmapComponents();
+            }
         }
 
         this.coordinates = {};
@@ -1002,7 +1027,7 @@ class DotPlot {
                                   .text(d => d[this.textColumn]);
     }
 
-    drawHeatmapComponents(data) {
+    drawHeatmapComponents() {
         // TODO remove hardcoding
         const myColor = d3.scaleLinear()
             .range(["#A51626", "#FFFDBF", "#006837"])
@@ -1070,8 +1095,6 @@ class DotPlot {
 
     // A function that updates the chart when the user zooms and thus new boundaries are available
     updateChart(event) {
-        console.log(event);
-
         // recover the new scale
         this.x = event.transform.rescaleX(this.originalX);
         this.y = event.transform.rescaleY(this.originalY);

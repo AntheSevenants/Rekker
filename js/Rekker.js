@@ -23,6 +23,7 @@ class Rekker {
         })
 
         this.axisMode = AxisModes.CoefficientsOnly;
+        this.heatmapLoaded = false;
 
         this.selectExternal = d3.select("#select_external");
         this.selectExternal2D = d3.select("#select_external_2D");
@@ -42,6 +43,7 @@ class Rekker {
         this.usePositiveNegativeGradientCheckbox = d3.select("#checkbox_positive_negative_gradient");
         this.probabilityModeCheckbox = d3.select("#checkbox_probabilities_mode");
         this.brushActiveCheckbox = d3.select("#checkbox_brush_active");
+        this.heatmapCheckbox = d3.select("#checkbox_enable_heatmap");
         this.buttonSetStandardDeviation = d3.select("#button_standard_deviation");
         this.buttonClearSelection = d3.select("#button_clear_selection");
         this.filterTabBar = d3.select("#filter-pills-tab");
@@ -239,6 +241,10 @@ class Rekker {
             this.dotPlot.brushActive = this.brushActiveCheckbox.node().checked;
         })
 
+        this.heatmapCheckbox.on("change", () => {
+            this.dotPlot.heatmapEnabled = this.heatmapCheckbox.node().checked;
+        })
+
         let filterPullEffect = new PullEffectComponent(this.inputPullEffect,
                                 this.pullEffectDisplay,
                                 (pullFilterValue) => { this.dotPlot.filterValue = pullFilterValue; },
@@ -367,6 +373,7 @@ class Rekker {
                 }
 
                 this.dotPlot.currentChartMode = chartMode;
+                this.updateHeatmapCheckbox();
             };
         });
 
@@ -384,6 +391,15 @@ class Rekker {
             let reader = new FileReader()
             reader.onload = () => {
                 this.loadMetaInfo(reader.result);
+            }
+            reader.readAsDataURL(event.target.files[0])
+        });
+
+        // Heatmap upload
+        d3.select("#input_heatmap_data").on("change", (event) => {
+            let reader = new FileReader()
+            reader.onload = () => {
+                this.loadHeatmapData(reader.result);
             }
             reader.readAsDataURL(event.target.files[0])
         });
@@ -409,6 +425,13 @@ class Rekker {
         d3.json(url).then(colorPalette => {
             d3.select("#label_color_palette").style("background-color", colorPalette[0]);
             this.dotPlot.setColorPalette(colorPalette);
+        });
+    }
+
+    loadHeatmapData(url) {
+        d3.csv(url).then(heatmapData => {
+            this.dotPlot.heatmapData = heatmapData;
+            this.updateHeatmapCheckbox();
         });
     }
 
@@ -471,5 +494,10 @@ class Rekker {
     updateSelectSelectionSort() {
         this.selectionStats.sortColumn = this.selectSelectionSort.node().value;
         this.selectionUpdate();
+    }
+
+    updateHeatmapCheckbox() {
+        let heatmapEnabled = (this.dotPlot.heatmapData != null && this.axisMode == AxisModes.ExternalOnly);
+        this.heatmapCheckbox.attr("disabled", heatmapEnabled ? null : "");
     }
 }
