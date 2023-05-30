@@ -107,3 +107,7 @@ a.dropdown-item {
 circle.selected {
 	fill-opacity: 1 !important;
 }
+
+.heatmap-point {
+	pointer-events: none;
+}

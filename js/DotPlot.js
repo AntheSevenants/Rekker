@@ -103,6 +103,11 @@ class DotPlot {
 
         this.originalWidth = parseInt(this.targetElement.style('width'), 10);
         this.initDimensions();
+
+        // TODO remove hardcoding
+        d3.csv("df_pred.csv").then((data) => {
+            this.heatmapData = data;
+        });
     }
 
     bindMetaInfo(metaInfo) {
@@ -692,6 +697,8 @@ class DotPlot {
                       .on("zoom", (event) => { this.updateChart(event); });
 
             this.pointPlane = this.scatter;
+
+            this.drawHeatmapComponents(null);
         }
 
         this.coordinates = {};
@@ -995,6 +1002,25 @@ class DotPlot {
                                   .text(d => d[this.textColumn]);
     }
 
+    drawHeatmapComponents(data) {
+        // TODO remove hardcoding
+        const myColor = d3.scaleLinear()
+            .range(["#A51626", "#FFFDBF", "#006837"])
+            // TODO maybe remove hardcoding
+            .domain([-0.5, 0, 0.5]);
+
+        // Add dots
+        this.pointPlane.selectAll("path.heatmap-point")
+            .data(this.heatmapData)
+            .enter()
+            .append("path")
+            .attr("transform", (d) => `translate(${this.x(d["mds.all.x"])}, ${this.y(d["mds.all.y"])})`)
+            //.attr("cy", (d) => this.y(d["mds.all.y"]))
+            .attr("d", d3.symbol().type(d3.symbolSquare).size(100)())
+            .attr("class", "heatmap-point")
+            .style("fill", (d) => myColor(d["fit"]));
+    }
+
     scaleX(d) {
         // Coefficient as logit
         if (this.externalColumnX == null) {
@@ -1044,6 +1070,8 @@ class DotPlot {
 
     // A function that updates the chart when the user zooms and thus new boundaries are available
     updateChart(event) {
+        console.log(event);
+
         // recover the new scale
         this.x = event.transform.rescaleX(this.originalX);
         this.y = event.transform.rescaleY(this.originalY);
@@ -1051,6 +1079,10 @@ class DotPlot {
         // update axes with these new boundaries
         this.xAxis.call(d3.axisBottom(this.x))
         this.yAxis.call(d3.axisLeft(this.y))
+
+        // Todo fix hardcoding
+        this.scatter.selectAll("path.heatmap-point")
+                    .attr("transform", (d) => `translate(${this.x(d["mds.all.x"])}, ${this.y(d["mds.all.y"])}) scale(${event.transform.k})`)
 
         this.scatter.selectAll("circle")
                     .attr('cx', d => this.scaleX(d))
