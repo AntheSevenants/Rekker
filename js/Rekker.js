@@ -101,6 +101,10 @@ class Rekker {
         if (this.urlParams.has("palette")) {
             this.loadColorPalette(this.urlParams.get("palette"));
         }
+
+        if (this.urlParams.has("heatmap")) {
+            this.loadHeatmapData(this.urlParams.get("heatmap"));
+        }
     }
 
     prepareInterface() {
