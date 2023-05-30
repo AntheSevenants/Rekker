@@ -35,8 +35,8 @@ class HeatmapFaux {
             // Color scale: give me a specie name, I return a color
             // Build color scale
             const myColor = d3.scaleLinear()
-                .range(["#29C66A",  "#FF5154"])
-                .domain([-0.5, 0.5]);
+                .range(["#A51626", "#FFFDBF", "#006837"])
+                .domain([-0.5, 0, 0.5]);
 
             // Add dots
             svg.append('g')
