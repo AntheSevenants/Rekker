@@ -202,6 +202,7 @@ class DotPlot {
         // We inform the draw function further down by setting the 
         // .externalColumnX field
         let baseColumnName = column.slice(0, -1);
+        this.baseColumnName = baseColumnName;
         if (column.slice(-1) == "²") {
             this._externalColumn = `${baseColumnName}.y`;
             this.externalColumnX = `${baseColumnName}.x`;
@@ -1030,7 +1031,7 @@ class DotPlot {
     drawHeatmapComponents() {
         // Add dots
         this.pointPlane.selectAll("path.heatmap-point")
-            .data(this.heatmapData)
+            .data(this.heatmapData.filter(d => d[this.baseColumnName] != "NA" && d[this.baseColumnName] != null))
             .enter()
             .append("path")
             .attr("transform", (d) => `translate(${this.x(d[this.externalColumnX])}, ${this.y(d[this.externalColumn])})`)
@@ -1272,7 +1273,7 @@ class DotPlot {
         .domain([-0.5, 0, 0.5]);
 
         this.pointPlane.selectAll("path.heatmap-point")
-                       .style("fill", (d) => heatmapColor(d["fit"]));
+                       .style("fill", (d) => heatmapColor(d[this.baseColumnName]));
     }
 
     applyLineVisibility() {
