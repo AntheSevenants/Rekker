@@ -89,6 +89,10 @@ class DotPlot {
         // Meta information about the model
         this._metaInfo = null;
 
+        // Heatmap dataset
+        this._heatmapData = null;
+        this._heatmapEnabled = false;
+
         this.selectedCoefficients = new ItemSelection(onUpdateSelection);
         this.selectedOtherCoefficients = new ItemSelection(() => { 
             this.otherCoefficientValuesTotal = 0;
@@ -198,6 +202,7 @@ class DotPlot {
         // We inform the draw function further down by setting the 
         // .externalColumnX field
         let baseColumnName = column.slice(0, -1);
+        this.baseColumnName = baseColumnName;
         if (column.slice(-1) == "²") {
             this._externalColumn = `${baseColumnName}.y`;
             this.externalColumnX = `${baseColumnName}.x`;
@@ -452,6 +457,30 @@ class DotPlot {
         this.drawRegressionInfo();
     }
 
+    // .heatmapEnabled
+    get heatmapEnabled() {
+        return this._heatmapEnabled;
+    }
+
+    set heatmapEnabled(bool) {
+        this._heatmapEnabled = bool;
+
+        this.updatePlot();
+    }
+
+    // .heatmapData
+    get heatmapData() {
+        return this._heatmapData;
+    }
+
+    set heatmapData(data) {
+        this._heatmapData = data;
+
+        if (this.heatmapEnabled) {
+            this.updatePlot();
+        }
+    }
+
     getColorPalette(gradient) {
         if (this.colorPalette != null) {
             return this.colorPalette;
@@ -692,6 +721,10 @@ class DotPlot {
                       .on("zoom", (event) => { this.updateChart(event); });
 
             this.pointPlane = this.scatter;
+
+            if (this.heatmapEnabled) {
+                this.drawHeatmapComponents();
+            }
         }
 
         this.coordinates = {};
@@ -995,6 +1028,18 @@ class DotPlot {
                                   .text(d => d[this.textColumn]);
     }
 
+    drawHeatmapComponents() {
+        // Add dots
+        this.pointPlane.selectAll("path.heatmap-point")
+            .data(this.heatmapData.filter(d => d[this.baseColumnName] != "NA" && d[this.baseColumnName] != null))
+            .enter()
+            .append("path")
+            .attr("transform", (d) => `translate(${this.x(d[this.externalColumnX])}, ${this.y(d[this.externalColumn])})`)
+            //.attr("cy", (d) => this.y(d["mds.all.y"]))
+            .attr("d", d3.symbol().type(d3.symbolSquare).size(100)())
+            .attr("class", "heatmap-point");
+    }
+
     scaleX(d) {
         // Coefficient as logit
         if (this.externalColumnX == null) {
@@ -1051,6 +1096,9 @@ class DotPlot {
         // update axes with these new boundaries
         this.xAxis.call(d3.axisBottom(this.x))
         this.yAxis.call(d3.axisLeft(this.y))
+
+        this.scatter.selectAll("path.heatmap-point")
+                    .attr("transform", (d) => `translate(${this.x(d[this.externalColumnX])}, ${this.y(d[this.externalColumn])}) scale(${event.transform.k})`)
 
         this.scatter.selectAll("circle")
                     .attr('cx', d => this.scaleX(d))
@@ -1214,6 +1262,18 @@ class DotPlot {
                            let pointElement = d3.select(event.target);
                            this.mouseOut(row, pointElement);
                         });
+        
+                        
+        // TODO remove hardcoding
+        const heatmapColor = d3.scaleLinear()
+        .range([ this.getColorPalette(false)[0], 
+                 this.getColorPalette(false)[4],
+                 this.getColorPalette(false)[1]])
+        // TODO maybe remove hardcoding
+        .domain([-0.5, 0, 0.5]);
+
+        this.pointPlane.selectAll("path.heatmap-point")
+                       .style("fill", (d) => heatmapColor(d[this.baseColumnName]));
     }
 
     applyLineVisibility() {
