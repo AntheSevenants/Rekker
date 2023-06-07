@@ -483,7 +483,13 @@ class DotPlot {
 
     getColorPalette(gradient) {
         if (this.colorPalette != null) {
-            return this.colorPalette;
+            if (!gradient) {
+                return this.colorPalette;
+            } else {
+                return [ this.colorPalette[0],
+                         this.colorPalette[4],
+                         this.colorPalette[1] ];
+            }
         } else {
             if (!gradient) {
                 return Constants.ColorPalette;
@@ -563,7 +569,7 @@ class DotPlot {
 
         if (this.useGradient) {
             this.gradientColorScale = d3.scaleLinear()
-                                        .domain([ this.minimumGroupValue, this.maximumGroupValue ])
+                                        .domain([ this.minimumGroupValue, 0, this.maximumGroupValue ])
                                         .range(this.getColorPalette(true));
         }
 
