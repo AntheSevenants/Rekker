@@ -36,6 +36,8 @@ To host Rekker yourself, follow these steps:
 	Serving HTTP on 0.0.0.0 port 8000 (http://0.0.0.0:8000/) ...
 	```
 
+See the bottom of this README if you wish to run Rekker in Docker.
+
 ## Dataset specifications
 
 ### Minimum requirements
@@ -168,6 +170,26 @@ The order is as follows:
 3. Used for removed coefficients
 4. Used for filtered coefficients
 5. Used as the transition colour in the heatmap
+
+## Docker container
+
+You can run Rekker in a [Docker container](https://www.docker.com/). This will spin up an [nginx](https://www.nginx.com/) webserver on your machine. There are two ways to do this:
+
+1. Development version: if you wish to make live changes to Rekker, use the development compose file. You can change the source code while the container is running:
+
+	```
+	docker compose up
+	```
+
+	Rekker will be available at `127.0.0.1:8080`.
+
+2. Production version: if you want to host Rekker in a production environment, use the production compose file. The source code will be frozen inside the container, so live code changes are not supported.
+
+	```
+	docker compose -f "docker-compose-prod.yml" up
+	```
+
+	Rekker will be available at `127.0.0.1:80`.
 
 ## Automatic dataset loading
 
