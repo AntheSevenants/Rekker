@@ -169,6 +169,21 @@ The order is as follows:
 4. Used for filtered coefficients
 5. Used as the transition colour in the heatmap
 
+## Automatic dataset loading
+
+You can automatically load different datasets by specifying their locations in the URL. This is especially useful if you want to share a direct link to a specific constellation of files.
+
+Supply the locations of the different datasets as GET query parameters:
+
+- `coefficients=data.csv`
+- `meta=model_info.csv`
+- `palette=colours.json`
+- `heatmap=gam.csv`
+
+e.g. `my-rekker-instance.local/?coefficients=data.csv&meta=model_info.csv&palette=colours.json&heatmap=gam.csv`
+
+This assumes these datasets are stored in your Rekker directory. You can also load *external* datasets, as long as the server they're stored on allows shared resources under [CORS](https://developer.mozilla.org/en-US/docs/Glossary/CORS).
+
 ## Future work
 
 * dynamic resizing
