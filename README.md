@@ -136,6 +136,17 @@ All model data should have `"model"` as its subject value. Then, you can define 
 
 If you add a line with `"model"` as a `subject` and `"intercept"` as a `predicate`, Rekker will allow you to display your model's intercept value and adjust for it in the interface. Other values are purely descriptive and appear in the model info pane.
 
+## Heatmap dataset specifications
+
+You can put GAM predictions as a backdrop for the scatterplot as a heatmap. This shows you a spatial overview of semantic areas in distributional semantics. The dataset structure for a GAM heatmap is simple:
+
+```
+mds.x,mds.y,mds
+0.25,-0.13,0.6
+```
+
+Your entire dataset should be composed of individual coordinates with predictions for that specific location in distributional space. Heatmaps are linked to bidimensional columns in your coefficients dataset, so the column names for these coordinates should be the same as the dimension-reduced distributional coordinates of your features (`mds.x` and `mds.y` in the example). The predicted *value* for that coordinate is the coordinate name itself (`mds` in the example).
+
 ## Colour palette
 
 You can define your own colour palette for use in Rekker. Create a JSON file with a list of at least five hex colours:
