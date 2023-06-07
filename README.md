@@ -54,6 +54,8 @@ This means your dataset should have a numeric "coefficient" column, and a charac
 
 The coefficient values will be rendered in a [dot plot](https://user-images.githubusercontent.com/84721952/204799949-2cfc2ed4-ed30-4ca3-a070-6721dfbc2979.png).
 
+If your regression model contains features which represent simple binary or numeric values (i.e. for multifactorial control), prefix them with `"_"` so they show up in the "Regression set-up" pane. You can toggle these additional features to see what effect they have on the other features in your model.
+
 ### External numeric information
 
 You can extend Rekker's functionality by adding extra information for each feature-coefficient pairing. If you wish to offset each coefficient against a specific numeric variable, simply add an extra numeric column. The following example shows the above example, complemented with a numeric "frequency" column.
