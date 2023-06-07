@@ -1351,7 +1351,7 @@ class DotPlot {
         .attr("class", className)
         .style("fill", () => {
             if (index <= 1 && this.useGradient) {
-                return this.getColorPalette(true)[index];
+                return this.getColorPalette(false)[index];
             }
 
             return(this.colorScale(group));
