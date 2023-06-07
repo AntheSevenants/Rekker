@@ -43,6 +43,13 @@ class SelectionStats {
         this.notices = {};
         this.groupFrequencies = {};
 
+        // Special case for coefficient numeric coding
+        if (this.dotPlot.groupColumn == "coefficient" && this.dotPlot.useGradient) {
+            this.groupColumn = "_sign";
+        } else {
+            this.groupColumn = this.dotPlot.groupColumn;
+        }
+
         /* Prepare frequency object by setting frequency counts to zero */
         this.dotPlot.groups.forEach(group => {
             this.groupFrequencies[group] = 0;
@@ -149,8 +156,8 @@ class SelectionStats {
 
         let coefficientPill = document.createElement("span");
         coefficientPill.className = "badge rounded-pill";
-        coefficientPill.style.backgroundColor = this.groupColors[row[this.dotPlot.groupColumn]];
-        coefficientPill.style.color = this.groupTextColors[row[this.dotPlot.groupColumn]];
+        coefficientPill.style.backgroundColor = this.groupColors[row[this.groupColumn]];
+        coefficientPill.style.color = this.groupTextColors[row[this.groupColumn]];
 
         if (defaultBadge) {
             coefficientPill.innerText = formatFunction(row["coefficient"]);
@@ -161,11 +168,11 @@ class SelectionStats {
 
         listGroupItem.appendChild(coefficientPill);
 
-        this.listGroups[row[this.dotPlot.groupColumn]].appendChild(listGroupItem);
-        this.groupFrequencies[row[this.dotPlot.groupColumn]]++;
+        this.listGroups[row[this.groupColumn]].appendChild(listGroupItem);
+        this.groupFrequencies[row[this.groupColumn]]++;
 
         // Disable notice for this group
-        this.notices[row[this.dotPlot.groupColumn]].style("display", "none");
+        this.notices[row[this.groupColumn]].style("display", "none");
     }
 
     buildTable() {
