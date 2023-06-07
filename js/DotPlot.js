@@ -812,6 +812,7 @@ class DotPlot {
                                   .attr("data-bs-toggle", "popover")
                                   .attr("data-bs-placement", "left")
                                   .attr("data-bs-html", "true")
+                                  .attr("data-bs-delay", "0")
                                   .attr("data-bs-title", d => d.feature)
                                   .attr("data-bs-trigger", "hover");        
 
@@ -963,6 +964,7 @@ class DotPlot {
                   .style("pointer-events", "stroke")
                   .style("cursor", "help")
                   .attr("data-bs-toggle", "popover")
+                  .attr("data-bs-delay", "0")
                   .attr("data-bs-placement", "right")
                   .attr("data-bs-html", "true")
                   .attr("data-bs-title", (d, i) => this.clusters[i])
@@ -1502,6 +1504,7 @@ class DotPlot {
                 .attr("data-bs-toggle", "popover")
                 .attr("data-bs-placement", "right")
                 .attr("data-bs-html", "true")
+                .attr("data-bs-delay", "0")
                 .attr("data-bs-title", this.externalColumnX)
                 .attr("data-bs-content", this.generateRegressionPopoverData(this.metaInfo.free[this.externalColumnX]))
                 .attr("data-bs-trigger", "hover")
@@ -1522,6 +1525,7 @@ class DotPlot {
                 .attr("data-bs-toggle", "popover")
                 .attr("data-bs-placement", "top")
                 .attr("data-bs-html", "true")
+                .attr("data-bs-delay", "0")
                 .attr("data-bs-title", this.externalColumn)
                 .attr("data-bs-content", this.generateRegressionPopoverData(this.metaInfo.free[this.externalColumn]))
                 .attr("data-bs-trigger", "hover")
