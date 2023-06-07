@@ -1,0 +1,4 @@
+FROM nginx:latest
+ADD .docker/default.conf /etc/nginx/conf.d
+# For production environments
+COPY . /var/www/html/
