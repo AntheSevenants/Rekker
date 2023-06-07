@@ -494,7 +494,9 @@ class DotPlot {
             if (!gradient) {
                 return Constants.ColorPalette;
             } else {
-                return Constants.GradientPalette;
+                return [ Constants.ColorPalette[0],
+                         Constants.ColorPalette[4],
+                         Constants.ColorPalette[1] ];
             }
         }
     }
@@ -568,8 +570,12 @@ class DotPlot {
         this.colorScale = d3.scaleOrdinal().domain(this.groups).range(this.getColorPalette(false));
 
         if (this.useGradient) {
+            // Test: maybe more interpretable when extremes are SD?
+            let stats = this.getStats();
+            let sd = stats.standardDeviation(this.coefficientValues);
+
             this.gradientColorScale = d3.scaleLinear()
-                                        .domain([ this.minimumGroupValue, 0, this.maximumGroupValue ])
+                                        .domain([ -sd, 0, +sd ])
                                         .range(this.getColorPalette(true));
         }
 
@@ -1390,14 +1396,7 @@ class DotPlot {
         });
     }
 
-    drawStatistics() {
-        // Remove pre-existing statistics things
-        this.svg.selectAll(".statistics").remove();
-
-        if (!(this.currentChartMode == ChartModes.ScatterPlot && this.externalColumnX == null)) {
-            return;
-        }
-
+    getStats() {
         let variables = { "coefficient": "metric",
                           [this.externalColumn]: 'metric' };
 
@@ -1406,6 +1405,19 @@ class DotPlot {
         data = data.filter(d => d.coefficient != 0 || d[this.externalColumn] != "NA");
 
         let stats = new Statistics(data, variables);
+
+        return stats;
+    }
+
+    drawStatistics() {
+        // Remove pre-existing statistics things
+        this.svg.selectAll(".statistics").remove();
+
+        if (!(this.currentChartMode == ChartModes.ScatterPlot && this.externalColumnX == null)) {
+            return;
+        }
+
+        let stats = this.getStats();
         let rho = stats.correlationCoefficient('coefficient', this.externalColumn);
 
         let text = `ρ = ${d3.format(".4r")(rho["correlationCoefficient"])}`;
