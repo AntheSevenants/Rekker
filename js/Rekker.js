@@ -121,11 +121,11 @@ class Rekker {
                         this.dotPlot.groupColumn = "_sign";
                         break;
                     case ColorCodings.NumericCoding:
+                        this.dotPlot.useGradient = true;
                         this.updateNumericCodingColumn();
                         this.selectCategoricalCoding.attr("disabled", "");
                         this.selectNumericCoding.attr("disabled", null);
                         this.inputPullEffect.attr("disabled", "");
-                        this.dotPlot.useGradient = true;
                         break;
                     case ColorCodings.CategoricalCoding:
                         this.updateCategoricalCodingColumn();
