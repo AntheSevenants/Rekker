@@ -136,6 +136,28 @@ All model data should have `"model"` as its subject value. Then, you can define 
 
 If you add a line with `"model"` as a `subject` and `"intercept"` as a `predicate`, Rekker will allow you to display your model's intercept value and adjust for it in the interface. Other values are purely descriptive and appear in the model info pane.
 
+## Colour palette
+
+You can define your own colour palette for use in Rekker. Create a JSON file with a list of at least five hex colours:
+
+```json
+[
+	"#96E637", 
+	"#DE193E", 
+	"#394E62", 
+	"#FFE4E1", 
+	"#FFFFFF"
+]
+```
+
+The order is as follows:
+
+1. Used for negative coefficients
+2. Used for positive coefficients
+3. Used for removed coefficients
+4. Used for filtered coefficients
+5. Used as the transition colour in the heatmap
+
 ## Future work
 
 * dynamic resizing
