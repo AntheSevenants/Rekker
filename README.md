@@ -116,6 +116,24 @@ coefficient,feature,frequency,pos
 ```
 Each unique group will receive its own colour coding. You can add multiple group columns and switch between them in the Rekker interface. The columns will show up under "Colour coding" > "Categorical".
 
+## Metadata specifications
+
+You can also load an additional dataset into Rekker which contains a model's *metadata*. The metadata file is based on triples of `subject`, `predicate` and `object`:
+
+```
+subject,predicate,object
+"model","alpha",0.4
+"model","loss",0.709548657049239
+"model","intercept",-0.554293130725607
+"model","dev.ratio",0.464360010202276
+"model","nzero",998
+"model","lambda",0.00217932833240788
+```
+
+All model data should have `"model"` as its subject value. Then, you can define *what* exact metadata about the model that line contains in `predicate`. `object` contains the actual value, as is clear from the above example. 
+
+If you add a line with `"model"` as a `subject` and `"intercept"` as a `predicate`, Rekker will allow you to display your model's intercept value and adjust for it in the interface. Other values are purely descriptive and appear in the model info pane.
+
 ## Future work
 
 * dynamic resizing
