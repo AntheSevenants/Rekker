@@ -76,7 +76,7 @@ The coefficient values and external data will be rendered in a [scatter plot](ht
 You can also define bidimensional numeric information for use with Rekker. To include this kind of information, use the "column.x" and "column.y" naming scheme:
 
 ```csv
-coefficient,feature,coord.x, coord.y
+coefficient,feature,mds.x,mds.y
 -2.7109007348534733,I,0.1,0.3
 -2.5738031394173366,Monday,0.8,-0.4
 -1.970461593962809,not,0,0
@@ -87,17 +87,22 @@ Corresponding column pairs will be combined automatically in the Rekker interfac
 
 The external data will be rendered in a [scatter plot](https://user-images.githubusercontent.com/84721952/204800617-8e155904-f882-4272-8901-0bb9ceea81e3.png).
 
-You can also add clustering information to this bidimensional plot. To add clustering information, just specify for each data point to which cluster it belongs. Make sure the clustering column is prefixed with "cluster.":
+You can also add clustering information to this bidimensional plot. To add clustering information, specify for each data point to which cluster it belongs. The clustering column should follow this naming convention:
+
+- prefixed with `cluster.`
+- contains the name of the coordinate system it is based on
+
+In the example below, our clustering is based on the `mds.x` and `mds.y` columns, hence why `mds` is included in the clustering column name. If you do not add this name, the clustering column will not show up in the interface.
 
 ```csv
-coefficient,feature,coord.x, coord.y, cluster.kmeans
+coefficient,feature,mds.x,mds.y,cluster.mds.kmeans
 -2.7109007348534733,I,0.1,0.3,cluster 1
 -2.5738031394173366,Monday,0.8,-0.4,cluster 2
 -1.970461593962809,not,0,0,cluster 2
 -1.864356619676603,like,-0.5,0.3,cluster 1
 ```
 
-The available clusterings will be recognised automatically in the Rekker interface. The clusters will be drawn as polygons under your bidimensional data points.
+If formatted correctly, the available clusterings will be recognised automatically in the Rekker interface. The clusters will be drawn as polygons under your bidimensional data points.
 
 ### External group information
 
