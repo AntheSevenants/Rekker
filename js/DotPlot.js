@@ -85,6 +85,8 @@ class DotPlot {
         // Brushing active?
         this._brushActive = false;
         this.brush = null;
+        // Brushing additive?
+        this.brushAdditive = false;
 
         // Meta information about the model
         this._metaInfo = null;

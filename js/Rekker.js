@@ -43,6 +43,7 @@ class Rekker {
         this.usePositiveNegativeGradientCheckbox = d3.select("#checkbox_positive_negative_gradient");
         this.probabilityModeCheckbox = d3.select("#checkbox_probabilities_mode");
         this.brushActiveCheckbox = d3.select("#checkbox_brush_active");
+        this.brushAdditiveCheckbox = d3.select("#checkbox_brush_additive");
         this.heatmapCheckbox = d3.select("#checkbox_enable_heatmap");
         this.buttonSetStandardDeviation = d3.select("#button_standard_deviation");
         this.buttonClearSelection = d3.select("#button_clear_selection");
@@ -243,6 +244,11 @@ class Rekker {
 
         this.brushActiveCheckbox.on("change", () => {
             this.dotPlot.brushActive = this.brushActiveCheckbox.node().checked;
+            this.brushAdditiveCheckbox.node().disabled = !this.brushActiveCheckbox.node().checked;
+        })
+        
+        this.brushAdditiveCheckbox.on("change", () => {
+            this.dotPlot.brushAdditive = this.brushAdditiveCheckbox.node().checked;
         })
 
         this.heatmapCheckbox.on("change", () => {
