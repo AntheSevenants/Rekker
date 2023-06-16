@@ -1171,9 +1171,15 @@ class DotPlot {
 			return;
 		}
 
-        this.selectedCoefficients.clear(false);
+        if (!this.brushAdditive) {
+            this.selectedCoefficients.clear(false);
+        }
 
         this.dataPoints.classed("selected", (d, i, dataPoints) => {
+            if (this.brushAdditive && this.selectedCoefficients.items.includes(d["feature"])) {
+                return true;
+            }
+
             const el = d3.select(dataPoints[i]);
             const selected = extent[0][0] <= el.attr("cx") && extent[1][0] >= el.attr("cx") && extent[0][1] <= el.attr("cy") && extent[1][1] >= el.attr("cy");
 
@@ -1183,7 +1189,6 @@ class DotPlot {
 
             return selected;
         });
-                       
     }
 
     manualClearSelection() {
