@@ -1147,6 +1147,7 @@ class DotPlot {
 
     applyBrush() {
         this.brush = d3.brush()
+            .keyModifiers(false)
             .extent([[0, 0], [this.chartRangeWidth, this.   chartRangeHeight]])
             .on("brush", (event) => { this.onBrush(event); })
             .on("end", (event) => { this.selectedCoefficients.callback(); /* callback only on brush end */ });
@@ -1167,6 +1168,8 @@ class DotPlot {
     onBrush(event) {
         const extent = event.selection;
 
+        let subtract = event.sourceEvent.altKey;
+
         if (extent == null) {
 			return;
 		}
@@ -1176,15 +1179,27 @@ class DotPlot {
         }
 
         this.dataPoints.classed("selected", (d, i, dataPoints) => {
+            let selected = false;
+
             if (this.brushAdditive && this.selectedCoefficients.items.includes(d["feature"])) {
-                return true;
+                //console.log("boer sjarel is er", d["feature"]);
+
+                if (!subtract) {
+                    return true;
+                } else {
+                    selected = true;
+                }
             }
 
             const el = d3.select(dataPoints[i]);
-            const selected = extent[0][0] <= el.attr("cx") && extent[1][0] >= el.attr("cx") && extent[0][1] <= el.attr("cy") && extent[1][1] >= el.attr("cy");
+            const inRegion = extent[0][0] <= el.attr("cx") && extent[1][0] >= el.attr("cx") && extent[0][1] <= el.attr("cy") && extent[1][1] >= el.attr("cy");
 
-            if (selected) {
+            if (inRegion && !subtract) {
                 this.selectedCoefficients.add(d["feature"], false);
+                selected = true;
+            } else if (inRegion && subtract) {
+                this.selectedCoefficients.remove(d["feature"], false);
+                selected = false; 
             }
 
             return selected;
