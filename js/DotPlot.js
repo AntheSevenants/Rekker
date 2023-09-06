@@ -1052,7 +1052,7 @@ class DotPlot {
             .append("path")
             .attr("transform", (d) => `translate(${this.x(d[this.externalColumnX])}, ${this.y(d[this.externalColumn])})`)
             //.attr("cy", (d) => this.y(d["mds.all.y"]))
-            .attr("d", d3.symbol().type(d3.symbolSquare).size(100)())
+            .attr("d", d3.symbol().type(d3.symbolSquare).size(200)())
             .attr("class", "heatmap-point");
     }
 
