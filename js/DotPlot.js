@@ -18,6 +18,9 @@ class DotPlot {
 
         this.otherCoefficientValues = {};
         this.coefficients.forEach(row => {
+            // Ensure every feature is a string
+            row["feature"] = row["feature"].toString();
+
             if (row["feature"].charAt(0) == "_") {
                 this.otherCoefficientValues[row["feature"]] = row["coefficient"];
             } 
