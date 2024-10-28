@@ -21,7 +21,7 @@ class DataSource {
             let i = 0;
             // Go over each dataset we defined earlier
             for (let dataset in this.datasets) {
-                // If the promise was succesful, we retrieve the value of that promise
+                // If the promise was successful, we retrieve the value of that promise
                 // Else, we set the dataset to null
                 switch (results[i]["status"]) {
                     case "fulfilled":
